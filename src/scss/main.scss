@@ -69,8 +69,17 @@ h2 {
     }
 
     .fa {
-        @include margin-right(.5);
-        font-size: map-get($text-size, large);
+        margin-right: .333em;
+        font-size: 1.5em;
+    }
+
+    &.solid {
+        background-color: color(white);
+        color: color(black);
+        &.inverted {
+            background-color: color(black);
+            color: color(white);
+        }
     }
 
     &:hover {
@@ -78,9 +87,7 @@ h2 {
     }
 }
 
-@each $name,
-$color in $colors {
-
+@each $name, $color in $colors {
     a.#{$name},
     .btn.#{$name} {
 
@@ -90,8 +97,31 @@ $color in $colors {
         }
     }
 
-    .btn.#{$name}:hover {
-        border-color: $color;
+    .btn.#{$name} {
+        &.solid {
+            &:not(.inverted) {
+                background-color: color(white);
+                color: $color;
+
+                .fa {
+                    color: $color;
+                }
+            }
+            &.inverted {
+                background-color: $color;
+                color: color(white);
+
+                .fa {
+                    color: color(white);
+                }
+            }    
+            &:hover {
+                box-shadow: 15px 15px 15px rgab(color(black), .6);
+            }
+        }
+        &:not(.solid):hover {
+            border-color: $color;
+        }
     }
 }
 

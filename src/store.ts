@@ -19,7 +19,7 @@ export interface WebSiteState {
   links: Link[];
   splashes: Splash[];
 
-  meta: Meta | null
+  meta: Meta[];
 }
 
 export const defaultState: WebSiteState = {
@@ -32,13 +32,19 @@ export const defaultState: WebSiteState = {
   links: [],
   splashes: [],
   loading: false,
-  meta: null
+  meta: []
 }
 
 export default new Vuex.Store<WebSiteState>({
   state: defaultState,
   getters: {
-    meta: (state) => state.meta,
+    meta: (state) => {
+      const meta = state.meta && state.meta.length > 0 ? state.meta[0] : <Meta>{};
+      return <Meta>{
+        ...meta,
+        footerLinks: (meta.footerLinkIds || []).map((li) => state.links.find((l) => l.id === li))
+      };
+    },
     pages: (state) => {
       return state.pages.map((p) => {
         return { 
@@ -86,7 +92,6 @@ export default new Vuex.Store<WebSiteState>({
       state.loading = false;
     },
     updatePages(state, pages: Page[]) {
-      console.log(pages);
       state.pages = [...pages];
     },
     updateTestimonials(state, testimonials: Testimonial[]) {
@@ -98,8 +103,9 @@ export default new Vuex.Store<WebSiteState>({
     updateReleases(state, releases: Release[]) {
       state.releases = [...releases];
     },
-    updateMeta(state, meta: Meta) {
-      state.meta = {...meta};
+    updateMeta(state, meta: Meta[]) {
+      console.log(meta);
+      state.meta = [...meta];
     },
     updatePhotos(state, photos: Photo[]) {
       state.photos = [...photos];
@@ -119,12 +125,12 @@ export default new Vuex.Store<WebSiteState>({
       this.commit('loading');
       this.commit('updatePages', await service.pages());
       this.commit('updateTestimonials', await service.testimonials());
+      this.commit('updateSplashes', await service.splashes());
       this.commit('updateVideos', await service.videos());
       this.commit('updateReleases', await service.releases());
       this.commit('updatePhotos', await service.photos());
       this.commit('updatePosts', await service.posts());
       this.commit('updateLinks', await service.links());
-      this.commit('updateSplashes', await service.splashes());
       this.commit('updateMeta', await service.meta());
       this.commit('loaded');
     }

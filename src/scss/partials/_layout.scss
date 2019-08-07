@@ -7,8 +7,9 @@
     background-position: top center;
     background-size: cover;
 
-    @include mobile-only() {
-        @include padding-top(12);
+    @include padding-top(6);
+    @include desktop-only {
+        @include padding-top(16);
     }
 }
 
@@ -22,29 +23,33 @@ footer,
 .content {
     >.box,
     > h1 {
-        &:first-child {
-            @include margin-top(2);
+        @include desktop-only {
+            &:first-child {
+                @include margin-top(2);
+            }    
         }
 
         >.links {
             @include padding-top(3);
             border-top: 1px dotted color(black);
             justify-content: center;
+
+            .links-title, a {
+                font-size: map-get($text-size, small);
+            }
         }
     }
 
     >.box {
         text-align: center;
     }
-    @include mobile-only() {
-        > h1 {
-            text-align: center;
-        }
+    > h1 {
+        text-align: center;
     }
 }
 
 .splash {
-    @include margin(4, auto, 12);
+    @include margin(4, auto, 14);
     text-align: center;
 
     p {
@@ -62,12 +67,16 @@ footer,
     }
 
     .btn {
-        @include font($size: map-get($text-size, x-large), $weight: 500);
+        @include font($size: map-get($text-size, large), $weight: 500);
         background-color: color(white);
         color: color(black);
         border: none;
 
         text-shadow: none;
+
+        .fa {
+            font-size: 1.2em;
+        }
 
         &:hover {
             box-shadow: 0 4px 4px rgba(color(black), .5);

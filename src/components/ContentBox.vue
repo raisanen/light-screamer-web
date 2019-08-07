@@ -1,6 +1,6 @@
 <template>
     <div :class="containerClass">
-        <div class="box" v-for="(item, index) in entries" :key="index">
+        <div class="box" v-for="(item, index) in entries" :key="index" :id="item.entry.id">
             <div v-if="item.entry.quote" class="testimonial">
                 <blockquote>{{item.entry.quote}}</blockquote>
                 <a class="source" v-if="item.entry.sourceUrl" :href="item.entry.sourceUrl">
@@ -10,7 +10,7 @@
                     {{item.entry.source}}
                 </span>
             </div>
-            <div v-else :id="item.entry.id">
+            <div v-else>
                 <h2 v-if="item.entry.title">
                     {{item.entry.title}}
                     <span class="date" v-if="item.entry.date && item.entry.dateString">
@@ -53,8 +53,8 @@
 
                 <div class="links" v-if="item.entry.releases">
                     <h3 class="links-title">Appears on the album</h3>
-                    <router-link class="web" v-for="release in item.entry.releases" :key="release.id" :to="{ name: 'home', params: { slug: 'releases'}}">
-                        <i class="fa fa-circle"></i>
+                    <router-link class="web" v-for="release in item.entry.releases" :key="release.id" :to="{ name: 'home', params: { slug: 'releases'}, hash: `#${release.id}`}">
+                        <i class="fa fa-circle-o"></i>
                         {{release.title}}
                     </router-link>
                 </div>
@@ -69,9 +69,9 @@
                         </h3>
                         <ul>
                             <li v-for="video in item.entry.videos" :key="video.id">
-                                <a :href="video.url" target="_blank">
+                                <router-link :to="{name: 'home', params: { slug: 'videos' }, hash: `#${video.id}`}">
                                     {{video.title}}
-                                </a>
+                                </router-link>
                             </li>
                         </ul>
                     </div>

@@ -272,6 +272,7 @@
     }
     &.boxes-2>.box {
         width: 49%;
+
         @include mobile-only() {
             width: 100%;
         }
@@ -281,7 +282,7 @@
         width: 32%;
 
         @include mobile-only() {
-            width: 49%;
+            width: 100%;
         }
     }
 }

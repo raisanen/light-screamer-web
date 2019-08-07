@@ -5,7 +5,7 @@
         <div class="splash" v-if="currentPage.splash">
           <p v-html="currentPage.splash.description"/>
           <a target="_blank"
-            :class="currentPage.splash.classes" 
+            :class="`btn solid inverted ${currentPage.splash.classes}`" 
             :href="currentPage.splash.link">
             <i v-if="currentPage.splash.icon" :class="`fa fa-${currentPage.splash.icon}`"></i>
             {{currentPage.splash.label}}

@@ -1,9 +1,13 @@
-$breakpoints: (desktop: 986px,
-    mobile: 700px);
+$breakpoints: (
+    desktop: 986px,
+    mobile: 700px
+);
 
-$site-colors: (black: #141414,
+$site-colors: (
+    black: #141414,
     white: #fff,
-    focus: #00affe);
+    focus: #00affe
+);
 $brand-colors: (web: #00affe,
     spotify: #1db954,
     bandcamp: #629aa9,
@@ -12,16 +16,19 @@ $brand-colors: (web: #00affe,
     facebook-square: #3b5998,
     instagram: #c13584,
     soundcloud: #ff8800,
-    twitter: #1da1f2);
+    twitter: #1da1f2
+);
 $colors: map-merge($site-colors, $brand-colors);
 
-$text-size: (small: .75rem,
+$text-size: (
+    small: .75rem,
     medium: 1rem,
     large: 1.4rem,
     x-large: 1.8rem,
     xx-large: 3rem,
     massive: 4.5rem,
-    smaller: .8em);
+    smaller: .8em
+);
 
 $font-body: 'DM Sans',
 sans-serif;
@@ -124,16 +131,28 @@ $base-size: 10px;
     padding: size($top, $base) size($right, $base) size($bottom, $base) size($left, $base);
 }
 
-@mixin media($breakpoint) {
+@mixin media-max($breakpoint) {
     @if map-has($breakpoints, $breakpoint) {
         @media only screen and (max-width: map-get($breakpoints, $breakpoint)) {
             @content;
         }
     }
 }
+@mixin media-min($breakpoint) {
+    @if map-has($breakpoints, $breakpoint) {
+        @media only screen and (min-width: map-get($breakpoints, $breakpoint) + 1) {
+            @content;
+        }
+    }
+}
 
 @mixin mobile-only() {
-    @include media(mobile) {
+    @include media-max(mobile) {
+        @content;
+    }
+}
+@mixin desktop-only() {
+    @include media-min(mobile) {
         @content;
     }
 }
@@ -164,9 +183,7 @@ $base-size: 10px;
 @mixin flex($inline: false, $direction: unset, $align: unset, $justify: unset, $wrap: unset) {
     @if $inline {
         display: inline-flex;
-    }
-
-    @else {
+    } @else {
         display: flex;
     }
 
