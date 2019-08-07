@@ -1,0 +1,184 @@
+#nav {
+    @include container();
+
+    .menu-button {
+        display: none;
+
+        @include mobile-only() {
+            @include position-fixed($top: 0, $left: 0, $z-index: 99);
+            @include font($font-body, $weight: 500, $size: map-get($text-size, medium), $transform: uppercase);
+            @include flex($justify: flex-start, $align: center);
+            @include padding-left(4);
+
+            border: 0;
+            background-color: rgba(color(black), .85);
+            color: color(white);
+
+
+            height: 80px;
+            width: 100%;
+
+            &:focus {
+                outline: none;
+            }
+
+            .icon {
+                @include margin-right(3);
+
+                position: relative;
+                display: block;
+
+                &,
+                &:before,
+                &:after {
+                    transition: all .25s;
+                    width: 40px;
+                    height: 5px;
+                    background-color: color(white);
+                }
+
+                &:before,
+                &:after {
+                    @include position-absolute($left: 0);
+                    content: '';
+                }
+
+                &:before {
+                    top: -10px;
+                }
+
+                &:after {
+                    bottom: -10px;
+                }
+            }
+
+            &.active {
+                .icon {
+                    background-color: transparent;
+
+                    &:before,
+                    &:after {
+                        top: 0;
+                        bottom: 0;
+                    }
+
+                    &:after {
+                        transform: rotate(135deg);
+                    }
+
+                    &:before {
+                        transform: rotate(-135deg);
+                    }
+                }
+            }
+
+        }
+
+    }
+
+    ul {
+        @include flex($direction: row, $justify: center, $align: center);
+        @include margin(0);
+        @include padding(1, 0);
+
+        max-width: 100%;
+        width: 100%;
+
+        list-style-type: none;
+
+        li {
+            width: auto;
+
+            &+li {
+                margin-left: 32px;
+            }
+
+            a {
+                @include font($size: map-get($text-size, x-large), $weight: 700, $transform: uppercase, $decoration: none);
+                @include padding(1, 0);
+
+                color: color(white);
+                display: inline-block;
+                position: relative;
+
+                &:after {
+                    @include position-absolute($bottom: 0, $left: 50%);
+
+                    content: '';
+
+                    height: 1px;
+                    width: 0%;
+
+                    background-color: color(white);
+
+                    transform: translateX(-50%);
+                    transition: all .25s;
+                }
+
+                &:not(.home) {
+                    text-shadow: 2px 2px color(black);
+
+                    &:hover:after {
+                        width: 100%;
+                        height: 2px;
+                    }
+
+                    &.router-link-active:after {
+                        width: 105%;
+                        height: 5px;
+                        box-shadow: 2px 2px color(black);
+                    }
+                }
+
+                img {
+                    max-height: 5.5rem;
+                    max-width: 5.5rem;
+                }
+            }
+        }
+
+        @include media(mobile) {
+            @include position-fixed($top: 0, $left: 0, $bottom: 100%, $z-index: 2);
+            @include padding(0);
+
+            flex-direction: column;
+            width: 100%;
+
+            background-color: color(black);
+            opacity: 0;
+
+            transition: all .3s;
+
+            &.show {
+                @include padding(4, 0);
+                bottom: 0;
+                opacity: 1;
+            }
+
+            li {
+                display: block;
+                width: 100%;
+                text-align: center;
+
+                &+li {
+                    margin-left: 0;
+                }
+
+                a {
+                    display: block;
+                    text-shadow: none !important;
+
+                    &:after {
+                        content: none !important;
+                    }
+
+                    &:not(.home).router-link-active {
+                        background-color: color(white);
+                        color: color(black);
+                    }
+                }
+            }
+
+        }
+    }
+}

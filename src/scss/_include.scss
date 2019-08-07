@@ -1,0 +1,188 @@
+$breakpoints: (desktop: 986px,
+    mobile: 700px);
+
+$site-colors: (black: #141414,
+    white: #fff,
+    focus: #00affe);
+$brand-colors: (web: #00affe,
+    spotify: #1db954,
+    bandcamp: #629aa9,
+    youtube: #ff0000,
+    facebook: #3b5998,
+    facebook-square: #3b5998,
+    instagram: #c13584,
+    soundcloud: #ff8800,
+    twitter: #1da1f2);
+$colors: map-merge($site-colors, $brand-colors);
+
+$text-size: (small: .75rem,
+    medium: 1rem,
+    large: 1.4rem,
+    x-large: 1.8rem,
+    xx-large: 3rem,
+    massive: 4.5rem,
+    smaller: .8em);
+
+$font-body: 'DM Sans',
+sans-serif;
+
+$base-size: 10px;
+
+/// Functions
+@function size($factor, $base: $base-size) {
+    @if $factor==auto {
+        @return $factor;
+    }
+
+    @return $base * $factor;
+}
+
+@function relative-size($factor) {
+    @return size(1em);
+}
+
+@function color($color) {
+    @if map-has($colors, $color) {
+        @return map-get($colors, $color);
+    }
+
+    @return transparent;
+}
+
+@function breakpoint($breakpoint) {
+    @if map-has($breakpoints, $breakpoint) {
+        @return map-get($breakpoints, $breakpoint);
+    }
+
+    @return map-get($breakpoints, desktop);
+}
+
+/// Mixins
+@mixin prop-if-set($property, $value: unset) {
+    @if $value !=unset {
+        #{$property}: $value;
+    }
+}
+
+@mixin margin-top($size, $base: $base-size) {
+    margin-top: size($size, $base);
+}
+
+@mixin margin-right($size, $base: $base-size) {
+    margin-right: size($size, $base);
+}
+
+@mixin margin-bottom($size, $base: $base-size) {
+    margin-bottom: size($size, $base);
+}
+
+@mixin margin-left($size, $base: $base-size) {
+    margin-left: size($size, $base);
+}
+
+@mixin margin-x($size, $base: $base-size) {
+    @include margin-left($size, $base);
+    @include margin-right($size, $base);
+}
+
+@mixin margin-y($size, $base: $base-size) {
+    @include margin-top($size, $base);
+    @include margin-bottom($size, $base);
+}
+
+@mixin margin($top: 0, $right: $top, $bottom: $top, $left: $right, $base: $base-size) {
+    margin: size($top, $base) size($right, $base) size($bottom, $base) size($left, $base);
+}
+
+@mixin padding-top($size, $base: $base-size) {
+    padding-top: size($size, $base);
+}
+
+@mixin padding-right($size, $base: $base-size) {
+    padding-right: size($size, $base);
+}
+
+@mixin padding-bottom($size, $base: $base-size) {
+    padding-bottom: size($size, $base);
+}
+
+@mixin padding-left($size, $base: $base-size) {
+    padding-left: size($size, $base);
+}
+
+@mixin padding-x($size, $base: $base-size) {
+    @include padding-left($size, $base);
+    @include padding-right($size, $base);
+}
+
+@mixin padding-y($size, $base: $base-size) {
+    @include padding-top($size, $base);
+    @include padding-bottom($size, $base);
+}
+
+@mixin padding($top: 0, $right: $top, $bottom: $top, $left: $right, $base: $base-size) {
+    padding: size($top, $base) size($right, $base) size($bottom, $base) size($left, $base);
+}
+
+@mixin media($breakpoint) {
+    @if map-has($breakpoints, $breakpoint) {
+        @media only screen and (max-width: map-get($breakpoints, $breakpoint)) {
+            @content;
+        }
+    }
+}
+
+@mixin mobile-only() {
+    @include media(mobile) {
+        @content;
+    }
+}
+
+@mixin container($margin-top: 0, $margin-bottom: $margin-top) {
+    width: breakpoint(desktop);
+    max-width: 96%;
+    margin: $margin-top auto $margin-bottom;
+}
+
+@mixin position($position: unset, $top: unset, $right: unset, $bottom: unset, $left: unset, $z-index: unset) {
+    @include prop-if-set(position, $position);
+    @include prop-if-set(top, $top);
+    @include prop-if-set(right, $right);
+    @include prop-if-set(bottom, $bottom);
+    @include prop-if-set(left, $left);
+    @include prop-if-set(z-index, $z-index);
+}
+
+@mixin position-fixed($top: unset, $right: unset, $bottom: unset, $left: unset, $z-index: unset) {
+    @include position(fixed, $top, $right, $bottom, $left, $z-index);
+}
+
+@mixin position-absolute($top: unset, $right: unset, $bottom: unset, $left: unset, $z-index: unset) {
+    @include position(absolute, $top, $right, $bottom, $left, $z-index);
+}
+
+@mixin flex($inline: false, $direction: unset, $align: unset, $justify: unset, $wrap: unset) {
+    @if $inline {
+        display: inline-flex;
+    }
+
+    @else {
+        display: flex;
+    }
+
+    @include prop-if-set(flex-direction, $direction);
+    @include prop-if-set(align-items, $align);
+    @include prop-if-set(justify-content, $justify);
+    @include prop-if-set(flex-wrap, $wrap);
+}
+
+@mixin font($family: unset, $size: unset, $height: unset, $weight: unset, $style: unset, $decoration: unset, $transform: unset, $align: unset) {
+    @include prop-if-set(font-family, $family);
+    @include prop-if-set(font-size, $size);
+    @include prop-if-set(font-weight, $weight);
+    @include prop-if-set(font-style, $style);
+    @include prop-if-set(line-height, $height);
+    @include prop-if-set(text-align, $align);
+    @include prop-if-set(text-decoration, $decoration);
+    @include prop-if-set(text-transform, $transform);
+}

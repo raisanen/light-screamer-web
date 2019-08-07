@@ -1,0 +1,33 @@
+.links {
+    @include flex($direction: row, $align: center, $justify: flex-start, $wrap: wrap);
+    @include margin-top(3);
+
+    h3.links-title {
+        @include margin-right(2);
+
+        &:after { content: ':'; }
+        
+        @include mobile-only {
+            @include margin(0, 0, 2);
+            width: 100%;
+            flex-grow: 1;
+        }
+    }
+
+    a {
+        @include flex($inline: true, $align: center);
+        @include margin-bottom(1);
+
+        font-size: map-get($text-size, medium);
+        text-shadow: none;
+
+
+        .fa {
+            @include margin-right(1);
+            font-size: map-get($text-size, x-large);
+        }
+        & + a {
+            @include margin-left(3);
+        }
+    }
+}

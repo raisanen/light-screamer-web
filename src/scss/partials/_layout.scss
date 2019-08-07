@@ -1,0 +1,93 @@
+.main {
+    min-height: 100vh;
+    width: 100%;
+
+    background-color: color(black);
+    background-attachment: fixed;
+    background-position: top center;
+    background-size: cover;
+
+    @include mobile-only() {
+        @include padding-top(12);
+    }
+}
+
+.content,
+footer,
+.splash {
+    @include container();
+    color: color(white);
+}
+
+.content {
+    >.box,
+    > h1 {
+        &:first-child {
+            @include margin-top(2);
+        }
+
+        >.links {
+            @include padding-top(3);
+            border-top: 1px dotted color(black);
+            justify-content: center;
+        }
+    }
+
+    >.box {
+        text-align: center;
+    }
+    @include mobile-only() {
+        > h1 {
+            text-align: center;
+        }
+    }
+}
+
+.splash {
+    @include margin(4, auto, 12);
+    text-align: center;
+
+    p {
+        @include margin(0, auto, 4);
+        @include font($size: map-get($text-size, massive), $weight: 700, $height: 1);
+
+        width: breakpoint(mobile);
+        max-width: 100%;
+
+        text-shadow: 4px 4px color(black);
+
+        i {
+            display: block;
+        }
+    }
+
+    .btn {
+        @include font($size: map-get($text-size, x-large), $weight: 500);
+        background-color: color(white);
+        color: color(black);
+        border: none;
+
+        text-shadow: none;
+
+        &:hover {
+            box-shadow: 0 4px 4px rgba(color(black), .5);
+        }
+    }
+    @include mobile-only() {
+        p    { font-size: map-get($text-size, xx-large); }
+        .btn { font-size: map-get($text-size, large); }
+    }
+}
+
+footer {
+    @include margin-bottom(6);
+    @include padding(2, 0, 4);
+
+    font-size: map-get($text-size, small);
+
+    p,
+    .links {
+        display: block;
+        text-align: center;
+    }
+}
