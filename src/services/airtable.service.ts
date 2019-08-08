@@ -1,7 +1,7 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import moment from 'moment';
 
-import { AirtableDtoContainer, Post, PostContainer, PageContainer, Page, Testimonial, TestimonialContainer, PhotoContainer, Photo, Release, ReleaseContainer, Video, VideoContainer, Link, LinkContainer, Splash, SplashContainer, Meta, MetaContainer } from '@/models/dtos';
+import { Post, PostContainer, PageContainer, Page, Testimonial, TestimonialContainer, PhotoContainer, Photo, Release, ReleaseContainer, Video, VideoContainer, Link, LinkContainer, Splash, SplashContainer, Meta, MetaContainer } from '@/models/dtos';
 
 const apiKey = 'keyQv7zDQbinENVcQ',
     appId = 'appxuBPxu0RLPPdpO';
@@ -21,7 +21,9 @@ export default class AirtableService {
 
     constructor() {
         this.axios = axios.create({
-            baseURL: `https://api.airtable.com/v0/${appId}/`
+            baseURL: process.env.NODE_ENV === 'production' 
+                ? '/proxy.php?endpoint='
+                : `https://api.airtable.com/v0/${appId}/`
         });
         this.axios.defaults.headers.common = { Authorization: `Bearer ${apiKey}` };
         this.cache = {};

@@ -2,20 +2,20 @@
 require_once('image-resize.php');
 
 class CachedFile {
-    private var $_ttl;
-    private var $_url;
+    private $_ttl;
+    private $_url;
 
-    private var $_cache_filename;
-    private var $_meta_filename;
+    private $_cache_filename;
+    private $_meta_filename;
 
-    private var $_cache_contents = NULL;
-    private var $_meta_contents = NULL;
+    private $_cache_contents = NULL;
+    private $_meta_contents = NULL;
 
-    function __construct(string $url, integer $ttl = 3600) {
+    function __construct(string $url) {
         $cache_dir =  __DIR__ . '/../tmp/';
         $filehash = hash('sha256', $url);
 
-        $this->_ttl = $ttl;
+        $this->_ttl = 3600;
         $this->_url = $url;
         $this->_cache_filename = $cache_dir . $filehash;
         $this->_meta_filename = $this->_cache_filename . '.json';
@@ -35,10 +35,7 @@ class CachedFile {
         return $this->_cache_contents;
     }
     public function meta() {
-        if ($this->exists() && is_null($this->_meta_contents)) {
-            $this->_meta_contents = json_decode(file_get_contents($this->_meta_filename), true);
-        }
-        return $this->_meta_contents;
+        return json_decode(file_get_contents($this->_meta_filename), true);
     }
 
     public function save(string $contents, array $meta = null) {
@@ -54,7 +51,7 @@ class CachedFile {
     public function delete() {
         if ($this->exists()) {
             unlink($this->_cache_filename);
-            unline($this->_meta_filename);
+            unlink($this->_meta_filename);
         }
     }
 
@@ -68,7 +65,7 @@ class CachingProxy {
         $info = $file->meta();
         $filename = $file->filename();
       
-        http_response_code($info['http_code']);
+        http_response_code(200);
         header('Access-Control-Allow-Origin: *');
         header('Content-Type: ' . $info['content_type']);
         header('Content-Length: ' . filesize($filename));
@@ -80,7 +77,7 @@ class CachingProxy {
             'height' => 0,
             'scale' => 1,
             'enlarge' => true
-        )
+        );
         switch ($trans) {
             case 'fitHeight':
             case 'maxHeight':
@@ -121,7 +118,7 @@ class CachingProxy {
                         $resize->resizeToHeight($opt['height'], $opt['enlarge']);
                         break;
                     case 'fitWidth':
-                    case 'maxWidth'
+                    case 'maxWidth':
                         $resize->resizeToWidth($opt['width'], $opt['enlarge']);
                         break;
                     case 'fit':
@@ -140,6 +137,7 @@ class CachingProxy {
 
     private static function download_file(CachedFile $file) {
         $headers = getallheaders();
+        $headers['Authorization'] = 'Bearer keyQv7zDQbinENVcQ';
         $curl_options = array( 
             CURLOPT_VERBOSE => true, 
             CURLOPT_URL => $file->url(), 
@@ -166,11 +164,11 @@ class CachingProxy {
         curl_close($curl);
     }
 
-    private static function get(CacheFile $file, array $options) {
-        if ($options['overwrite'] || !$file->cache_valid()) {
+    private static function get(CachedFile $file, array $options) {
+        if ($options['overwrite'] || !$file->valid()) {
             self::download_file($file);
             if ($options['transform'] !== false) {
-                self::transform($file, $options['transform'], $options['options'])
+                self::transform($file, $options['transform'], $options['options']);
             }
         }
         self::output_headers($file);
@@ -183,7 +181,7 @@ class CachingProxy {
         header('Access-Control-Allow-Headers: accept, x-requested-with, content-type');      
     }
 
-    public static function handle_request(string $method, string $url, array $options) {
+    public static function handle_request(string $method, ?string $url, array $options) {
         if ($method === 'OPTIONS') {
             self::options();
         } else if (!is_null($url)) {
@@ -201,13 +199,19 @@ class CachingProxy {
 }
 
 $method = $_SERVER['REQUEST_METHOD'];
-$url = isset($_GET['url']) ? $_GET['url'] : NULL;
 $options = array(
     'overwrite' => isset($_GET['overwrite']),
     'transform' => isset($_GET['transform']) ? $_GET['transform'] : false,
     'options' => isset($_GET['options']) ? $_GET['options'] : false
 );
+$url = '';
 
-CacheProxy::handle_request($method, $url, $options);
+if (isset($_GET['endpoint'])) {
+    $url = 'https://api.airtable.com/v0/appxuBPxu0RLPPdpO/' . str_replace('/', '', $_GET['endpoint']);
+} else if (isset($_GET['image'])) {
+    $url = 'https://dl.airtable.com/.attachments/' . $_GET['image'];
+}
+
+CachingProxy::handle_request($method, $url, $options);
 
 exit();
