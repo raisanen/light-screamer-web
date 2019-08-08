@@ -39,7 +39,9 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { Getter, Mutation, State } from 'vuex-class';
+
 import { Page, Release, Video, Meta, Post, Photo, PageType, Link } from '@/models/dtos';
+
 import Navigation from '@/components/Navigation.vue';
 import ContentBox, { ValidContent } from '@/components/ContentBox.vue';
 import Links from '@/components/Links.vue';
@@ -83,8 +85,13 @@ export default class Home extends Vue {
       }
   }
 
+  private setTitle() {
+    document.title = `${this.meta.title} - ${this.currentPage.title}`;
+  }
+
   beforeMount() {
-    this.$store.dispatch('loadData');
+    this.$store.dispatch('loadData').then(() => this.setTitle());
+    this.$router.afterEach(() => this.setTitle());
   }
 }
 </script>

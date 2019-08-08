@@ -104,7 +104,6 @@ export default new Vuex.Store<WebSiteState>({
       state.releases = [...releases];
     },
     updateMeta(state, meta: Meta[]) {
-      console.log(meta);
       state.meta = [...meta];
     },
     updatePhotos(state, photos: Photo[]) {

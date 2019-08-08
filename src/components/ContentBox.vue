@@ -18,10 +18,10 @@
                     </span>
                 </h2>
 
-                <a class="image" v-if="item.entry.imageUrl" :href="item.entry.imageUrl" target="_blank">
+                <div v-if="item.entry.embed" v-html="item.entry.embed"></div>
+                <a class="image" v-else-if="item.entry.imageUrl" :href="item.entry.imageUrl" target="_blank">
                     <img :src="item.entry.imageUrl"/>
                 </a>
-                <div v-if="item.entry.embed" v-html="item.entry.embed"></div>
 
                 <div class="buttons links" v-if="item.entry.spotify || item.entry.bandcamp">
                     <a class="btn spotify" v-if="item.entry.spotify" :href="item.entry.spotify" target="_blank">
@@ -34,7 +34,7 @@
                     </a>
                 </div>
 
-                <div v-if="item.hasTracks && item.entry.description" class="flex-split seventy-thirty">
+                <div v-if="item.hasTracks && item.entry.description" class="flex-split sixty-forty">
                     <p v-html="item.entry.description"/>
                     <div class="tracks">
                         <h3>
@@ -61,19 +61,17 @@
 
                 <ContentBox v-if="item.hasTestimonials" :content="item.entry.testimonials" :columns="item.entry.testimonials.length % 2 === 0 ? 2 : 3"/>
 
-                <div class="boxes boxes-2" v-if="item.hasTracks || item.hasVideos">
-                    <div class="box videos" v-if="item.hasVideos">
-                        <h3>
-                            <i class="fa fa-youtube"></i>
-                            Videos
-                        </h3>
-                        <ul>
-                            <li v-for="video in item.entry.videos" :key="video.id">
-                                <router-link :to="{name: 'home', params: { slug: 'videos' }, hash: `#${video.id}`}">
-                                    {{video.title}}
-                                </router-link>
-                            </li>
-                        </ul>
+                <div class="videos" v-if="item.hasVideos">
+                    <h3>
+                        <i class="fa fa-youtube"></i>
+                        Videos
+                    </h3>
+                    <div class="video-list">
+                        <router-link v-for="video in item.entry.videos" :key="video.id" class="youtube" :to="{name: 'home', params: { slug: 'videos' }, hash: `#${video.id}`}">
+                            <img :src="video.imageUrl"/>
+                            <span>{{video.title}}</span>
+                            <i class="fa fa-youtube-play fa-2x"></i>
+                        </router-link>
                     </div>
                 </div>
             </div>

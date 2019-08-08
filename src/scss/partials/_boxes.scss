@@ -71,8 +71,24 @@
                 }
             }
 
-            > :last-child {
+            > :last-child:not(.flex-split) {
                 @include padding-bottom(5);
+                @include mobile-only {
+                    &.source {
+                        @include padding-bottom(2);
+                    }
+                }
+            }
+            .flex-split {
+                align-items: stretch;
+                div, p {
+                    @include padding-bottom(5);
+                    @include padding-top(3);
+                    @include margin-bottom(0);
+                    &:last-child {
+                        background-color: rgba(color(black), .5);
+                    }
+                }
             }
         }
 
@@ -133,8 +149,11 @@
             .links-title {
                 @include margin-left(3);
             }
-            a {
+            &:not(.buttons) a {
                 @include margin(0);
+                @include mobile-only {
+                    @include margin-left(3);
+                }
             }
         }
 
@@ -166,17 +185,61 @@
 
             ol,
             ul {
-                @include margin(1, 0, 0, 5);
                 @include padding(0);
+                @include margin(1, 0, 0, 2);
 
                 li {
-                    @include margin-bottom(.5);
-                    @include font($size: map-get($text-size, small), $weight: 400);
+                    @include margin-bottom(1);
+                    @include font($size: map-get($text-size, medium), $weight: 400);
+                    list-style-position: inside;
                 }
             }
-            ul li {
-                @include margin-right(2);
-                display: inline-block;
+            .video-list {
+                @include flex($direction: row, $justify: flex-start, $align: center, $wrap: wrap);
+                @include margin-x(2);
+                @include margin-top(2);
+
+                a {
+                    @include flex($inline: true, $direction: column, $justify: center, $align: center);
+                    @include padding(2);
+                    @include margin-bottom(2);
+                    position: relative;
+                    width: 24%;
+                    background-color: rgba(color(black), .5);
+                    margin-right: 2%;
+
+                    @include mobile-only {
+                        width: 48%;
+                        margin-right: 0;
+                        &:nth-child(odd) {
+                            margin-right: 2%;
+                        }
+                    }
+
+                    img {
+                        @include margin(0, 0, 1);
+                        display: block;
+                        max-width: 100%;
+                    }
+                    .fa {
+                        @include margin-top(-2);
+                        transition: opacity .2s;
+                        transform: translate(-50%, -50%);
+                        position: absolute;
+                        display: block;
+                        top: 50%;
+                        left: 50%;
+                        opacity: 0;
+                    }
+                    &:hover {
+                        transform: translateY(-1px);
+                        background-color: rgba(color(black), .7);
+                        color: color(white);
+                        .fa {
+                            opacity: 1;
+                        }
+                    }
+                }
             }
         }
 
@@ -206,6 +269,17 @@
 
             &+.boxes {
                 background: transparent;
+            }
+            &.buttons {
+                @include padding-bottom(2);
+                @include padding-top(3);
+                @include margin-bottom(0);
+                justify-content: center;
+            }
+        }
+        @include mobile-only {
+            .boxes {
+                @include padding-bottom(0);
             }
         }
 
@@ -249,13 +323,6 @@
                     }
                 }
             }
-        }
-
-        .buttons {
-            @include padding-y(2);
-            @include margin-bottom(3);
-
-            text-align: center;
         }
 
         p {

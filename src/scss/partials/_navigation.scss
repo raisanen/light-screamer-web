@@ -6,80 +6,96 @@
         height: 80px;
     }
 
-    .menu-button {
+    .mobile-nav {
         display: none;
 
         @include mobile-only() {
             @include position-fixed($top: 0, $left: 0, $z-index: 99);
             @include font($font-body, $weight: 500, $size: map-get($text-size, medium), $transform: uppercase);
-            @include flex($justify: flex-start, $align: center);
+            @include flex($justify: space-between, $align: center);
             @include padding-left(2);
-
-            &, .icon-container {
-                transition: all .5s ease-in-out;                
-            }
-
-            border: 0;
             background-color: rgba(color(black), .85);
             color: color(white);
-
 
             height: 80px;
             width: 100%;
 
-            &:focus {
-                outline: none;
+            &, a.logo, .heading, .menu-button {
+                transition: all .4s ease-in-out;
             }
-            .icon-container {
-                @include margin-right(3);
+
+            a.logo, a.logo > img {
                 display: block;
-                height: 60px;
-                width: 60px;
+                height: 66px;
+                width: 66px;
+            }    
+            .heading {
+                flex-grow: 1;
+                text-align: center;
+                text-shadow: none;
+            }
+            
+            .menu-button {
                 position: relative;
+                width: 70px;
+                height: 80px;
+                background-color: transparent;
+                border: 0;
+                
+                &:focus {
+                    outline: none;
+                }
+                .icon {
+                    @include position-absolute($top: 50%, $left: 50%);
+                    transform: translate(-50%, -50%);
+                    display: block;
+    
+                    &, &:before, &:after {
+                        @include position-absolute();
+                        transition: all .25s;
+                        width: 40px;
+                        height: 5px;
+                        background-color: color(white);
+                    }
+
+                    &:before,
+                    &:after {
+                        content: '';
+                        left: 0;
+                    }
+    
+                    &:before { top: -12px; }
+                    &:after { bottom: -12px; }
+                }    
             }
-            .icon {
-                display: block;
 
-                &,
-                &:before,
-                &:after {
-                    @include position-absolute();
-                    transition: all .25s;
-                    width: 40px;
-                    height: 5px;
-                    background-color: color(white);
-                }
-                left: 10px;
-                top: 26px;
+            &.detached:not(.active) {
+                height: 60px;
 
-                &:before,
-                &:after {
-                    content: '';
-                    left: 0;
-                }
-
-                &:before {
-                    top: -12px;
-                }
-
-                &:after {
-                    bottom: -12px;
-                }
-            }
-            &.detached {
                 background-color: transparent;
                 color: transparent;
-                .icon-container {
+
+                .logo, .heading { opacity: 0; }
+
+                .menu-button {
                     background-color: rgba(color(black), .85);
+                    height: 60px;
                 }
             }
 
             &.active {
+                background-color: color(white);
+                color: color(black);
+
+                .logo > img {
+                    filter: invert(1);
+                }
+
                 .icon {
                     background-color: transparent;
-
                     &:before,
                     &:after {
+                        background-color: color(black);
                         top: 0;
                         bottom: 0;
                     }

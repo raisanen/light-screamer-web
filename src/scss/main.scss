@@ -131,7 +131,15 @@ h2 {
 
 .flex-split {
     @include flex($direction: row, $justify: space-between, $align: flex-start);
-
+    @include desktop-only {
+        & > {
+            div, p {
+                &:last-child {
+                    @include padding-left(2);
+                }
+            }
+        }
+    }
     &.fifty-fifty> {
 
         div,
@@ -145,11 +153,11 @@ h2 {
         div,
         p {
             &:first-child {
-                width: 60%;
+                width: 66%;
             }
 
             &:last-child {
-                width: 39%;
+                width: 32%;
             }
         }
     }
@@ -159,11 +167,11 @@ h2 {
         div,
         p {
             &:first-child {
-                width: 69%;
+                width: 70%;
             }
 
             &:last-child {
-                width: 30%;
+                width: 29%;
             }
         }
     }

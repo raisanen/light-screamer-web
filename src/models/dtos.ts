@@ -39,7 +39,7 @@ export interface Release extends AirtableImageEntry, AirtableTextEntry, Airtable
     videos: Video[];
     tracks: string[];
 }
-export interface Video extends AirtableDateEntry, AirtableUrlEntry, AirtableTextEntry {
+export interface Video extends AirtableDateEntry, AirtableImageEntry, AirtableUrlEntry, AirtableTextEntry {
     embed: string;
     releaseIds: string[];
     releases: Release[];
@@ -233,10 +233,14 @@ export class TestimonialContainer extends AirtableDtoContainer<Testimonial> {
 export class VideoContainer extends AirtableDtoContainer<Video> {
     protected parseData(record: AirtableRecord) {
         const baseObj = RecordParser.parse(record, 'Text', 'Date', '*url', '*embed', '*releaseIds'); 
-
+/// https://www.youtube.com/watch?v=ExRQll_MfCA
         return (<Video>{
             ...baseObj,
-            title: (baseObj.title || '').replace(/^Light Screamer\s+\-\s+/, '').replace(/\s*\(official[^)]+\)/i, '')
+            title: (baseObj.title || '').replace(/^Light Screamer\s+\-\s+/, '').replace(/\s*\(official[^)]+\)/i, ''),
+            imageUrl: (baseObj.url || '').replace(
+                /https?\:\/\/www\.youtube\.com\/watch\?v\=(.+)/,
+                'https://img.youtube.com/vi/$1/0.jpg'
+            )
         });
     }
 }
