@@ -32,32 +32,37 @@ export default class AirtableService {
 
     protected get now(): moment.Moment { return moment.utc(); }
 
+    protected tableUrl(tableName: string, overwrite: boolean = false): string {
+        const separator = process.env.NODE_ENV === 'production' ? '&' : '?';
+        return `${tableName}` + (overwrite ? `${separator}overwrite=true` : '');
+    }
+
     protected cacheValid(tableName: string): boolean {
         return this.cache[tableName] && this.cache[tableName].length > 0 &&
             this.lastUpdate[tableName].add(6, 'hours').isAfter(this.now);
     }
 
-    protected async fetch(tableName: string): Promise<AirtableResponse> {
-        const result = await this.axios.get<AirtableResponse>(tableName);
+    protected async fetch(tableName: string, overwrite: boolean = false): Promise<AirtableResponse> {
+        const result = await this.axios.get<AirtableResponse>(this.tableUrl(tableName, overwrite));
         return result.data;
     }
 
-    public async get(tableName: string): Promise<AirtableRecord[]> {
-        if (!this.cacheValid(tableName)) {
-            const data = await this.fetch(tableName);
+    public async get(tableName: string, overwrite: boolean = false): Promise<AirtableRecord[]> {
+        if (!this.cacheValid(tableName) || overwrite) {
+            const data = await this.fetch(tableName, overwrite);
             this.cache[tableName] = data.records;
             this.lastUpdate[tableName] = this.now;
         }
         return this.cache[tableName];
     }
 
-    public async pages(): Promise<Page[]> { return (await this.get('pages')).map((r) => new PageContainer(r).data); }
-    public async photos(): Promise<Photo[]> { return (await this.get('photos')).map((r) => new PhotoContainer(r).data); }
-    public async posts(): Promise<Post[]> { return (await this.get('posts')).map((r) => new PostContainer(r).data); }
-    public async releases(): Promise<Release[]> { return (await this.get('releases')).map((r) => new ReleaseContainer(r).data); }
-    public async testimonials(): Promise<Testimonial[]> { return (await this.get('testimonials')).map((r) => new TestimonialContainer(r).data); }
-    public async videos(): Promise<Video[]> { return (await this.get('videos')).map((r) => new VideoContainer(r).data); }
-    public async links(): Promise<Link[]> { return (await this.get('links')).map((r) => new LinkContainer(r).data); }
-    public async splashes(): Promise<Splash[]> { return (await this.get('splashes')).map((r) => new SplashContainer(r).data); }
-    public async meta(): Promise<Meta[]> { return (await this.get('meta')).map((r) => new MetaContainer(r).data); }
+    public async pages(overwrite: boolean = false): Promise<Page[]> { return (await this.get('pages', overwrite)).map((r) => new PageContainer(r).data); }
+    public async photos(overwrite: boolean = false): Promise<Photo[]> { return (await this.get('photos', overwrite)).map((r) => new PhotoContainer(r).data); }
+    public async posts(overwrite: boolean = false): Promise<Post[]> { return (await this.get('posts', overwrite)).map((r) => new PostContainer(r).data); }
+    public async releases(overwrite: boolean = false): Promise<Release[]> { return (await this.get('releases', overwrite)).map((r) => new ReleaseContainer(r).data); }
+    public async testimonials(overwrite: boolean = false): Promise<Testimonial[]> { return (await this.get('testimonials', overwrite)).map((r) => new TestimonialContainer(r).data); }
+    public async videos(overwrite: boolean = false): Promise<Video[]> { return (await this.get('videos', overwrite)).map((r) => new VideoContainer(r).data); }
+    public async links(overwrite: boolean = false): Promise<Link[]> { return (await this.get('links', overwrite)).map((r) => new LinkContainer(r).data); }
+    public async splashes(overwrite: boolean = false): Promise<Splash[]> { return (await this.get('splashes', overwrite)).map((r) => new SplashContainer(r).data); }
+    public async meta(overwrite: boolean = false): Promise<Meta[]> { return (await this.get('meta', overwrite)).map((r) => new MetaContainer(r).data); }
 }

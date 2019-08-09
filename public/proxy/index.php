@@ -25,8 +25,11 @@ class CachedFile {
     public function exists() {
         return file_exists($this->_cache_filename) && file_exists($this->_meta_filename);
     }
+    public function expired() {
+        return (filemtime($this->_cache_filename) + $this->_ttl) > time();
+    }
     public function valid() {
-        return $this->exists() && (filemtime($this->_cache_filename) + $this->_ttl) > time();        
+        return $this->exists() && !$this->expired();        
     }
 
     public function cache() {
@@ -166,7 +169,7 @@ class CachingProxy {
     }
 
     private static function get(CachedFile $file, array $options) {
-        if ($options['overwrite'] || !$file->valid()) {
+        if ($options['overwrite'] || !$file->exists()) {
             self::download_file($file);
             if ($options['transform'] !== false) {
                 self::transform($file, $options['transform'], $options['options']);

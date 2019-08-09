@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import AirtableService from '@/services/airtable.service';
-import { Page, Testimonial, Video, Release, PageType, Meta, Photo, Post, Link, Splash, AirtableTestimonialEntry } from './models/dtos';
+import { Page, Testimonial, Video, Release, PageType, Meta, Photo, Post, Link, Splash } from './models/dtos';
 
 Vue.use(Vuex);
 
@@ -31,25 +31,39 @@ export const defaultState: WebSiteState = {
   posts: [],
   links: [],
   splashes: [],
+  meta: [],
   loading: false,
-  meta: []
 }
 const idsToObjs = (entry: any, objName: string, state: any) => {
   const idKey = `${objName}Ids`,
     stateKey = `${objName}s`,
     obj: any = {};
 
-  obj[stateKey] = (entry[idKey] || []).map((ti: string) => state[stateKey].find((t: {id: string}) => t.id === ti)); 
+  obj[stateKey] = (entry[idKey] || []).map((ti: string) => state[stateKey].find((t: { id: string }) => t.id === ti));
 
   return obj;
 };
 const makeGetter = (entryName: string) => {
   return (entry: any, state: WebSiteState) => idsToObjs(entry, entryName, state);
-}
+};
 const testimonials = makeGetter('testimonial'),
   videos = makeGetter('video'),
   releases = makeGetter('release'),
   links = makeGetter('link');
+
+const updates: any = {
+  'pages': service.pages,
+  'meta': service.meta,
+  'splashes': service.splashes,
+  'testimonials': service.testimonials,
+  'links': service.links,
+  'videos': service.videos,
+  'releases': service.releases,
+  'photos': service.photos,
+  'posts': service.posts
+};
+
+const has = (obj: any, key: string) => obj[key] && Array.isArray(obj[key]) && obj[key].length > 0;
 
 export default new Vuex.Store<WebSiteState>({
   state: defaultState,
@@ -67,11 +81,12 @@ export default new Vuex.Store<WebSiteState>({
           ...p,
           ...testimonials(p, state),
           ...links(p, state),
-          shouldShow: p.type === PageType.Text || p.type === PageType.Contact ||
-            (p.type === PageType.Videos && state.videos && state.videos.length > 0) ||
-            (p.type === PageType.Releases && state.releases && state.releases.length > 0) ||
-            (p.type === PageType.Posts && state.posts && state.posts.length > 0) ||
-            (p.type === PageType.Photos && state.photos && state.photos.length > 0),
+          shouldShow: p.type === PageType.Text || 
+            p.type === PageType.Contact ||
+            (p.type === PageType.Videos   && has(state, 'videos')) ||
+            (p.type === PageType.Releases && has(state, 'releases')) ||
+            (p.type === PageType.Posts    && has(state, 'posts')) ||
+            (p.type === PageType.Photos   && has(state, 'photos')),
           splash: (p.splashId ? state.splashes.find((s) => s.id === p.splashId) : null)
         };
       }).filter(p => p.shouldShow)
@@ -107,47 +122,41 @@ export default new Vuex.Store<WebSiteState>({
     loaded(state) {
       state.loading = false;
     },
-    updatePages(state, pages: Page[]) {
+    pages(state, pages: Page[]) {
       state.pages = [...pages];
     },
-    updateTestimonials(state, testimonials: Testimonial[]) {
+    testimonials(state, testimonials: Testimonial[]) {
       state.testimonials = [...testimonials];
     },
-    updateVideos(state, videos: Video[]) {
+    videos(state, videos: Video[]) {
       state.videos = [...videos];
     },
-    updateReleases(state, releases: Release[]) {
+    releases(state, releases: Release[]) {
       state.releases = [...releases];
     },
-    updateMeta(state, meta: Meta[]) {
+    meta(state, meta: Meta[]) {
       state.meta = [...meta];
     },
-    updatePhotos(state, photos: Photo[]) {
+    photos(state, photos: Photo[]) {
       state.photos = [...photos];
     },
-    updatePosts(state, posts: Post[]) {
+    posts(state, posts: Post[]) {
       state.posts = [...posts];
     },
-    updateLinks(state, links: Link[]) {
+    links(state, links: Link[]) {
       state.links = [...links];
     },
-    updateSplashes(state, splashes: Splash[]) {
+    splashes(state, splashes: Splash[]) {
       state.splashes = [...splashes];
     }
   },
   actions: {
-    async loadData() {
-      this.commit('loading');
-      this.commit('updatePages', await service.pages());
-      this.commit('updateTestimonials', await service.testimonials());
-      this.commit('updateSplashes', await service.splashes());
-      this.commit('updateVideos', await service.videos());
-      this.commit('updateReleases', await service.releases());
-      this.commit('updatePhotos', await service.photos());
-      this.commit('updatePosts', await service.posts());
-      this.commit('updateLinks', await service.links());
-      this.commit('updateMeta', await service.meta());
-      this.commit('loaded');
+    async loadData(store, overwrite: boolean = false) {
+      !overwrite && this.commit('loading');
+      for (var k of Object.keys(updates)) {
+        this.commit(k, await updates[k].call(service, overwrite));
+      }
+      !overwrite && this.commit('loaded');
     }
   }
 })

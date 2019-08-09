@@ -1,15 +1,12 @@
 .box {
+    $bgcolor: color(black);
     @include padding(2, 2, 3);
     @include margin-bottom(2);
 
-    background: rgba(color(black), .5);
-    background: -moz-linear-gradient(left, rgba(color(black), .5) 0%, rgba(color(black), 0.77) 50%, rgba(color(black), .5) 100%);
-    background: -webkit-gradient(left top, right top, color-stop(0%, rgba(color(black), .5)), color-stop(50%, rgba(color(black), 0.77)), color-stop(100%, rgba(color(black), .5)));
-    background: -webkit-linear-gradient(left, rgba(color(black), .5) 0%, rgba(color(black), 0.77) 50%, rgba(color(black), .5) 100%);
-    background: -o-linear-gradient(left, rgba(color(black), .5) 0%, rgba(color(black), 0.77) 50%, rgba(color(black), .5) 100%);
-    background: -ms-linear-gradient(left, rgba(color(black), .5) 0%, rgba(color(black), 0.77) 50%, rgba(color(black), .5) 100%);
-    background: linear-gradient(to right, rgba(color(black), .5) 0%, rgba(color(black), 0.77) 50%, rgba(color(black), .5) 100%);
-
+    &:not(.transparent) {
+        background: $bgcolor;
+        background: linear-gradient(90deg, rgba($bgcolor,0.44) 0%, rgba($bgcolor,0.77) 50%, rgba($bgcolor,0.44) 100%);
+    }
     font-weight: 400;
 
     .box {
@@ -72,7 +69,7 @@
             }
 
             > :last-child:not(.flex-split) {
-                @include padding-bottom(5);
+                @include padding-bottom(3);
                 @include mobile-only {
                     &.source {
                         @include padding-bottom(2);
@@ -144,8 +141,8 @@
                 @include margin-bottom(0);
             }
         }
-        .embed + .description {
-            @include margin-top(2);
+        .embed {
+            @include margin-bottom(2);
         }
 
         .links {
@@ -154,8 +151,11 @@
             .links-title {
                 @include margin-left(3);
             }
-            &.releases .links-title {
-                @include margin-bottom(0);
+            &.releases {
+                @include margin-top(2);
+                .links-title {
+                    @include margin-bottom(0);
+                }
             }
             &:not(.buttons) a {
                 @include margin(0);

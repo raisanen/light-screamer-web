@@ -1,14 +1,17 @@
 <template>
-    <div class="links" v-if="links && links.length > 0">
+    <div :class="containerClass">
         <h3 class="links-title" v-if="title">
+            <i v-if="icon" :class="iconClass"></i>
             {{title}}
         </h3>
-        <a :class="link.type" v-for="link in links" :key="link.id" :href="link.url">
-            <i :class="`fa fa-${link.type}`"></i>
-            <span v-if="showLabels">
-                {{link.title}}
-            </span>
-        </a>
+        <slot>
+            <a :class="link.type" v-for="link in defaultLinks" :key="link.id" :href="link.url">
+                <i :class="`fa fa-${link.type}`"></i>
+                <span v-if="showLabels">
+                    {{link.title}}
+                </span>
+            </a>
+        </slot>
     </div>
 </template>
 <script lang="ts">
@@ -19,8 +22,23 @@ import { Link } from '../models/dtos';
 
 @Component
 export default class Links extends Vue {
-    @Prop() links!: Link[];
-    @Prop() showLabels?: boolean;
-    @Prop() title?: string;
+    @Prop() protected links?: Link[];
+    @Prop() protected showLabels?: boolean;
+
+    @Prop() protected title?: string;
+    @Prop() protected icon?: string;
+    @Prop() protected className?: string;
+
+    protected get defaultLinks(): Link[] {
+        return this.links || [];
+    }
+
+    protected get containerClass(): string {
+        return `links ${this.className || ''}`;
+    }
+
+    protected get iconClass(): string {
+        return this.icon ? `fa fa-${this.icon}` : '';
+    }
 }
 </script>

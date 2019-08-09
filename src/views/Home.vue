@@ -11,30 +11,18 @@
             {{currentPage.splash.label}}
           </a>
         </div>
-        <h1 v-if="currentPage.splash && currentPage.title">
-          {{currentPage.title}}
-        </h1>
-        <div class="box" v-else>
-          <h1 :class="{hidden: !!currentPage.splash}">{{currentPage.title}}</h1>
-          <p v-if="currentPage.description" v-html="currentPage.description"></p>
-          <Links :title="currentPage.linksTitle" :links="currentPage.links" :showLabels="true"/>
-        </div>
 
-        <ContentBox v-if="content.length > 0" :content="content" />
+        <Box :class="{transparent: !(currentPage.description || (currentPage.links && currentPage.links.length > 0))}" :title="currentPage.title" :isTopLevel="true" :description="currentPage.description">
+          <template v-slot:post-description v-if="currentPage.links && currentPage.links.length > 0">
+            <Links :title="currentPage.linksTitle" :links="currentPage.links" :showLabels="true"/>
+          </template>
+        </Box>
+
+        <ContentBoxes v-if="content.length > 0" :content="content" />
 
         <Testimonials v-if="currentPage.testimonials" :testimonials="currentPage.testimonials" :columns="3"/>
-
-        <div class="box" v-if="currentPage.splash && (currentPage.description || currentPage.links)">
-          <p v-if="currentPage.description" v-html="currentPage.description"></p>
-          <Links :title="currentPage.linksTitle" :links="currentPage.links" :showLabels="true"/>
-        </div>
     </main>
-    <footer>
-      <div class="box">
-        <p>{{meta ? meta.description : ''}}</p>
-        <Links :links="links"/>
-      </div>
-    </footer>
+    <Footer/>
   </div>
 </template>
 
@@ -42,19 +30,27 @@
 import { Component, Vue } from 'vue-property-decorator';
 import { Getter, Mutation, State } from 'vuex-class';
 
+import moment from 'moment';
+
 import { Page, Release, Video, Meta, Post, Photo, PageType, Link } from '@/models/dtos';
 
 import Navigation from '@/components/Navigation.vue';
-import ContentBox, { ValidContent } from '@/components/ContentBox.vue';
+import ContentBoxes, { ValidContent } from '@/components/ContentBoxes.vue';
 import Links from '@/components/Links.vue';
 import Testimonials from '@/components/Testimonials.vue';
+import Footer from '@/components/Footer.vue';
+import Box from '@/components/Box.vue';
+
+const UPDATE_TIMEOUT = 5;
 
 @Component({
   components: {
-    ContentBox,
+    Box,
+    ContentBoxes,
     Links,
     Navigation,
-    Testimonials
+    Testimonials,
+    Footer
   },
 })
 export default class Home extends Vue {
@@ -65,7 +61,8 @@ export default class Home extends Vue {
   @Getter protected meta!: Meta;
   @Getter protected posts!: Post[];
   @Getter protected photos!: Photo[];
-  @Getter protected links!: Link[];
+
+  private lastUpdate: moment.Moment = moment.utc();
 
   protected get currentPageId(): string {
     return this.$route.params.slug || 'home';
@@ -75,12 +72,16 @@ export default class Home extends Vue {
     return this.pages ? this.pages.find(p => p.slug === this.currentPageId) : null;
   }
 
+  protected get currentPageType(): PageType {
+    return this.currentPage ? this.currentPage.type : PageType.Unknown;
+  }
+
   protected get backgroundImage(): string {
     return this.currentPage ? `background-image: url(${this.currentPage.imageUrl});` : '';
   }
 
   protected get content(): ValidContent[] {
-      switch (this.currentPage ? this.currentPage.type : PageType.Unknown) {
+      switch (this.currentPageType) {
         case PageType.Posts: return this.posts;
         case PageType.Photos: return this.photos;
         case PageType.Releases: return this.releases;
@@ -90,12 +91,28 @@ export default class Home extends Vue {
   }
 
   private setTitle() {
-    document.title = `${this.meta.title} - ${this.currentPage.title}`;
+    const metaTitle = this.meta ? this.meta.title : 'Light Screamer',
+      pageTitle = this.currentPage ? this.currentPage.title : '';
+
+    document.title = `${metaTitle} - ${pageTitle}`;
+  }
+
+  private reloadData() {
+    this.$store.dispatch('loadData', true).then(() => this.onUpdate());
+  }
+
+  private onUpdate() {
+    this.setTitle();
+
+    if (this.lastUpdate.add(UPDATE_TIMEOUT, 'minutes').isBefore(moment.utc())) {
+      this.lastUpdate = moment.utc();
+      this.reloadData();
+    }
   }
 
   beforeMount() {
-    this.$store.dispatch('loadData').then(() => this.setTitle());
-    this.$router.afterEach(() => this.setTitle());
+    this.$store.dispatch('loadData', false).then(() => this.onUpdate());
+    this.$router.afterEach(() => this.onUpdate());
   }
 }
 </script>

@@ -49,6 +49,7 @@ export interface Link extends AirtableTextEntry, AirtableUrlEntry {
     type: string;
 }
 export interface Meta extends AirtableImageEntry, AirtableTextEntry {
+    footerText: string;
     footerLinks: Link[];
     footerLinkIds: string[];
 }
@@ -165,7 +166,7 @@ export class LinkContainer extends AirtableDtoContainer<Link> {
 export class MetaContainer extends AirtableDtoContainer<Meta> {
     protected parseData(record: AirtableRecord) {
         return (<Meta>{
-            ...RecordParser.parse(record, 'Text', 'Image', '*footer-linkIds')
+            ...RecordParser.parse(record, 'Text', 'Image', '*footer-text', '*footer-linkIds')
         });
     }
 }

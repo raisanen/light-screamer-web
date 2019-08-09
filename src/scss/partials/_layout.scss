@@ -3,6 +3,8 @@
     min-height: 100vh;
     width: 100%;
 
+    overflow-x: hidden;
+
     background-color: color(black);
     background-attachment: fixed;
     background-position: top center;
@@ -25,12 +27,10 @@ footer,
     >.box,
     > h1 {
         @include desktop-only {
-            &:first-child {
-                @include margin-top(2);
-            }    
+            @include margin-top(6);
         }
 
-        >.links {
+        >.box-content > .links {
             @include padding-top(3);
             border-top: 1px dotted color(black);
             justify-content: center;
