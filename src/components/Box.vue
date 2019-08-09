@@ -51,7 +51,7 @@ export default class Box extends Vue {
     }
 
     protected get descriptionContainerClass(): string {
-        return this.hasSidebar ? 'flex-split sixty-forty' : '';
+        return this.hasSidebar ? 'sidebar-container' : '';
     }
 }
 </script>

@@ -1,33 +1,36 @@
 #nav {
+    $mobile-image-size: $mobile-menu-height * .8;
+
     @include padding-y(2);
     width: 100%;
 
     @include mobile-only {
-        height: 80px;
+        height: $mobile-menu-height;
     }
 
     .mobile-nav {
         display: none;
 
         @include mobile-only() {
-            @include position-fixed($top: 0, $left: 0, $z-index: 99);
+            @include position-fixed($top: 0, $left: 0, $z-index: top);
             @include font($font-body, $weight: 500, $size: map-get($text-size, medium), $transform: uppercase);
             @include flex($justify: space-between, $align: center);
             @include padding-left(2);
-            background-color: rgba(color(black), .85);
+
+            background-color: color-black(semi-opaque);
             color: color(white);
 
-            height: 80px;
+            height: $mobile-menu-height;
             width: 100%;
 
             &, a.logo, .heading, .menu-button {
-                transition: all .4s ease-in-out;
+                @include transition($speed: slow);
             }
 
             a.logo, a.logo > img {
                 display: block;
-                height: 66px;
-                width: 66px;
+                height: $mobile-image-size;
+                width: $mobile-image-size;
             }    
             .heading {
                 flex-grow: 1;
@@ -37,8 +40,8 @@
             
             .menu-button {
                 position: relative;
-                width: 70px;
-                height: 80px;
+                width: $mobile-menu-height;
+                height: $mobile-menu-height;
                 background-color: transparent;
                 border: 0;
                 
@@ -46,15 +49,15 @@
                     outline: none;
                 }
                 .icon {
-                    @include position-absolute($top: 50%, $left: 50%);
-                    transform: translate(-50%, -50%);
+                    @include position-absolute-centered();
                     display: block;
     
                     &, &:before, &:after {
                         @include position-absolute();
-                        transition: all .25s;
-                        width: 40px;
-                        height: 5px;
+                        @include transition($speed: fast);
+
+                        width: $mobile-menu-height / 2;
+                        height: $border-width-max;
                         background-color: color(white);
                     }
 
@@ -63,14 +66,14 @@
                         content: '';
                         left: 0;
                     }
-    
-                    &:before { top: -12px; }
-                    &:after { bottom: -12px; }
+                    $line-offset: ($border-width-max * 2 + ($border-width-max / 2));
+                    &:before { top: -$line-offset; }
+                    &:after { bottom: -$line-offset; }
                 }    
             }
 
             &.detached:not(.active) {
-                height: 60px;
+                height: $mobile-menu-detached-height;
 
                 background-color: transparent;
                 color: transparent;
@@ -78,8 +81,12 @@
                 .logo, .heading { opacity: 0; }
 
                 .menu-button {
-                    background-color: rgba(color(black), .85);
-                    height: 60px;
+                    height: $mobile-menu-detached-height;
+                    .icon {
+                        &, &:before, &:after {
+                            box-shadow: $border-width-medium $border-width-medium color-black(semi-opaque);
+                        }
+                    }
                 }
             }
 
@@ -128,11 +135,11 @@
             width: auto;
 
             &+li {
-                margin-left: 32px;
+                @include margin-left(3);
             }
 
             a {
-                @include font($size: map-get($text-size, large), $weight: 700, $transform: uppercase, $decoration: none);
+                @include font($size: text-size(large), $weight: 700, $transform: uppercase, $decoration: none);
                 @include padding(1, 0);
 
                 color: color(white);
@@ -141,43 +148,45 @@
 
                 &:after {
                     @include position-absolute($bottom: 0, $left: 50%);
+                    @include transition($speed: fast);
 
                     content: '';
 
-                    height: 1px;
+                    height: $border-width-min;
                     width: 0%;
 
                     background-color: color(white);
 
                     transform: translateX(-50%);
-                    transition: all .25s;
                 }
 
                 &:not(.home) {
-                    text-shadow: 2px 2px color(black);
+                    @include margin-y(1, 2);
+                    @include text-shadow-default();
 
                     &:hover:after {
                         width: 100%;
-                        height: 2px;
+                        height: $border-width-medium;
                     }
 
                     &.router-link-active:after {
                         width: 105%;
-                        height: 5px;
-                        box-shadow: 2px 2px color(black);
+                        height: $border-width-max;
+                        box-shadow: $border-width-medium $border-width-medium color-black(semi-opaque);
                     }
                 }
 
                 img {
-                    max-height: 100px;
-                    max-width: 100px;
+                    max-height: $mobile-menu-height;
+                    max-width: $mobile-menu-height;
                 }
             }
         }
 
         @include mobile-only() {
-            @include position-fixed($top: 0, $left: 0, $z-index: 2);
+            @include position-fixed($top: 0, $left: 0, $z-index: middle);
             @include padding(0);
+            @include transition($speed: medium);
 
             flex-direction: column;
             justify-content: flex-start;
@@ -185,10 +194,8 @@
             height: 0;
             overflow: hidden;
 
-            background-color: color(black);
+            background-color: color-black(opaque);
             opacity: 0;
-
-            transition: all .3s;
 
             &.show {
                 @include padding(4, 0);
@@ -207,7 +214,7 @@
                 }
 
                 &+li {
-                    margin-left: 0;
+                    @include margin-left(0);
                 }
 
                 a {
@@ -229,24 +236,30 @@
     }
     
     @include desktop-only {
-        @include position-fixed($top: 0, $left: 0, $right: 0, $z-index: 100);
-        transition: all .4s ease-in-out;
-        height: 160px;
+        @include position-fixed($top: 0, $left: 0, $right: 0, $z-index: middle);
+
+        height: $desktop-menu-height;
         overflow: hidden;
 
-        ul > li > a img {
-            transition: all .4s ease-in-out;
-        }    
+        &, ul > li > a img {
+            @include margin-right(1);
+            @include transition($speed: medium);
+        }
+
         &.detached {
+            $detached-image-size: $desktop-menu-detached-height * .75;
             @include padding(1);
             background-color: color(black);
-            height: 80px;
+            height: $desktop-menu-detached-height;
+
             ul > li > a {
+                &:not(.home) {
+                    @include margin-y(1);
+                }
                 img {
-                    max-height: 50px;
-                    max-width: 50px;
-                    margin-right: 20px;
-                    margin-left: 20px;
+                    @include margin-x(2);
+                    max-height: $detached-image-size;
+                    max-width: $detached-image-size;
                 }
             }
         }

@@ -85,7 +85,7 @@ export interface Page extends AirtableEntry, AirtableTextEntry, AirtableImageEnt
     splash?: Splash;
 }
 export interface Post extends AirtableTextEntry, AirtablePostEntry { }
-export interface Photo extends AirtableTextEntry, AirtablePostEntry, AirtablePostEntry { }
+export interface Photo extends Post, AirtableImageEntry { }
 
 //#region Container classes
 export abstract class AirtableDtoContainer<T> {
@@ -104,7 +104,7 @@ class RecordParser {
             const d = moment.utc(fields.date);
             return <AirtableDateEntry>{ date:  d, dateString: d.format('YYYY-MM-DD')};
         },
-        Image: (fields: any) => (<AirtableImageEntry>{ imageUrl: fields.image ? fields.image[0].url : ''}),
+        Image: (fields: any) => (<AirtableImageEntry>{ imageUrl: fields.image ? (Array.isArray(fields.image) ? fields.image[0].url : fields.image) : ''}),
         Post: (fields: any) => (<AirtablePostEntry>{postLink: fields['post-link']}),    
         Testimonial: (fields: any) => (<AirtableTestimonialEntry>{testimonialIds: fields.testimonials}),
         Text: (fields: any) => (<AirtableTextEntry>{

@@ -1,3 +1,5 @@
+$box-image-max-height: size(40);
+
 .box {
     $bgcolor: color(black);
     @include padding(2, 2, 3);
@@ -5,7 +7,7 @@
 
     &:not(.transparent) {
         background: $bgcolor;
-        background: linear-gradient(90deg, rgba($bgcolor,0.44) 0%, rgba($bgcolor,0.77) 50%, rgba($bgcolor,0.44) 100%);
+        background: linear-gradient(90deg, color-black(transparent) 0%, color-black(semi-opaque) 50%, color-black(transparent) 100%);
     }
     font-weight: 400;
 
@@ -22,7 +24,7 @@
 
     p,
     blockquote {
-        @include font($weight: 400, $size: map-get($text-size, medium), $height: 1.5);
+        @include font($weight: 400, $size: text-size(medium), $height: 1.5);
     }
 
     p {
@@ -68,7 +70,7 @@
                 }
             }
 
-            > :last-child:not(.flex-split) {
+            &:not(.testimonial) > :last-child:not(.flex-split) {
                 @include padding-bottom(3);
                 @include mobile-only {
                     &.source {
@@ -83,7 +85,7 @@
                     @include padding-top(3);
                     @include margin-bottom(0);
                     &:last-child {
-                        background-color: rgba(color(black), .5);
+                        background-color: color-black(transparent);
                     }
                 }
             }
@@ -93,9 +95,11 @@
         .image {
             @include margin(0);
             width: 100%;
-        }
-        iframe {
-            height: 400px;
+            height: $box-image-max-height;
+            
+            @include mobile-only() {
+                max-height: $box-image-max-height / 2;
+            }
         }
 
         .image {
@@ -103,17 +107,12 @@
             display: block;
             overflow: hidden;
 
-            height: 400px;
-
             img {
-                @include position-absolute($top: 50%, $left: 50%);
-
+                @include position-absolute-centered();
+                @include transition($element: max-width, $speed: medium);
                 max-width: 120%;
                 min-width: 100%;
                 min-height: 100%;
-
-                transform: translate(-50%, -50%);
-                transition: max-width .3s ease-in-out;
             }
 
             &:hover {
@@ -123,10 +122,8 @@
             }
 
             @include mobile-only() {
-                max-height: 250px;
-
                 img {
-                    max-height: 400px;
+                    max-height: $box-image-max-height;
                 }
             }
         }
@@ -156,6 +153,14 @@
                 .links-title {
                     @include margin-bottom(0);
                 }
+                a {
+                    & + a {
+                        @include margin-left(2);
+                    }
+                    &:hover {
+                        transform: translateY(-$border-width-min);
+                    }    
+                }
             }
             &:not(.buttons) a {
                 @include margin(0);
@@ -170,12 +175,31 @@
 
             .date {
                 @include position-absolute($top: 50%, $right: 0);
-                @include font($size: map-get($text-size, small), $weight: 400);
+                @include font($size: text-size(small), $weight: 400);
 
                 transform: translateY(-50%);
             }
         }
-
+        .sidebar-container {
+            @include desktop-only {
+                @include flex($direction: row, $justify: space-between);
+                & >  {
+                    p, div {
+                        @include padding-top(2);
+                        &:first-child {
+                            width: 64%;
+                        }
+                        &:last-child {
+                            font-size: text-size(small);
+                            width: 32%;
+                        }
+                    }
+                }    
+            }
+        }
+        .description, .tracks {
+            @include padding-y(2);
+        }
         .tracks,
         .videos {
             h3 {
@@ -187,8 +211,8 @@
                 }
             }
             &.tracks {
-                @include padding-bottom(4);
                 @include padding-right(2);
+                background-color: color-black(transparent);
             }
 
             ol,
@@ -198,12 +222,12 @@
 
                 li {
                     @include margin-bottom(1);
-                    @include font($size: map-get($text-size, medium), $weight: 400);
+                    @include font($size: text-size(small), $weight: 400);
                     list-style-position: inside;
                 }
             }
             .video-list {
-                @include flex($direction: row, $justify: flex-start, $align: center, $wrap: wrap);
+                @include flex($direction: row, $justify: flex-start, $align: stretch, $wrap: wrap);
                 @include margin-x(2);
                 @include margin-top(2);
 
@@ -212,8 +236,8 @@
                     @include padding(2);
                     @include margin-bottom(2);
                     position: relative;
-                    width: 24%;
-                    background-color: rgba(color(black), .5);
+                    width: 23%;
+                    background-color: color-black(transparent);
                     margin-right: 2%;
 
                     @include mobile-only {
@@ -231,17 +255,14 @@
                     }
                     .fa {
                         @include margin-top(-2);
-                        transition: opacity .2s;
-                        transform: translate(-50%, -50%);
-                        position: absolute;
+                        @include transition($speed: fast);
+                        @include position-absolute-centered();
                         display: block;
-                        top: 50%;
-                        left: 50%;
                         opacity: 0;
                     }
                     &:hover {
-                        transform: translateY(-1px);
-                        background-color: rgba(color(black), .7);
+                        transform: translateY(-$border-width-min);
+                        background-color: color-black(semi-opaque);
                         color: color(white);
                         .fa {
                             opacity: 1;
@@ -273,7 +294,7 @@
             @include padding(1, 2, 3);
 
             width: 100%;
-            background: rgba(color(black), .2);
+            background: color-black(very-transparent);
 
             &+.boxes {
                 background: transparent;
@@ -292,29 +313,30 @@
         }
 
         p {
-            font-size: map-get($text-size, small);
+            font-size: text-size(small);
         }
 
         .testimonial {
             @include padding-left(8);
+            @include padding-bottom(2);
 
             position: relative;
 
             &:before {
-                @include position-absolute($top: -5px, $left: 10px);
-                @include font($size: map-get($text-size, xx-large), $align: left, $height: 1);
+                @include position-absolute($top: size(-.5), $left: size(2));
+                @include font($size: text-size(xx-large), $align: left, $height: 1);
 
                 content: '\00bb';
 
                 display: block;
-                width: 15px;
-                height: 40px;
+                width: size(1.5);
+                height: size(4);
             }
 
             blockquote {
                 @include margin(0);
                 @include padding(0);
-                @include font($size: map-get($text-size, medium), $weight: 400, $style: italic);
+                @include font($size: text-size(medium), $weight: 400, $style: italic);
 
                 display: block;
 
@@ -324,7 +346,7 @@
 
                     display: block;
 
-                    font-size: map-get($text-size, small);
+                    font-size: text-size(small);
 
                     &:before {
                         content: '\2014';
@@ -334,8 +356,12 @@
         }
 
         p {
-            @include font($size: map-get($text-size, medium), $height: 1.5);
+            @include font($size: text-size(medium), $height: 1.5);
         }
+    }
+
+    &.photos > .box {
+        padding-top: 0;
     }
 
     &.boxes-1>.box {

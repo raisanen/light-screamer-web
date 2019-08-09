@@ -1,5 +1,5 @@
 <template>
-  <div class="main" :style="backgroundImage" v-if="!loading">
+  <div class="main" v-if="!loading">
     <Navigation/>
     <main class="content" v-if="currentPage">
         <div class="splash" v-if="currentPage.splash">
@@ -18,11 +18,12 @@
           </template>
         </Box>
 
-        <ContentBoxes v-if="content.length > 0" :content="content" />
+        <ContentBoxes :class="(currentPageType === pageType.Photos ? 'photos' : '')" v-if="content.length > 0" :content="content" />
 
         <Testimonials v-if="currentPage.testimonials" :testimonials="currentPage.testimonials" :columns="3"/>
     </main>
     <Footer/>
+    <div v-html="uglyBodyStyleHack"></div>
   </div>
 </template>
 
@@ -64,6 +65,8 @@ export default class Home extends Vue {
 
   private lastUpdate: moment.Moment;
 
+  protected pageType = PageType;
+
   protected get currentPageId(): string {
     return this.$route.params.slug || 'home';
   };
@@ -90,6 +93,16 @@ export default class Home extends Vue {
       }
   }
 
+  protected get uglyBodyStyleHack(): string {
+    return this.currentPage ? `<style>body { background-image: url(${this.currentPage.imageUrl}), linear-gradient(#282828, #fff, #fff, #121212); background-blend-mode: multiply, normal; }</style>` : '';
+  }
+
+  private setBackground() {
+    const body = document.querySelector('body');
+    body.style.backgroundImage = this.backgroundImage;
+    console.log(body.style.backgroundImage);
+  }
+
   private setTitle() {
     const metaTitle = this.meta ? this.meta.title : 'Light Screamer',
       pageTitle = this.currentPage ? this.currentPage.title : '';
@@ -103,8 +116,9 @@ export default class Home extends Vue {
 
   private onUpdate() {
     this.setTitle();
+    this.setBackground();
 
-    if (this.lastUpdate.isBefore(moment.utc().add(-UPDATE_TIMEOUT, 'minutes'))) {
+    if (this.lastUpdate.isBefore(moment.utc().add(-5, 'minutes'))) {
       this.lastUpdate = moment.utc();
       this.reloadData();
     }

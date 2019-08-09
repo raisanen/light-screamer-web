@@ -21,13 +21,13 @@
         @include flex($inline: true, $align: center);
         @include margin-bottom(1);
 
-        font-size: map-get($text-size, medium);
+        font-size: text-size(medium);
         text-shadow: none;
 
 
         .fa {
             @include margin-right(1);
-            font-size: map-get($text-size, x-large);
+            font-size: text-size(x-large);
         }
 
         &+a {

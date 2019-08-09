@@ -1,3 +1,35 @@
+html,
+body,
+#app {
+    @include padding(0);
+    @include margin(0);
+    @include font($font-body, $size: 20px, $weight: 400, $height: 1.2);
+    @include text-shadow-default();
+
+    background-color: transparent;
+
+    @include mobile-only() {
+        font-size: 18px;
+    }
+}
+body {
+    background: color(black);
+    background-attachment: fixed;
+    background-position: top center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+
 .main {
     @include padding-top(6);
     min-height: 100vh;
@@ -5,11 +37,7 @@
 
     overflow-x: hidden;
 
-    background-color: color(black);
-    background-attachment: fixed;
-    background-position: top center;
-    background-size: cover;
-    background-repeat: no-repeat;
+    background-color: transparent;
 
     @include desktop-only {
         @include padding-top(16);
@@ -32,11 +60,11 @@ footer,
 
         >.box-content > .links {
             @include padding-top(3);
-            border-top: 1px dotted color(black);
+            border-top: $border-width-min dotted color(black);
             justify-content: center;
 
             .links-title, a {
-                font-size: map-get($text-size, small);
+                font-size: text-size(small);
             }
         }
     }
@@ -55,12 +83,11 @@ footer,
 
     p {
         @include margin(0, auto, 4);
-        @include font($size: map-get($text-size, massive), $weight: 700, $height: 1);
+        @include font($size: text-size(massive), $weight: 700, $height: 1);
+        @include text-shadow-large();
 
         width: breakpoint(mobile);
         max-width: 100%;
-
-        text-shadow: 4px 4px color(black);
 
         i {
             display: block;
@@ -68,7 +95,7 @@ footer,
     }
 
     .btn {
-        @include font($size: map-get($text-size, large), $weight: 500);
+        @include font($size: text-size(large), $weight: 500);
         background-color: color(white);
         color: color(black);
         border: none;
@@ -76,16 +103,16 @@ footer,
         text-shadow: none;
 
         .fa {
-            font-size: 1.2em;
+            font-size: text-size(larger);
         }
 
         &:hover {
-            box-shadow: 0 4px 4px rgba(color(black), .5);
+            box-shadow: 0 0 $border-width-medium color-black(transparent);
         }
     }
     @include mobile-only() {
-        p    { font-size: map-get($text-size, xx-large); }
-        .btn { font-size: map-get($text-size, large); }
+        p    { font-size: text-size(xx-large); }
+        .btn { font-size: text-size(large); }
     }
 }
 
@@ -93,7 +120,7 @@ footer {
     @include margin-bottom(6);
     @include padding(2, 0, 4);
 
-    font-size: map-get($text-size, small);
+    font-size: text-size(small);
 
     p,
     .links {

@@ -1,14 +1,15 @@
 $breakpoints: (
-    desktop: 999px,
+    desktop: 900px,
     mobile: 700px
 );
 
 $site-colors: (
     black: #141414,
     white: #fff,
-    focus: #00affe
+    focus: #abc
 );
-$brand-colors: (web: #00affe,
+$brand-colors: (
+    web: #abc,
     spotify: #1db954,
     bandcamp: #629aa9,
     youtube: #ff0000,
@@ -20,6 +21,14 @@ $brand-colors: (web: #00affe,
 );
 $colors: map-merge($site-colors, $brand-colors);
 
+$background-opacity: (
+    opaque: 1,
+    semi-opaque: .85,
+    semi-transparent: .66, 
+    transparent: .44,
+    very-transparent: .22
+);
+
 $text-size: (
     small: .75rem,
     medium: 1rem,
@@ -27,13 +36,33 @@ $text-size: (
     x-large: 1.8rem,
     xx-large: 3rem,
     massive: 4.5rem,
-    smaller: .8em
+    smaller: .8em,
+    larger: 1.2em
 );
 
-$font-body: 'DM Sans',
-sans-serif;
-
+$font-body: 'DM Sans', sans-serif;
 $base-size: 10px;
+
+$z-levels: (
+    top: 1000,
+    middle:  800,
+    bottom:  600
+);
+
+$transition-speeds: (
+    fast: .2s,
+    medium: .4s,
+    slow: .6s
+);
+
+$desktop-menu-height: 160px;
+$mobile-menu-height: 80px;
+$desktop-menu-detached-height: $mobile-menu-height;
+$mobile-menu-detached-height: 60px;
+
+$border-width-min: 1px;
+$border-width-medium: 2px;
+$border-width-max: 5px;
 
 /// Functions
 @function size($factor, $base: $base-size) {
@@ -48,12 +77,39 @@ $base-size: 10px;
     @return size(1em);
 }
 
+@function z($level) {
+    @if map-has($z-levels, $level) {
+        @return map-get($z-levels, $level);
+    }
+    @return $level;
+}
+
+@function speed($speed) {
+    @if map-has($transition-speeds, $speed) {
+        @return map-get($transition-speeds, $speed);
+    }
+    @return map-get($transition-speeds, fast);
+}
+
 @function color($color) {
     @if map-has($colors, $color) {
         @return map-get($colors, $color);
     }
 
     @return transparent;
+}
+@function text-size($size) {
+    @if map-has($text-size, $size) {
+        @return map-get($text-size, $size);
+    }
+    @return 1em;
+}
+
+@function color-black($opacity: max) {
+    @if map-has($background-opacity, $opacity) {
+        @return rgba(color(black), map-get($background-opacity, $opacity));
+    }
+    @return rgba(color(black), map-get($background-opacity, opaque));
 }
 
 @function breakpoint($breakpoint) {
@@ -69,6 +125,10 @@ $base-size: 10px;
     @if $value !=unset {
         #{$property}: $value;
     }
+}
+
+@mixin transition($element: all, $speed: fast, $timing: ease) {
+    transition: $element speed($speed) $timing;
 }
 
 @mixin margin-top($size, $base: $base-size) {
@@ -87,14 +147,14 @@ $base-size: 10px;
     margin-left: size($size, $base);
 }
 
-@mixin margin-x($size, $base: $base-size) {
-    @include margin-left($size, $base);
-    @include margin-right($size, $base);
+@mixin margin-x($left, $right: $left, $base: $base-size) {
+    @include margin-left($left, $base);
+    @include margin-right($right, $base);
 }
 
-@mixin margin-y($size, $base: $base-size) {
-    @include margin-top($size, $base);
-    @include margin-bottom($size, $base);
+@mixin margin-y($top, $bottom: $top, $base: $base-size) {
+    @include margin-top($top, $base);
+    @include margin-bottom($bottom, $base);
 }
 
 @mixin margin($top: 0, $right: $top, $bottom: $top, $left: $right, $base: $base-size) {
@@ -117,14 +177,14 @@ $base-size: 10px;
     padding-left: size($size, $base);
 }
 
-@mixin padding-x($size, $base: $base-size) {
-    @include padding-left($size, $base);
-    @include padding-right($size, $base);
+@mixin padding-x($left, $right: $left, $base: $base-size) {
+    @include padding-left($left, $base);
+    @include padding-right($right, $base);
 }
 
-@mixin padding-y($size, $base: $base-size) {
-    @include padding-top($size, $base);
-    @include padding-bottom($size, $base);
+@mixin padding-y($top, $bottom: $top, $base: $base-size) {
+    @include padding-top($top, $base);
+    @include padding-bottom($bottom, $base);
 }
 
 @mixin padding($top: 0, $right: $top, $bottom: $top, $left: $right, $base: $base-size) {
@@ -169,7 +229,9 @@ $base-size: 10px;
     @include prop-if-set(right, $right);
     @include prop-if-set(bottom, $bottom);
     @include prop-if-set(left, $left);
-    @include prop-if-set(z-index, $z-index);
+    @if $z-index != unset {
+        z-index: z($z-index);
+    }
 }
 
 @mixin position-fixed($top: unset, $right: unset, $bottom: unset, $left: unset, $z-index: unset) {
@@ -178,6 +240,13 @@ $base-size: 10px;
 
 @mixin position-absolute($top: unset, $right: unset, $bottom: unset, $left: unset, $z-index: unset) {
     @include position(absolute, $top, $right, $bottom, $left, $z-index);
+}
+
+@mixin position-absolute-centered($width: unset, $height: unset, $z-index: unset) {
+    @include position-absolute($top: 50%, $left: 50%, $z-index: $z-index);
+    @include prop-if-set(width, $width);
+    @include prop-if-set(height, $height);
+    transform: translate(-50%, -50%);
 }
 
 @mixin flex($inline: false, $direction: unset, $align: unset, $justify: unset, $wrap: unset) {
@@ -202,4 +271,14 @@ $base-size: 10px;
     @include prop-if-set(text-align, $align);
     @include prop-if-set(text-decoration, $decoration);
     @include prop-if-set(text-transform, $transform);
+}
+
+@mixin text-shadow($size, $color) {
+    text-shadow: $size $size $color;
+}
+@mixin text-shadow-default() {
+    @include text-shadow($border-width-medium, color-black(semi-opaque));
+}
+@mixin text-shadow-large() {
+    @include text-shadow($border-width-max, color-black(semi-opaque));
 }

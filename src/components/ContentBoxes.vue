@@ -7,7 +7,7 @@
             >
             <template v-slot:image>
                 <div class="embed" v-if="item.entry.embed" v-html="item.entry.embed"></div>
-                <a class="image" v-else-if="item.entry.imageUrl" :href="item.entry.imageUrl" target="_blank">
+                <a class="image" v-else-if="item.entry.imageUrl" :href="item.entry.postLink ? item.entry.postLink : item.entry.imageUrl" target="_blank">
                     <img :src="item.entry.imageUrl"/>
                 </a>
             </template>
@@ -40,9 +40,11 @@
             </template>
 
             <template v-if="item.hasReleases" v-slot:pre-testimonials>
-                <Links :title="'Appears on the album'" className="releases">
+                <Links :title="'Appears on the release' + (item.entry.releases.length !== 1 ? 's' : '')" className="releases">
                     <router-link class="web" v-for="release in item.entry.releases" :key="release.id" :to="{ name: 'home', params: { slug: 'releases'}, hash: `#${release.id}`}">
-                        <i class="fa fa-circle-o"></i>
+                        <span class="image-icon">
+                            <img :src="release.imageUrl">
+                        </span>
                         {{release.title}}
                     </router-link>
                 </Links>

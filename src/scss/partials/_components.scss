@@ -1,0 +1,119 @@
+
+a,
+a:active {
+    @include font($weight: 500, $decoration: none);
+    @include transition($speed: fast);
+
+    color: color(white);
+
+    &:hover {
+        color: color(focus);
+    }
+}
+
+h1,
+h2,
+h3 {
+    font-weight: 700;
+
+    .fa {
+        @include margin-right(.5);
+        font-size: text-size(smaller);
+        display: inline-block;
+    }
+}
+
+h1 {
+    @include font($size: 2.5rem, $transform: uppercase);
+}
+
+h2 {
+    font-size: text-size(x-large);
+}
+
+.btn {
+    @include flex($inline: true, $align: center);
+    @include padding(.75, 1, $base: 1em);
+    @include font($size: text-size(medium), $height: 1, $decoration: none);
+    @include transition($speed: fast);
+
+    border: $border-width-min solid color(white);
+
+    &+.btn {
+        @include margin-left(2);
+    }
+
+    .fa {
+        margin-right: .333em;
+        font-size: text-size(larger);
+    }
+
+    &.solid {
+        background-color: color(white);
+        color: color(black);
+        &.inverted {
+            background-color: color(black);
+            color: color(white);
+        }
+    }
+
+    &:hover {
+        transform: translateY(-1px);
+    }
+}
+
+@each $name, $color in $colors {
+    a.#{$name},
+    .btn.#{$name} {
+
+        & .fa,
+        &:hover {
+            color: $color;
+        }
+    }
+
+    .btn.#{$name} {
+        &.solid {
+            &:not(.inverted) {
+                background-color: color(white);
+                color: $color;
+
+                .fa {
+                    color: $color;
+                }
+            }
+            &.inverted {
+                background-color: $color;
+                color: color(white);
+
+                .fa {
+                    color: color(white);
+                }
+            }    
+            &:hover {
+                $shadow-size: size(1.5);
+                box-shadow: size(1) size(1) size(2) color-black(semi-transparent);
+            }
+        }
+        &:not(.solid):hover {
+            border-color: $color;
+        }
+    }
+}
+
+.hidden {
+    display: none;
+}
+
+.image-icon {
+    @include margin-right(1);
+    display: inline-block;
+    width: 2em;
+    height: 2em;
+    border-radius: 50%;
+    overflow: hidden;
+    img {
+        max-height: 2em;
+        max-width: 2em;
+    }
+}
