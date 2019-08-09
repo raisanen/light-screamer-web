@@ -22,7 +22,7 @@ export default class AirtableService {
     constructor() {
         this.axios = axios.create({
             baseURL: process.env.NODE_ENV === 'production' 
-                ? '/proxy.php?endpoint='
+                ? '/proxy/?endpoint='
                 : `https://api.airtable.com/v0/${appId}/`
         });
         this.axios.defaults.headers.common = { Authorization: `Bearer ${apiKey}` };

@@ -19,8 +19,10 @@
           <p v-if="currentPage.description" v-html="currentPage.description"></p>
           <Links :title="currentPage.linksTitle" :links="currentPage.links" :showLabels="true"/>
         </div>
-        <ContentBox v-if="content.length > 0" :content="content"/>
-        <ContentBox v-if="currentPage.testimonials" :content="currentPage.testimonials" :columns="3"/>
+
+        <ContentBox v-if="content.length > 0" :content="content" />
+
+        <Testimonials v-if="currentPage.testimonials" :testimonials="currentPage.testimonials" :columns="3"/>
 
         <div class="box" v-if="currentPage.splash && (currentPage.description || currentPage.links)">
           <p v-if="currentPage.description" v-html="currentPage.description"></p>
@@ -29,7 +31,7 @@
     </main>
     <footer>
       <div class="box">
-        <p>{{meta ? meta.footerText : ''}}</p>
+        <p>{{meta ? meta.description : ''}}</p>
         <Links :links="links"/>
       </div>
     </footer>
@@ -45,12 +47,14 @@ import { Page, Release, Video, Meta, Post, Photo, PageType, Link } from '@/model
 import Navigation from '@/components/Navigation.vue';
 import ContentBox, { ValidContent } from '@/components/ContentBox.vue';
 import Links from '@/components/Links.vue';
+import Testimonials from '@/components/Testimonials.vue';
 
 @Component({
   components: {
     ContentBox,
     Links,
     Navigation,
+    Testimonials
   },
 })
 export default class Home extends Vue {

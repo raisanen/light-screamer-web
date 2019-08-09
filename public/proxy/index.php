@@ -1,6 +1,4 @@
 <?php
-require_once('image-resize.php');
-
 class CachedFile {
     private $_ttl;
     private $_url;
@@ -12,7 +10,10 @@ class CachedFile {
     private $_meta_contents = NULL;
 
     function __construct(string $url) {
-        $cache_dir =  __DIR__ . '/../tmp/';
+        $cache_dir =  __DIR__ . '/tmp/';
+        if (!file_exists($cache_dir)) {
+            mkdir($cache_dir, 0777);
+        }
         $filehash = hash('sha256', $url);
 
         $this->_ttl = 3600;
@@ -103,36 +104,36 @@ class CachingProxy {
         return $options;
     }
     private static function transform(CachedFile $file, string $transform, string $options) {
-        $meta = $file->meta();
-        if (strpos($meta['content_type'], 'image/') !== false) {
-            $resize = new ImageResize($file->filename());
-            $transformations = array_combine(
-                explode(',', $transform),
-                explode(',', $options)
-            );
-            foreach ($transformations as $trans => $op) {
-                $opt = self::parse_opt($trans, $op);
-                switch ($trans) {
-                    case 'fitHeight':
-                    case 'maxHeight':
-                        $resize->resizeToHeight($opt['height'], $opt['enlarge']);
-                        break;
-                    case 'fitWidth':
-                    case 'maxWidth':
-                        $resize->resizeToWidth($opt['width'], $opt['enlarge']);
-                        break;
-                    case 'fit':
-                    case 'max':
-                        $resize->resizeToBestFit($opt['width'], $opt['height'], $opt['enlarge']);
-                        break;
-                    case 'scale':
-                        $resize->scale($opt['scale']);
-                        break;
-                }
-            }
-            $newimage = $resize->getImageAsString();
-            $file->save($newimage);
-        }
+        // $meta = $file->meta();
+        // if (strpos($meta['content_type'], 'image/') !== false) {
+        //     $resize = new ImageResize($file->filename());
+        //     $transformations = array_combine(
+        //         explode(',', $transform),
+        //         explode(',', $options)
+        //     );
+        //     foreach ($transformations as $trans => $op) {
+        //         $opt = self::parse_opt($trans, $op);
+        //         switch ($trans) {
+        //             case 'fitHeight':
+        //             case 'maxHeight':
+        //                 $resize->resizeToHeight($opt['height'], $opt['enlarge']);
+        //                 break;
+        //             case 'fitWidth':
+        //             case 'maxWidth':
+        //                 $resize->resizeToWidth($opt['width'], $opt['enlarge']);
+        //                 break;
+        //             case 'fit':
+        //             case 'max':
+        //                 $resize->resizeToBestFit($opt['width'], $opt['height'], $opt['enlarge']);
+        //                 break;
+        //             case 'scale':
+        //                 $resize->scale($opt['scale']);
+        //                 break;
+        //         }
+        //     }
+        //     $newimage = $resize->getImageAsString();
+        //     $file->save($newimage);
+        // }
     }
 
     private static function download_file(CachedFile $file) {

@@ -233,7 +233,6 @@ export class TestimonialContainer extends AirtableDtoContainer<Testimonial> {
 export class VideoContainer extends AirtableDtoContainer<Video> {
     protected parseData(record: AirtableRecord) {
         const baseObj = RecordParser.parse(record, 'Text', 'Date', '*url', '*embed', '*releaseIds'); 
-/// https://www.youtube.com/watch?v=ExRQll_MfCA
         return (<Video>{
             ...baseObj,
             title: (baseObj.title || '').replace(/^Light Screamer\s+\-\s+/, '').replace(/\s*\(official[^)]+\)/i, ''),

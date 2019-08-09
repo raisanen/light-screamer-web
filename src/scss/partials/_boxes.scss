@@ -97,6 +97,9 @@
             @include margin(0);
             width: 100%;
         }
+        iframe {
+            height: 400px;
+        }
 
         .image {
             position: relative;
@@ -141,13 +144,18 @@
                 @include margin-bottom(0);
             }
         }
+        .embed + .description {
+            @include margin-top(2);
+        }
 
         .links {
-            @include margin-left(0);
-            @include margin-right(0);
+            @include margin-x(0);
 
             .links-title {
                 @include margin-left(3);
+            }
+            &.releases .links-title {
+                @include margin-bottom(0);
             }
             &:not(.buttons) a {
                 @include margin(0);

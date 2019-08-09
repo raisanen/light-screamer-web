@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import AirtableService from '@/services/airtable.service';
-import { Page, Testimonial, Video, Release, PageType, Meta, Photo, Post, Link, Splash } from './models/dtos';
+import { Page, Testimonial, Video, Release, PageType, Meta, Photo, Post, Link, Splash, AirtableTestimonialEntry } from './models/dtos';
 
 Vue.use(Vuex);
 
@@ -34,6 +34,22 @@ export const defaultState: WebSiteState = {
   loading: false,
   meta: []
 }
+const idsToObjs = (entry: any, objName: string, state: any) => {
+  const idKey = `${objName}Ids`,
+    stateKey = `${objName}s`,
+    obj: any = {};
+
+  obj[stateKey] = (entry[idKey] || []).map((ti: string) => state[stateKey].find((t: {id: string}) => t.id === ti)); 
+
+  return obj;
+};
+const makeGetter = (entryName: string) => {
+  return (entry: any, state: WebSiteState) => idsToObjs(entry, entryName, state);
+}
+const testimonials = makeGetter('testimonial'),
+  videos = makeGetter('video'),
+  releases = makeGetter('release'),
+  links = makeGetter('link');
 
 export default new Vuex.Store<WebSiteState>({
   state: defaultState,
@@ -47,34 +63,34 @@ export default new Vuex.Store<WebSiteState>({
     },
     pages: (state) => {
       return state.pages.map((p) => {
-        return { 
+        return {
           ...p,
-          shouldShow: p.type === PageType.Text || p.type === PageType.Contact || 
+          ...testimonials(p, state),
+          ...links(p, state),
+          shouldShow: p.type === PageType.Text || p.type === PageType.Contact ||
             (p.type === PageType.Videos && state.videos && state.videos.length > 0) ||
             (p.type === PageType.Releases && state.releases && state.releases.length > 0) ||
             (p.type === PageType.Posts && state.posts && state.posts.length > 0) ||
             (p.type === PageType.Photos && state.photos && state.photos.length > 0),
-          testimonials: (p.testimonialIds || []).map((ti) => state.testimonials.find((t) => t.id === ti)),
-          splash: (p.splashId ? state.splashes.find((s) => s.id === p.splashId) : null),
-          links: (p.linkIds || []).map((li) => state.links.find((l) => l.id === li))
+          splash: (p.splashId ? state.splashes.find((s) => s.id === p.splashId) : null)
         };
       }).filter(p => p.shouldShow)
-      .sort((a, b) => a.sort - b.sort);
+        .sort((a, b) => a.sort - b.sort);
     },
     videos: (state) => {
       return state.videos.map((v) => {
         return {
           ...v,
-          releases: (v.releaseIds || []).map((ri) => state.releases.find((r) => r.id === ri))
+          ...releases(v, state)
         }
       }).sort((a, b) => a.date < b.date ? 1 : -1);
     },
     releases: (state) => {
       return state.releases.map((r) => {
-        return { 
-          ...r, 
-          testimonials: (r.testimonialIds || []).map((ti) => state.testimonials.find((t) => t.id === ti)),
-          videos: (r.videoIds || []).map((vi) => state.videos.find((v) => v.id === vi))
+        return {
+          ...r,
+          ...testimonials(r, state),
+          ...videos(r, state),
         }
       }).sort((a, b) => a.date < b.date ? 1 : -1);
     },
