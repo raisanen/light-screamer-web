@@ -62,7 +62,7 @@ export default class Home extends Vue {
   @Getter protected posts!: Post[];
   @Getter protected photos!: Photo[];
 
-  private lastUpdate: moment.Moment = moment.utc();
+  private lastUpdate: moment.Moment;
 
   protected get currentPageId(): string {
     return this.$route.params.slug || 'home';
@@ -104,13 +104,14 @@ export default class Home extends Vue {
   private onUpdate() {
     this.setTitle();
 
-    if (this.lastUpdate.add(UPDATE_TIMEOUT, 'minutes').isBefore(moment.utc())) {
+    if (this.lastUpdate.isBefore(moment.utc().add(-UPDATE_TIMEOUT, 'minutes'))) {
       this.lastUpdate = moment.utc();
       this.reloadData();
     }
   }
 
   beforeMount() {
+    this.lastUpdate = moment.utc();
     this.$store.dispatch('loadData', false).then(() => this.onUpdate());
     this.$router.afterEach(() => this.onUpdate());
   }
