@@ -74,9 +74,6 @@ footer,
 
     >.box {
         text-align: center;
-        @include mobile-only {
-            @include margin-bottom(0);
-        }
     }
 
     >h1 {
@@ -120,7 +117,7 @@ footer,
 
     @include mobile-only {
         @include margin-bottom(10);
-        
+
         p {
             font-size: text-size(xx-large);
         }

@@ -54,7 +54,7 @@
     
                     &, &:before, &:after {
                         @include position-absolute();
-                        @include transition($speed: fast);
+                        @include transition($speed: medium);
 
                         width: $mobile-menu-height / 2;
                         height: $border-width-max;
