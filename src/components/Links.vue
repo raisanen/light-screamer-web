@@ -30,7 +30,7 @@ export default class Links extends Vue {
     @Prop() protected className?: string;
 
     protected get defaultLinks(): Link[] {
-        return this.links || [];
+        return (this.links || []).filter((l) => l && l.id);
     }
 
     protected get containerClass(): string {

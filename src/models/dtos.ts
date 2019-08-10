@@ -76,7 +76,7 @@ export interface Page extends AirtableEntry, AirtableTextEntry, AirtableImageEnt
     linkIds: string[];
     links: Link[];
 
-    shouldShow: boolean;
+    active: boolean;
 
     sort: number;
 
@@ -176,8 +176,8 @@ export class PageContainer extends AirtableDtoContainer<Page> {
         const { splash } = record.fields;
         return (<Page>{
             ...RecordParser.parse(record, 
-                'Text', 'Image', 'Testimonial', 
-                'slug', 'sort', 'type', 'links-title', 'linkIds'
+                'Text', 'Image', 'Testimonial',
+                'active', 'slug', 'sort', 'type', 'links-title', 'linkIds'
             ),
             splashId: splash && Array.isArray(splash) && splash.length > 0 ? splash[0] : null
         });

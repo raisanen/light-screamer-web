@@ -8,8 +8,6 @@ Vue.use(Vuex);
 const service = new AirtableService();
 
 export interface WebSiteState {
-  loading: boolean;
-
   pages: Page[];
   testimonials: Testimonial[];
   videos: Video[];
@@ -20,6 +18,9 @@ export interface WebSiteState {
   splashes: Splash[];
 
   meta: Meta[];
+
+  initializing: boolean;
+  loading: boolean;
 }
 
 export const defaultState: WebSiteState = {
@@ -31,8 +32,11 @@ export const defaultState: WebSiteState = {
   posts: [],
   links: [],
   splashes: [],
+
   meta: [],
+
   loading: false,
+  initializing: false
 }
 const idsToObjs = (entry: any, objName: string, state: any) => {
   const idKey = `${objName}Ids`,
@@ -51,7 +55,7 @@ const testimonials = makeGetter('testimonial'),
   releases = makeGetter('release'),
   links = makeGetter('link');
 
-const updates: any = {
+const allUpdates: any = {
   'pages': service.pages,
   'meta': service.meta,
   'splashes': service.splashes,
@@ -68,6 +72,7 @@ const has = (obj: any, key: string) => obj[key] && Array.isArray(obj[key]) && ob
 export default new Vuex.Store<WebSiteState>({
   state: defaultState,
   getters: {
+    initializing: (state) => state.initializing,
     meta: (state) => {
       const meta = state.meta && state.meta.length > 0 ? state.meta[0] : <Meta>{};
       return <Meta>{
@@ -76,21 +81,14 @@ export default new Vuex.Store<WebSiteState>({
       };
     },
     pages: (state) => {
-      return state.pages.map((p) => {
+      return state.pages.filter((p) => p.active).map((p) => {
         return {
           ...p,
           ...testimonials(p, state),
           ...links(p, state),
-          shouldShow: p.type === PageType.Text || 
-            p.type === PageType.Contact ||
-            (p.type === PageType.Videos   && has(state, 'videos')) ||
-            (p.type === PageType.Releases && has(state, 'releases')) ||
-            (p.type === PageType.Posts    && has(state, 'posts')) ||
-            (p.type === PageType.Photos   && has(state, 'photos')),
           splash: (p.splashId ? state.splashes.find((s) => s.id === p.splashId) : null)
         };
-      }).filter(p => p.shouldShow)
-        .sort((a, b) => a.sort - b.sort);
+      }).sort((a, b) => a.sort - b.sort);
     },
     videos: (state) => {
       return state.videos.map((v) => {
@@ -116,11 +114,11 @@ export default new Vuex.Store<WebSiteState>({
     loading: (state) => state.loading
   },
   mutations: {
-    loading(state) {
-      state.loading = true;
+    initializing(state, initializing: boolean) {
+      state.initializing = initializing;
     },
-    loaded(state) {
-      state.loading = false;
+    loading(state, loading: boolean) {
+      state.loading = loading;
     },
     pages(state, pages: Page[]) {
       state.pages = [...pages];
@@ -141,22 +139,34 @@ export default new Vuex.Store<WebSiteState>({
       state.photos = [...photos];
     },
     posts(state, posts: Post[]) {
-      state.posts = [...posts];
+      state.posts = [ ...posts ];
     },
     links(state, links: Link[]) {
-      state.links = [...links];
+      state.links = [ ...links ];
     },
     splashes(state, splashes: Splash[]) {
-      state.splashes = [...splashes];
+      state.splashes = [ ...splashes ];
     }
   },
   actions: {
-    async loadData(store, overwrite: boolean = false) {
-      !overwrite && this.commit('loading');
-      for (var k of Object.keys(updates)) {
-        this.commit(k, await updates[k].call(service, overwrite));
+    async initialize() {
+      this.commit('initializing', true);
+      this.commit('pages', await service.pages());
+      this.commit('meta', await service.meta());
+      this.commit('initializing', false);
+    },
+    async loadData(_, payload: { update: string[]; overwrite?: boolean; }) {
+      const tablesToUpdate = [... payload.update],
+        overwrite = !!payload.overwrite;
+
+      if (tablesToUpdate.length > 0) {
+        !overwrite && this.commit('loading', true);
+
+        for (var table of tablesToUpdate) {
+          this.commit(table, await allUpdates[table].call(service, overwrite));
+        }
+        !overwrite && this.commit('loading', false);
       }
-      !overwrite && this.commit('loaded');
     }
   }
 })

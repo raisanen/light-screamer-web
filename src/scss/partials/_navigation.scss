@@ -225,9 +225,12 @@
                         content: none !important;
                     }
 
-                    &:not(.home).router-link-active {
-                        background-color: color(white);
-                        color: color(black);
+                    &:not(.home) {
+                        @include margin-y(1);
+                        &.router-link-active {
+                            background-color: color(white);
+                            color: color(black);
+                        }
                     }
                 }
             }

@@ -61,8 +61,32 @@ h2 {
         transform: translateY(-1px);
     }
 }
+.shiny {
+    position: relative;
+    overflow: hidden;
+    z-index: 0;
+    &:after {
+        @include position-absolute($top: 0, $left: 0);
+        content: '';
+        display: block;
+
+        width: 0;
+        height: 100%;
+
+        opacity: 0;
+        background: color(white);
+        box-shadow: 0 0 size(6) size(3) color(white);
+
+        animation: shine 12s linear infinite;
+        animation-delay: 2s;
+        z-index: 1;
+    }
+}
+
 
 @each $name, $color in $colors {
+    $hover-color: scale-color($color, $lightness: -7.5%);
+
     a.#{$name},
     .btn.#{$name} {
 
@@ -89,6 +113,10 @@ h2 {
                 .fa {
                     color: color(white);
                 }
+
+                &:hover {
+                    background-color: $hover-color;
+                }
             }    
             &:hover {
                 $shadow-size: size(1.5);
@@ -96,6 +124,7 @@ h2 {
             }
         }
         &:not(.solid):hover {
+            color: $hover-color;
             border-color: $color;
         }
     }
@@ -116,4 +145,62 @@ h2 {
         max-height: 2em;
         max-width: 2em;
     }
+}
+
+.show-in-desktop,
+.show-in-mobile {
+    width: 0;
+    height: 0;
+    line-height: 0;
+}
+@include desktop-only {
+    .show-in-mobile { display: none; }
+    .show-in-desktop { display: inline-block; }
+}
+@include mobile-only {
+    .show-in-mobile { display: inline-block; }
+    .show-in-desktop { display: none; }
+}
+
+.loading {
+    animation: appear speed(slowest) ease-out both;
+}
+.loading-container {
+    @include transition($speed: slow);
+    transform-origin: top;
+
+    &.loading {
+        transform: scaleY(0);
+        opacity: 0;
+    }
+}
+
+@keyframes appear {
+    0% {
+        filter: blur(25px) brightness(0.5);
+        opacity: 0;
+    }
+
+    100% {
+        filter: blur(5px) brightness(1);
+        opacity: 1;
+    }
+}
+@keyframes shine {
+    from {
+        transform: skewX(10deg);
+        opacity: 0;
+        left: -20%;
+    }
+
+    5% {
+        opacity: .3;
+    }
+
+    10% {
+        transform: skewX(-15deg);
+        opacity: 0;
+        left: 120%;
+    }
+    to { }
 }

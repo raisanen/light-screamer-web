@@ -1,7 +1,7 @@
 <template>
-<div :class="containerClass" v-if="testimonials">
-    <div class="box" v-for="(item, index) in testimonials" :key="index" :id="item.id">
-        <div class="testimonial">
+<div :class="containerClass" v-if="testimonials && testimonials.length > 0">
+    <div class="box" v-for="(item, index) in testimonials" :key="index" :id="item ? item.id : ''">
+        <div class="testimonial" v-if="item">
             <blockquote>{{item.quote}}</blockquote>
             <a class="source" v-if="item.sourceUrl" :href="item.sourceUrl">
                 {{item.source}}
@@ -25,7 +25,7 @@ export default class Testimonials extends Vue {
     @Prop() columns?: number;
 
     protected get containerClass(): string {
-        return `boxes boxes-${this.columns || 1}`;
+        return `testimonials boxes boxes-${this.columns || 1}`;
     }
 }
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <nav id="nav" :class="{detached: detached}">
+  <nav id="nav" :class="{detached: detached}" v-if="pages">
     <div class="mobile-nav" :class="{active: showMenu, detached: mobileDetached}">
       <router-link @click.native="hideMenu()" :to="{name: 'home'}" class="logo" v-if="meta">
         <img :src="meta.imageUrl"/>

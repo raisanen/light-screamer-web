@@ -168,6 +168,11 @@ $box-image-max-height: size(40);
                     @include margin-left(3);
                 }
             }
+            @include mobile-only {
+                &.releases a {
+                    @include margin-top(1);
+                }
+            }
         }
 
         h2 {

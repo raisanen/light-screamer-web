@@ -1,9 +1,12 @@
 <template>
     <div :class="containerClass">
-        <Box v-for="(item, index) in entries" :key="index" :id="item.entry.id"
-            :title="item.entry.title" :date="item.entry.dateString" 
-            :description="item.entry.description" :testimonials="item.entry.testimonials"
-            :hasSidebar="item.hasTracks"
+        <Box v-for="(item, index) in entries" :key="index" 
+            :id="item.entry.id"
+            :title="item.entry && item.entry.title" 
+            :date="item.entry && item.entry.dateString" 
+            :description="item.entry && item.entry.description" 
+            :testimonials="item.entry && item.entry.testimonials"
+            :hasSidebar="item.entry && item.hasTracks"
             >
             <template v-slot:image>
                 <div class="embed" v-if="item.entry.embed" v-html="item.entry.embed"></div>
@@ -105,17 +108,17 @@ export default class ContentBoxes extends Vue {
     }
 
     protected get entries(): BoxEntry[] {
-        const has = (c: any, prop: string): boolean => c[prop] && c[prop].length > 0;
-        return this.content.map((c) => {
+        const has = (c: any, prop: string): boolean => c && c[prop] && c[prop].length > 0;
+        return (this.content || []).map((c) => {
             return <BoxEntry> {
-                entry: c,
+                entry: { ...c },
                 hasTestimonials: has(c, 'testimonials'),
                 hasVideos: has(c, 'videos'),
                 hasReleases: has(c, 'releases'),
                 hasLinks: has(c, 'links'),
                 hasTracks: has(c, 'tracks')
             }
-        });
+        }).filter((c) => c.entry && c.entry.id);
     }
 
 }
