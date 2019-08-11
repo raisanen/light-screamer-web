@@ -11,13 +11,13 @@
             <template v-slot:image>
                 <div class="embed" v-if="item.entry.embed" v-html="item.entry.embed"></div>
                 <a class="image" v-else-if="item.entry.imageUrl" :href="item.entry.postLink ? item.entry.postLink : item.entry.imageUrl" target="_blank">
-                    <img :src="item.entry.imageUrl"/>
+                    <img :src="item.entry.imageUrl" :alt="item.entry.title"/>
                 </a>
             </template>
 
             <template v-slot:pre-description v-if="item.entry.spotify || item.entry.bandcamp">
                 <Links className="buttons">
-                    <a class="btn spotify" v-if="item.entry.spotify" :href="item.entry.spotify" target="_blank">
+                    <a  class="btn spotify" v-if="item.entry.spotify" :href="item.entry.spotify" target="_blank">
                         <i class="fa fa-spotify"></i>
                         Spotify
                     </a>
@@ -46,7 +46,7 @@
                 <Links :title="'Appears on the release' + (item.entry.releases.length !== 1 ? 's' : '')" className="releases">
                     <router-link class="web" v-for="release in item.entry.releases" :key="release.id" :to="{ name: 'home', params: { slug: 'releases'}, hash: `#${release.id}`}">
                         <span class="image-icon">
-                            <img :src="release.imageUrl">
+                            <img :src="release.imageUrl" :alt="release.title">
                         </span>
                         {{release.title}}
                     </router-link>
@@ -61,7 +61,7 @@
                     </h3>
                     <div class="video-list">
                         <router-link v-for="video in item.entry.videos" :key="video.id" class="youtube" :to="{name: 'home', params: { slug: 'videos' }, hash: `#${video.id}`}">
-                            <img :src="video.imageUrl"/>
+                            <img :src="video.imageUrl" :alt="video.title"/>
                             <span>{{video.title}}</span>
                             <i class="fa fa-youtube-play fa-2x"></i>
                         </router-link>

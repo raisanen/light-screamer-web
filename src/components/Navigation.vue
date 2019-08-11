@@ -2,20 +2,20 @@
   <nav id="nav" :class="{detached: detached}" v-if="pages">
     <div class="mobile-nav" :class="{active: showMenu, detached: mobileDetached}">
       <router-link @click.native="hideMenu()" :to="{name: 'home'}" class="logo" v-if="meta">
-        <img :src="meta.imageUrl"/>
+        <img :src="meta.imageUrl" alt="Light Screamer"/>
       </router-link>
       <div class="heading" v-if="meta" >
           {{meta.title}}
       </div>
-      <button class="menu-button" @click="toggleMenu()">
+      <button class="menu-button" @click="toggleMenu()" aria-label="Menu" role="button">
           <span class="icon"></span>
       </button>
     </div>
-    <ul :class="{show: showMenu}">
+    <ul :class="{show: showMenu}" role="navigation">
       <li class="menu-link" v-for="page in pages" :key="page.id">
-        <router-link @click.native="hideMenu()" :class="page.slug" :to="{name: 'home', params: { slug: page.slug }}">
+        <router-link  @click.native="hideMenu()" :class="page.slug" :to="{name: 'home', params: { slug: page.slug }}">
           <span v-if="meta && page.slug === 'home'">
-            <img :src="meta.imageUrl"/>
+            <img :src="meta.imageUrl" alt="Home"/>
           </span>
           <span v-else>
             {{page.title}}

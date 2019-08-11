@@ -5,7 +5,7 @@
             {{title}}
         </h3>
         <slot>
-            <a :class="link.type" v-for="link in defaultLinks" :key="link.id" :href="link.url">
+            <a :class="link.type" v-for="link in defaultLinks" :key="link.id" :href="link.url" :aria-label="link.title">
                 <i :class="`fa fa-${link.type}`"></i>
                 <span v-if="showLabels">
                     {{link.title}}
