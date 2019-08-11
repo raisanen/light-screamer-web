@@ -34,7 +34,15 @@
   },
   "vue": {
     "pwa": {
+      "themeColor": "#ffffff",
+      "msTileColor": "#000000",
       "workboxPluginMode": "InjectManifest",
+      "iconPaths": {
+          "favicon32": "favicon-32x32.png",
+          "favicon16": "favicon-16x16.png",
+          "appleTouchIcon": "apple-touch-icon-152x152.png",
+          "msTileImage": "mstile-150x150.png"
+      },
       "workboxOptions": {
         "swSrc": "./src/service-worker.js",
         "exclude": ["service-worker.js", ".htaccess", "proxy/index.php"]
