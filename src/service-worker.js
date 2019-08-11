@@ -8,8 +8,13 @@ workbox.routing.registerRoute(
     new workbox.strategies.StaleWhileRevalidate({
         cacheName: 'html'
     }),
-); 
-
+);
+workbox.routing.registerRoute(
+    /\/\#\/[a-z]?$/,
+    new workbox.strategies.StaleWhileRevalidate({
+        cacheName: 'pages'
+    }),
+);
 workbox.routing.registerRoute(
     /(app|chunk-vendors)\.[0-9a-z]+\.(?:js|css)(\.map)?$/,
     new workbox.strategies.StaleWhileRevalidate({
