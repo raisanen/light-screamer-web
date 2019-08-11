@@ -6,6 +6,7 @@ body,
     @include font($font-body, $size: 20px, $weight: 400, $height: 1.2);
     @include text-shadow-default();
 
+    width: 100%;
     background-color: transparent;
 
     @include mobile-only() {
@@ -31,7 +32,7 @@ body {
 
 .main {
     min-height: 100vh;
-    width: 100vw;
+    width: 100%;
 
     overflow-x: hidden;
 
