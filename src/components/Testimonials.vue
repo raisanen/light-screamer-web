@@ -3,7 +3,7 @@
     <div class="box" v-for="(item, index) in testimonials" :key="index" :id="item ? item.id : ''">
         <div class="testimonial" v-if="item">
             <blockquote>{{item.quote}}</blockquote>
-            <a class="source" v-if="item.sourceUrl" :href="item.sourceUrl">
+            <a class="source" v-if="item.sourceUrl" :href="item.sourceUrl" target="_blank" rel="noreferrer">
                 {{item.source}}
             </a>
             <span class="source" v-else>
