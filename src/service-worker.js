@@ -4,6 +4,13 @@ const apiExpiration = 60 * 60, // 1 hour
 workbox.setConfig({ debug: true });
 
 workbox.routing.registerRoute(
+    /\.html$/,
+    new workbox.strategies.StaleWhileRevalidate({
+        cacheName: 'html'
+    }),
+); 
+
+workbox.routing.registerRoute(
     /(app|chunk-vendors)\.[0-9a-z]+\.(?:js|css)(\.map)?$/,
     new workbox.strategies.StaleWhileRevalidate({
         cacheName: 'vue'

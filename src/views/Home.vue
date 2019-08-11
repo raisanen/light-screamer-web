@@ -4,7 +4,7 @@
     <main class="content" v-if="currentPage" :class="{loading: initializing || loading}">
         <div class="splash" v-if="currentPage.splash">
           <p v-html="currentPage.splash.description"/>
-          <a target="_blank"
+          <a target="_blank" rel="noreferrer"
             :class="`btn solid inverted shiny ${currentPage.splash.classes}`" 
             :href="currentPage.splash.link">
             <i v-if="currentPage.splash.icon" :class="`fa fa-${currentPage.splash.icon}`"></i>

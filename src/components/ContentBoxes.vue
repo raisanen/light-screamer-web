@@ -10,18 +10,18 @@
             >
             <template v-slot:image>
                 <div class="embed" v-if="item.entry.embed" v-html="item.entry.embed"></div>
-                <a class="image" v-else-if="item.entry.imageUrl" :href="item.entry.postLink ? item.entry.postLink : item.entry.imageUrl" target="_blank">
+                <a class="image" v-else-if="item.entry.imageUrl" :href="item.entry.postLink ? item.entry.postLink : item.entry.imageUrl" target="_blank" rel="noreferrer">
                     <img :src="item.entry.imageUrl" :alt="item.entry.title"/>
                 </a>
             </template>
 
             <template v-slot:pre-description v-if="item.entry.spotify || item.entry.bandcamp">
                 <Links className="buttons">
-                    <a  class="btn spotify" v-if="item.entry.spotify" :href="item.entry.spotify" target="_blank">
+                    <a  class="btn spotify" v-if="item.entry.spotify" :href="item.entry.spotify" target="_blank" rel="noreferrer">
                         <i class="fa fa-spotify"></i>
                         Spotify
                     </a>
-                    <a class="btn bandcamp" v-if="item.entry.bandcamp" :href="item.entry.bandcamp" target="_blank">
+                    <a class="btn bandcamp" v-if="item.entry.bandcamp" :href="item.entry.bandcamp" target="_blank" rel="noreferrer">
                         <i class="fa fa-bandcamp"></i>
                         Bandcamp
                     </a>
