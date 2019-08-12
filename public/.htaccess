@@ -2,6 +2,17 @@
     Header set Cache-Control "max-age=31536050"
 </FilesMatch>
 
+<Directory "/css/">
+    <FilesMatch "\.css$">
+        Header set Cache-Control "max-age=‭604800‬"
+    </FilesMatch>
+</Directory>
+<Directory "/js/">
+    <FilesMatch "\.js$">
+        Header set Cache-Control "max-age=‭604800‬"
+    </FilesMatch>
+</Directory>
+
 RewriteEngine On
 RewriteCond %{HTTPS} !=on
 RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
