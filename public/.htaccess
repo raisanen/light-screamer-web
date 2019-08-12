@@ -2,16 +2,9 @@
     Header set Cache-Control "max-age=31536050"
 </FilesMatch>
 
-<Directory "/css/">
-    <FilesMatch "\.css$">
-        Header set Cache-Control "max-age=‭604800‬"
-    </FilesMatch>
-</Directory>
-<Directory "/js/">
-    <FilesMatch "\.js$">
-        Header set Cache-Control "max-age=‭604800‬"
-    </FilesMatch>
-</Directory>
+<FilesMatch "(app|chunk-vendors)\.[a-z0-9]+\.(css|js)$">
+    Header set Cache-Control "max-age=604800"
+</FilesMatch>
 
 RewriteEngine On
 RewriteCond %{HTTPS} !=on

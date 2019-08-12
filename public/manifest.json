@@ -1,6 +1,7 @@
 {
   "name": "Light Screamer",
   "short_name": "Light Screamer",
+  "description": "Website for the acclaimed noise rock band",
   "icons": [
     {
       "src": "./android-chrome-192x192.png",
@@ -13,8 +14,8 @@
       "type": "image/png"
     }
   ],
-  "start_url": "./index.html",
-  "display": "minimal-ui",
+  "start_url": ".",
+  "display": "standalone",
   "orientation": "portrait",
   "background_color": "#000000",
   "theme_color": "#ffffff"

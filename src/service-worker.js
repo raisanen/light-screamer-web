@@ -1,100 +1,82 @@
-const apiExpiration = 60 * 60, // 1 hour
-    mediaExpiration = 120 * 24 * apiExpiration; // 120 Days 
+const timespan = (num, unit) => {
+        const units = {
+                'minute': 60,
+                'hour': 60 * 60,
+                'day': 24 * 60 * 60,
+                'week': 7 * 24 * 60 * 60,
+                'second': 1
+            },
+            normalized = unit.replace(/s$/i, '').toLowerCase();
+
+        return (typeof units[normalized] !== 'undefined') ? units[normalized] * num : num;
+    },
+    rex = (rexstr) => new RegExp(rexstr.replace(/\./g, '\\.')),
+    matchUrl = (uri) => rex(`^https://${uri}`),
+    matchExt = (...exts) => rex(`.(?:${exts.join('|')})$`),
+    matchType = (type) => ({ event }) => event.destination === type;
+
+const stale = (cacheName, ...plugins) => new workbox.strategies.StaleWhileRevalidate({cacheName, plugins}),
+    cache = (cacheName, ...plugins) => new workbox.strategies.CacheFirst({cacheName, plugins}),
+    network = (cacheName, ...plugins) => new workbox.strategies.NetworkFirst({cacheName, plugins}),
+    expiration = (maxAgeSeconds, opts = {}) => new workbox.expiration.Plugin({ maxAgeSeconds, ...opts });
+
+const apiExpiration = timespan(1, 'hour'),
+    proxyExpiration = timespan(15, 'minutes'),
+    mediaExpiration = timespan(1, 'week');
 
 workbox.setConfig({ debug: true });
 
 workbox.routing.registerRoute(
-    /\.html$/,
-    new workbox.strategies.StaleWhileRevalidate({
-        cacheName: 'html'
-    }),
-);
-workbox.routing.registerRoute(
-    /\/\#\/[a-z]?$/,
-    new workbox.strategies.StaleWhileRevalidate({
-        cacheName: 'pages'
-    }),
-);
-workbox.routing.registerRoute(
-    /(app|chunk-vendors)\.[0-9a-z]+\.(?:js|css)(\.map)?$/,
-    new workbox.strategies.StaleWhileRevalidate({
-        cacheName: 'vue'
-    }),
-); 
-
-workbox.routing.registerRoute(
-    /\.(?:png|gif|jpg|jpeg|svg)$/,
-    new workbox.strategies.StaleWhileRevalidate({
-        cacheName: 'images',
-        plugins: [
-            new workbox.expiration.Plugin({
-                maxEntries: 60,
-                maxAgeSeconds: mediaExpiration,
-            }),
-        ],
-    }),
+    matchUrl('ls.fivebyfive.se/#/[a-z]+/?'),
+    stale('pages')
 );
 
 workbox.routing.registerRoute(
-    /^https:\/\/ls\.fivebyfive\.se\/proxy(.*)/,
-    new workbox.strategies.NetworkFirst({
-        cacheName: 'api',
-    }),
-);
-// stackpath.bootstrapcdn.com
-workbox.routing.registerRoute(
-    /^https:\/\/fonts\.(?:googleapis|gstatic)\.com\/(.*)/,
-    new workbox.strategies.CacheFirst({
-        cacheName: 'googleapis',
-        plugins: [
-            new workbox.expiration.Plugin({
-                maxEntries: 16,
-                maxAgeSeconds: mediaExpiration
-            }),
-        ],
-    }),
+    rex('(app|chunk-vendors)\.[0-9a-z]+\.(?:js|css)$'),
+    stale('vue')
 );
 workbox.routing.registerRoute(
-    /^https:\/\/stackpath\.bootstrapcdn\.com\/(.*)/,
-    new workbox.strategies.CacheFirst({
-        cacheName: 'cdn',
-        plugins: [
-            new workbox.expiration.Plugin({
-                maxEntries: 16,
-                maxAgeSeconds: mediaExpiration
-            }),
-        ],
-    }),
-);
-workbox.routing.registerRoute(
-    /^https:\/\/dl\.airtable\.com\/(.*)/,
-    new workbox.strategies.CacheFirst({
-        cacheName: 'airtable',
-        plugins: [
-            new workbox.expiration.Plugin({
-                maxEntries: 128,
-                maxAgeSeconds: mediaExpiration,
-            }),
-            new workbox.cacheableResponse.Plugin({
-                statuses: [0, 200]
-            })
-        ],
-    }),
+    matchExt('png|gif|jpg|jpeg|svg'),
+    stale('images', expiration(mediaExpiration))
 );
 
 workbox.routing.registerRoute(
-    /^https:\/\/img\.youtube\.com\/(.*)/,
-    new workbox.strategies.CacheFirst({
-        cacheName: 'youtube',
-        plugins: [
-            new workbox.expiration.Plugin({
-                maxEntries: 128,
-                maxAgeSeconds: mediaExpiration,
-            }),
-            new workbox.cacheableResponse.Plugin({
-                statuses: [0, 200]
-            })
-        ],
-    }),
+    matchUrl('ls.fivebyfive.se/proxy'),
+    network('api', expiration(proxyExpiration))
 );
+workbox.routing.registerRoute(
+    matchUrl('fonts.(?:googleapis|gstatic).com'),
+    cache('google', 
+        expiration(mediaExpiration),
+        new workbox.cacheableResponse.Plugin({
+            statuses: [0, 200]
+        })
+    )
+);
+
+workbox.routing.registerRoute(
+    matchUrl('stackpath.bootstrapcdn.com'),
+    cache('cdn', 
+        expiration(mediaExpiration),
+        new workbox.cacheableResponse.Plugin({
+            statuses: [0, 200]
+        })
+    )
+);
+
+workbox.routing.registerRoute(
+    matchUrl('dl.airtable.com'),
+    stale('airtable', 
+        expiration(mediaExpiration),
+        new workbox.cacheableResponse.Plugin({
+            statuses: [0, 200]
+        })
+    )
+);
+
+workbox.routing.registerRoute(
+    matchUrl('img.youtube.com'),
+    stale('youtube', expiration(mediaExpiration))
+);
+
 workbox.precaching.precacheAndRoute([]);
