@@ -1,4 +1,4 @@
-$box-image-max-height: size(40);
+$box-image-max-height: size(50);
 
 .box {
     $bgcolor: color(black);
@@ -96,10 +96,6 @@ $box-image-max-height: size(40);
             @include margin(0);
             width: 100%;
             height: $box-image-max-height;
-            
-            @include mobile-only() {
-                max-height: $box-image-max-height / 2;
-            }
         }
 
         .image {
@@ -110,9 +106,8 @@ $box-image-max-height: size(40);
             img {
                 @include position-absolute-centered();
                 @include transition($element: max-width, $speed: medium);
-                max-width: 120%;
+                max-width: 105%;
                 min-width: 100%;
-                min-height: 100%;
             }
 
             &:hover {
@@ -123,7 +118,6 @@ $box-image-max-height: size(40);
 
             @include mobile-only() {
                 img {
-                    max-height: $box-image-max-height;
                 }
             }
         }
@@ -322,20 +316,20 @@ $box-image-max-height: size(40);
         }
 
         .testimonial {
-            @include padding-left(8);
+            @include padding-left(6);
             @include padding-bottom(2);
 
             position: relative;
 
             &:before {
                 @include position-absolute($top: size(-.5), $left: size(2));
-                @include font($size: text-size(xx-large), $align: left, $height: 1);
+                @include font($size: text-size(x-large), $align: left, $height: 1);
 
                 content: '\00bb';
 
                 display: block;
-                width: size(1.5);
-                height: size(4);
+                width: size(1);
+                height: size(2);
             }
 
             blockquote {

@@ -10,8 +10,12 @@
             >
             <template v-slot:image>
                 <div class="embed" v-if="item.entry.embed" v-html="item.entry.embed"></div>
-                <a class="image" v-else-if="item.entry.imageUrl" :href="item.entry.postLink ? item.entry.postLink : item.entry.imageUrl" target="_blank" rel="noreferrer">
-                    <img :src="item.entry.imageUrl" :alt="item.entry.title"/>
+                <a class="image" v-else-if="item.entry.imageUrl" @click="showImage(item.entry.imageUrl)" target="_blank" rel="noreferrer">
+                    <picture>
+                        <source media="(min-width: 701px)" :srcset="item.entry.imageUrl">
+                        <source media="(max-width: 700px)" :srcset="item.entry.thumbnailLargeUrl">
+                        <img :src="item.entry.thumbnailLargeUrl" :alt="item.entry.title">
+                    </picture>
                 </a>
             </template>
 
@@ -46,7 +50,7 @@
                 <Links :title="'Appears on the release' + (item.entry.releases.length !== 1 ? 's' : '')" className="releases">
                     <router-link class="web" v-for="release in item.entry.releases" :key="release.id" :to="{ name: 'home', params: { slug: 'releases'}, hash: `#${release.id}`}">
                         <span class="image-icon">
-                            <img :src="release.imageUrl" :alt="release.title">
+                            <img :src="release.thumbnailSmallUrl" :alt="release.title">
                         </span>
                         {{release.title}}
                     </router-link>
@@ -121,5 +125,8 @@ export default class ContentBoxes extends Vue {
         }).filter((c) => c.entry && c.entry.id);
     }
 
+    protected showImage(imageUrl: string): void {
+        this.$store.dispatch('showLightbox', imageUrl);
+    }
 }
 </script>

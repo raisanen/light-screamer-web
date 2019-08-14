@@ -1,7 +1,7 @@
 #nav {
     $mobile-image-size: $mobile-menu-height * .8;
-
     @include padding-y(2);
+
     width: 100%;
 
     @include mobile-only {
@@ -12,16 +12,16 @@
         display: none;
 
         @include mobile-only() {
-            @include position-fixed($top: 0, $left: 0, $z-index: top);
             @include font($font-body, $weight: 500, $size: map-get($text-size, medium), $transform: uppercase);
             @include flex($justify: space-between, $align: center);
             @include padding-left(2);
-
-            background-color: color-black(semi-opaque);
-            color: color(white);
+            @include position-fixed($top: 0, $left: 0, $z-index: top);
 
             height: $mobile-menu-height;
             width: 100%;
+
+            background-color: color-black(semi-opaque);
+            color: color(white);
 
             &, a.logo, .heading, .menu-button {
                 @include transition($speed: slow);
@@ -108,11 +108,11 @@
                     }
 
                     &:after {
-                        transform: rotate(135deg);
+                        transform: rotate(45deg);
                     }
 
                     &:before {
-                        transform: rotate(-135deg);
+                        transform: rotate(-45deg);
                     }
                 }
             }
@@ -139,7 +139,7 @@
             }
 
             a {
-                @include font($size: text-size(large), $weight: 700, $transform: uppercase, $decoration: none);
+                @include font($size: text-size(large), $weight: 700, $transform: lowercase, $decoration: none);
                 @include padding(1, 0);
 
                 color: color(white);

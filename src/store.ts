@@ -21,6 +21,8 @@ export interface WebSiteState {
 
   initializing: boolean;
   loading: boolean;
+
+  lightboxImage: string;
 }
 
 export const defaultState: WebSiteState = {
@@ -36,7 +38,9 @@ export const defaultState: WebSiteState = {
   meta: [],
 
   loading: false,
-  initializing: false
+  initializing: false,
+
+  lightboxImage: null,
 }
 const idsToObjs = (entry: any, objName: string, state: any) => {
   const idKey = `${objName}Ids`,
@@ -72,6 +76,7 @@ const has = (obj: any, key: string) => obj[key] && Array.isArray(obj[key]) && ob
 export default new Vuex.Store<WebSiteState>({
   state: defaultState,
   getters: {
+    lightboxImage: (state) => state.lightboxImage,
     initializing: (state) => state.initializing,
     meta: (state) => {
       const meta = state.meta && state.meta.length > 0 ? state.meta[0] : <Meta>{};
@@ -114,6 +119,9 @@ export default new Vuex.Store<WebSiteState>({
     loading: (state) => state.loading
   },
   mutations: {
+    lightbox(state, image: string) {
+      state.lightboxImage = image || null;
+    },
     initializing(state, initializing: boolean) {
       state.initializing = initializing;
     },
@@ -149,6 +157,12 @@ export default new Vuex.Store<WebSiteState>({
     }
   },
   actions: {
+    showLightbox(_, payload: string) {
+      this.commit('lightbox', payload);
+    },
+    hideLightbox() {
+      this.commit('lightbox', null);
+    },
     async initialize() {
       this.commit('initializing', true);
       this.commit('pages', await service.pages());

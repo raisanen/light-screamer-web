@@ -27,6 +27,7 @@
     </main>
     <Footer :class="{loading: initializing}"/>
     <DynamicStyle :stylesheet="dynamicStyle"/>
+    <Lightbox/>
   </div>
 </template>
 
@@ -38,13 +39,14 @@ import moment from 'moment';
 
 import { Page, Release, Video, Meta, Post, Photo, PageType, Link } from '@/models/dtos';
 
-import Navigation from '@/components/Navigation.vue';
-import ContentBoxes, { ValidContent } from '@/components/ContentBoxes.vue';
-import Links from '@/components/Links.vue';
-import Testimonials from '@/components/Testimonials.vue';
-import Footer from '@/components/Footer.vue';
 import Box from '@/components/Box.vue';
+import ContentBoxes, { ValidContent } from '@/components/ContentBoxes.vue';
 import DynamicStyle from '@/components/DynamicStyle.vue';
+import Footer from '@/components/Footer.vue';
+import Lightbox from '@/components/Lightbox.vue';
+import Links from '@/components/Links.vue';
+import Navigation from '@/components/Navigation.vue';
+import Testimonials from '@/components/Testimonials.vue';
 
 const UPDATE_TIMEOUT = 5;
 
@@ -54,6 +56,7 @@ const UPDATE_TIMEOUT = 5;
     ContentBoxes,
     DynamicStyle,
     Footer,
+    Lightbox,
     Links,
     Navigation,
     Testimonials,

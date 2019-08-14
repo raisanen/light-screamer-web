@@ -15,6 +15,7 @@ h1,
 h2,
 h3 {
     font-weight: 700;
+    text-transform: lowercase;
 
     .fa {
         @include margin-right(.5);
@@ -24,7 +25,7 @@ h3 {
 }
 
 h1 {
-    @include font($size: 2.5rem, $transform: uppercase);
+    @include font($size: 2.5rem);
 }
 
 h2 {
@@ -135,15 +136,15 @@ h2 {
 }
 
 .image-icon {
+    $image-icon-size: 36px;
     @include margin-right(1);
+
     display: inline-block;
-    width: 2em;
-    height: 2em;
-    border-radius: 50%;
     overflow: hidden;
-    img {
-        max-height: 2em;
-        max-width: 2em;
+    border-radius: 50%;
+    &, & img {
+        width: $image-icon-size;
+        height: $image-icon-size;
     }
 }
 

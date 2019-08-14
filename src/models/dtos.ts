@@ -10,6 +10,8 @@ export interface AirtableTextEntry extends AirtableEntry {
 }
 export interface AirtableImageEntry extends AirtableEntry  {
     imageUrl: string;
+    thumbnailSmallUrl: string;
+    thumbnailLargeUrl: string;
 }
 export interface AirtableDateEntry extends AirtableEntry  {
     date: moment.Moment;
@@ -104,7 +106,13 @@ class RecordParser {
             const d = moment.utc(fields.date);
             return <AirtableDateEntry>{ date:  d, dateString: d.format('YYYY-MM-DD')};
         },
-        Image: (fields: any) => (<AirtableImageEntry>{ imageUrl: fields.image ? (Array.isArray(fields.image) ? fields.image[0].url : fields.image) : ''}),
+        Image: (fields: any) => {
+            const img = fields.image && Array.isArray(fields.image) ? fields.image[0] : null,
+                imageUrl = img && img.url ? img.url : '',
+                thumbnailLargeUrl = img && img.thumbnails && img.thumbnails.large ? img.thumbnails.large.url : '',
+                thumbnailSmallUrl = img && img.thumbnails && img.thumbnails.small ? img.thumbnails.small.url : '';
+            return <AirtableImageEntry>{ imageUrl, thumbnailLargeUrl, thumbnailSmallUrl };
+        },
         Post: (fields: any) => (<AirtablePostEntry>{postLink: fields['post-link']}),    
         Testimonial: (fields: any) => (<AirtableTestimonialEntry>{testimonialIds: fields.testimonials}),
         Text: (fields: any) => (<AirtableTextEntry>{
