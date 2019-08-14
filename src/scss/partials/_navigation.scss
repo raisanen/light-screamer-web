@@ -12,7 +12,7 @@
         display: none;
 
         @include mobile-only() {
-            @include font($font-body, $weight: 500, $size: map-get($text-size, medium), $transform: uppercase);
+            @include font($font-body, $weight: 700, $size: map-get($text-size, medium), $transform: lowercase);
             @include flex($justify: space-between, $align: center);
             @include padding-left(2);
             @include position-fixed($top: 0, $left: 0, $z-index: top);

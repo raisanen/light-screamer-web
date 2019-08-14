@@ -12,6 +12,10 @@
 
     .close-button {
         @include position-absolute($top: size(2), $right: size(2));
+        @include mobile-only {
+            top: size(1);
+            right: size(1);
+        }
 
         font-size: text-size(x-large);
 
@@ -20,8 +24,7 @@
         color: color(white);
     }
     .lightbox {
-        @include position-absolute-centered($width: 90vh, $height: 90vh);
-
+        @include position-absolute-centered($width: 90vh, $height: 80vh);
         img {
             max-width: 100%;
             max-height: 100%;

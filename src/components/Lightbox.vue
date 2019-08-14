@@ -1,7 +1,7 @@
 <template>
     <div class="lightbox-container" :class="{active: !!lightboxImage}">
         <button class="close-button" @click="close()"><i class="fa fa-times"></i></button>
-        <div class="lightbox">
+        <div class="lightbox" @click="close()">
             <img v-if="!!lightboxImage" :src="lightboxImage" alt="Lightboxed image">
         </div>
     </div>

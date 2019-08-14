@@ -73,6 +73,15 @@ workbox.routing.registerRoute(
         })
     )
 );
+workbox.routing.registerRoute(
+    matchUrl('scontent.xx.fbcdn.net'),
+    stale('facebook',
+        expiration(mediaExpiration),
+        new workbox.cacheableResponse.Plugin({
+            statuses: [0, 200]
+        })
+    )
+);
 
 workbox.routing.registerRoute(
     matchUrl('img.youtube.com'),
