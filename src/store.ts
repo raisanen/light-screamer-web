@@ -173,7 +173,6 @@ export default new Vuex.Store<WebSiteState>({
       state.photos = [...photos];
     },
     instagram(state, posts: InstagramPost[]) {
-      console.log(posts);
       state.instagramImages = [...posts];
     },
     posts(state, posts: Post[]) {

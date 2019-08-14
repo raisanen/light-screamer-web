@@ -54,7 +54,6 @@ export default class SocializerService {
 
     public async get(): Promise<InstagramPost[]> {
         const result = await this.getRequest();
-        console.log(result);
         return result.result;
     }
 }
