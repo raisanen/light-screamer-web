@@ -126,7 +126,9 @@ export default new Vuex.Store<WebSiteState>({
             id: i.id,
             date: moment.utc(i.posted),
             dateString:  moment.utc(i.posted).format('YYYY-MM-DD'),
-            description: i.message,
+            description: i.message
+              .replace(/#(\S+)/g,'<a href="https://instagram.com/explore/tags/$1/" rel="noreferrer" target="_blank">#$1</a>')
+              .replace(/@(\S+)/g,'<a href="https://instagram.com/$1" rel="noreferrer" target="_blank">@$1</a>'),
             imageUrl: i.imageLargeUrl,
             thumbnailSmallUrl: i.imageSmallUrl,
             thumbnailLargeUrl: i.imageLargeUrl,
