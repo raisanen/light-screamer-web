@@ -86,8 +86,10 @@ export interface Page extends AirtableEntry, AirtableTextEntry, AirtableImageEnt
     splashId: string;
     splash?: Splash;
 }
-export interface Post extends AirtableTextEntry, AirtablePostEntry { }
-export interface Photo extends Post, AirtableImageEntry { }
+export interface Post extends AirtableDateEntry, AirtableTextEntry, AirtablePostEntry { }
+export interface Photo extends Post, AirtableImageEntry { 
+    type: 'instagram' | 'facebook';
+}
 
 //#region Container classes
 export abstract class AirtableDtoContainer<T> {
@@ -203,7 +205,8 @@ export class PostContainer extends AirtableDtoContainer<Post> {
 export class PhotoContainer extends AirtableDtoContainer<Photo> {
     protected parseData(record: AirtableRecord) {
         return (<Photo>{
-            ...RecordParser.parse(record, 'Date', 'Text', 'Post', 'Image')
+            ...RecordParser.parse(record, 'Date', 'Text', 'Post', 'Image'),
+            type: 'facebook'
         })
     }
 }

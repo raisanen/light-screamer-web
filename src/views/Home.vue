@@ -11,7 +11,6 @@
             {{currentPage.splash.label}}
           </a>
         </div>
-
         <Box :class="{transparent: !(currentPage.description || (currentPage.links && currentPage.links.length > 0))}" 
             :title="currentPage.title" :isTopLevel="true" :description="currentPage.description">
           <template v-slot:post-description v-if="currentPage.links && currentPage.links.length > 0">
@@ -20,7 +19,9 @@
         </Box>
 
         <div class="loading-container" :class="{loading: loading}">
-          <ContentBoxes :class="(currentPageType === pageType.Photos ? 'photos' : '')" v-if="!loading && content && content.length > 0" :content="content" />
+          <ContentBoxes :class="(currentPageType === pageType.Photos ? 'photos' : '')" v-if="!loading && content && content.length > 0" 
+              :content="content" :columns="(currentPageType === pageType.Photos ? 2 : 1)"
+            />
         </div>
 
         <Testimonials v-if="currentPage.testimonials" :testimonials="currentPage.testimonials" :columns="3"/>
@@ -110,7 +111,7 @@ export default class Home extends Vue {
       case PageType.Posts:
         tables.push('posts'); break;
       case PageType.Photos:
-        tables.push('photos'); break;
+        tables.push('photos', 'instagram'); break;
       case PageType.Releases:
         tables.push('releases', 'videos');
         break;

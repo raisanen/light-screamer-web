@@ -211,7 +211,12 @@ $options = array(
 $url = '';
 
 if (isset($_GET['endpoint'])) {
-    $url = 'https://api.airtable.com/v0/appxuBPxu0RLPPdpO/' . str_replace('/', '', $_GET['endpoint']);
+    $endpoint = $_GET['endpoint'];
+    if ($endpoint === 'instagram') {
+        $url = 'https://socializegraph-web.azurewebsites.net/api/v2/instagram/render/9b2b7c02-e093-42f1-13c9-08d6f31a070e?take=30';
+    } else {
+        $url = 'https://api.airtable.com/v0/appxuBPxu0RLPPdpO/' . str_replace('/', '', $_GET['endpoint']);
+    }
 } else if (isset($_GET['image'])) {
     $url = 'https://dl.airtable.com/.attachments/' . $_GET['image'];
 }

@@ -3,6 +3,7 @@
         <div class="box-content">
             <h1 v-if="title && isTopLevel">{{title}}</h1>
             <h2 v-else-if="title">
+                <i v-if="type === 'instagram' || type === 'facebook'" :class="`fa fa-${type}`"></i>
                 {{title}}
                 <span v-if="date" class="date">{{date}}</span>
             </h2>
@@ -45,9 +46,10 @@ export default class Box extends Vue {
     @Prop() protected hasSidebar?: boolean;
     @Prop() protected isTopLevel?: boolean;
     @Prop() protected className?: string;
+    @Prop() protected type?: string;
 
     protected get boxClass(): string {
-        return `box ${this.className || ''}`;
+        return `box ${this.className || ''} ${this.type || ''}`;
     }
 
     protected get descriptionContainerClass(): string {

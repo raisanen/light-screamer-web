@@ -47,9 +47,8 @@ $box-image-max-height: size(50);
     >.box {
         @include flex($direction: column, $align: stretch, $justify: stretch);
         @include padding(2, 0, 0);
-
-        flex-grow: 1;
-        width: 100%;
+        flex: 0 0 100%;
+        max-width: 100%;
 
         @include mobile-only() {
             width: 100%;
@@ -91,37 +90,7 @@ $box-image-max-height: size(50);
             }
         }
 
-        iframe,
-        .image {
-            @include margin(0);
-            width: 100%;
-            height: $box-image-max-height;
-        }
-
-        .image {
-            position: relative;
-            display: block;
-            overflow: hidden;
-
-            img {
-                @include position-absolute-centered();
-                @include transition($element: max-width, $speed: medium);
-                max-width: 105%;
-                min-width: 100%;
-            }
-
-            &:hover {
-                img {
-                    max-width: 115%;
-                }
-            }
-
-            @include mobile-only() {
-                img {
-                }
-            }
-        }
-
+        
         h2,
         .testimonial,
         p,
@@ -132,6 +101,66 @@ $box-image-max-height: size(50);
                 @include margin-bottom(0);
             }
         }
+
+        iframe,
+        .image {
+            @include margin(0);
+            width: 100%;
+            height: $box-image-max-height;
+        }
+        .image {
+            position: relative;
+        }
+        &.facebook, &.instagram {
+            h2 {
+                @include margin-y(1);
+            }
+            > div {
+                justify-content: flex-start;
+            }
+            .image {
+                height: auto;
+                img {
+                    max-width: 100%;
+                    min-width: 100%;
+                }
+                .fa {
+                    @include transition($speed: fast);
+                    @include position-absolute-centered($width: 100%, $height: 100%);
+                    @include flex($justify: center, $align: center);
+                    background-color: color-black(transparent);
+                    font-size: text-size(large);
+                    opacity: 0;
+                }
+                &:hover {
+                    .fa {
+                        opacity: 1;
+                        font-size: text-size(xx-large);
+                    }
+                }
+            }
+        }
+        &:not(.facebook):not(.instagram) {
+            .image {
+                overflow: hidden;
+                position: relative;
+                display: block;
+                height: $box-image-max-height;
+    
+                img {
+                    @include position-absolute-centered();
+                    @include transition($element: max-width, $speed: medium);
+                    max-width: 105%;
+                    min-width: 100%;
+                }    
+                &:hover {
+                    img {
+                        max-width: 115%;
+                    }
+                }    
+            }
+        }
+
         .embed {
             @include margin-bottom(2);
         }
@@ -370,8 +399,11 @@ $box-image-max-height: size(50);
             @include margin-bottom(0);
         }
     }
+
+
     &.boxes-2>.box {
-        width: 49%;
+        max-width: 49%;
+        flex: 0 0 49%;
 
         @include mobile-only() {
             width: 100%;
@@ -379,7 +411,8 @@ $box-image-max-height: size(50);
     }
 
     &.boxes-3>.box {
-        width: 32%;
+        max-width: 32%;
+        flex: 0 0 32%;
 
         @include mobile-only() {
             width: 100%;

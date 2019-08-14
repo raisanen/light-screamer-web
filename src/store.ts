@@ -1,11 +1,14 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import AirtableService from '@/services/airtable.service';
-import { Page, Testimonial, Video, Release, PageType, Meta, Photo, Post, Link, Splash } from './models/dtos';
+import { Page, Testimonial, Video, Release, Meta, Photo, Post, Link, Splash } from './models/dtos';
+import SocializerService, { InstagramPost } from './services/instagram.service';
+import moment from 'moment';
 
 Vue.use(Vuex);
 
-const service = new AirtableService();
+const service = new AirtableService(),
+  socializer = new SocializerService();
 
 export interface WebSiteState {
   pages: Page[];
@@ -13,6 +16,7 @@ export interface WebSiteState {
   videos: Video[];
   releases: Release[];
   photos: Photo[];
+  instagramImages: InstagramPost[];
   posts: Post[];
   links: Link[];
   splashes: Splash[];
@@ -31,6 +35,7 @@ export const defaultState: WebSiteState = {
   videos: [],
   releases: [],
   photos: [],
+  instagramImages: [],
   posts: [],
   links: [],
   splashes: [],
@@ -68,7 +73,8 @@ const allUpdates: any = {
   'videos': service.videos,
   'releases': service.releases,
   'photos': service.photos,
-  'posts': service.posts
+  'posts': service.posts,
+  'instagram': socializer.get
 };
 
 const has = (obj: any, key: string) => obj[key] && Array.isArray(obj[key]) && obj[key].length > 0;
@@ -112,7 +118,25 @@ export default new Vuex.Store<WebSiteState>({
         }
       }).sort((a, b) => a.date < b.date ? 1 : -1);
     },
-    photos: (state) => state.photos,
+    photos: (state) => {
+      return [
+        ...state.photos,
+        ...state.instagramImages.filter(i => i.type === 'image').map((i) => {
+          return <Photo>{
+            id: i.id,
+            date: moment.utc(i.posted),
+            dateString:  moment.utc(i.posted).format('YYYY-MM-DD'),
+            description: i.message,
+            imageUrl: i.imageLargeUrl,
+            thumbnailSmallUrl: i.imageSmallUrl,
+            thumbnailLargeUrl: i.imageLargeUrl,
+            postLink: i.postLink,
+            title: i.postByUser,
+            type: 'instagram'
+          }
+        })
+      ].sort((a, b) => a.date < b.date ? 1 : -1);
+    },
     posts: (state) => state.posts,
     testimonials: (state) => state.testimonials,
     links: (state) => state.links,
@@ -146,6 +170,10 @@ export default new Vuex.Store<WebSiteState>({
     photos(state, photos: Photo[]) {
       state.photos = [...photos];
     },
+    instagram(state, posts: InstagramPost[]) {
+      console.log(posts);
+      state.instagramImages = [...posts];
+    },
     posts(state, posts: Post[]) {
       state.posts = [ ...posts ];
     },
@@ -177,7 +205,7 @@ export default new Vuex.Store<WebSiteState>({
         !overwrite && this.commit('loading', true);
 
         for (var table of tablesToUpdate) {
-          this.commit(table, await allUpdates[table].call(service, overwrite));
+          this.commit(table, await allUpdates[table].call(table === 'instagram' ? socializer : service, overwrite));
         }
         !overwrite && this.commit('loading', false);
       }
