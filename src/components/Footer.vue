@@ -1,9 +1,7 @@
 <template>
     <footer>
-      <div class="box">
         <p v-html="footerText"></p>
         <Links :links="links"/>
-      </div>
     </footer>
 </template>
 
@@ -12,8 +10,9 @@ import Vue from 'vue';
 import { Getter, Mutation, State } from 'vuex-class';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
-import { Meta, Link } from '../models/dtos';
-import Links from './Links.vue';
+
+import { Meta, Link } from '@/models/dtos';
+import Links from '@/components/Links.vue';
 
 @Component({
   components: {
@@ -32,4 +31,7 @@ export default class Footer extends Vue {
     }
 }
 </script>
+<style lang="scss">
+  @import '../scss/components/footer';
+</style>
 

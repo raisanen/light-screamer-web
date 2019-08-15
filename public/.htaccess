@@ -2,7 +2,7 @@
     Header set Cache-Control "max-age=31536050"
 </FilesMatch>
 
-<FilesMatch "(app|chunk-vendors)\.[a-z0-9]+\.(css|js)$">
+<FilesMatch "(app|chunk-vendors|(page|component)-[a-z]+)\.[a-z0-9]+\.(css|js)$">
     Header set Cache-Control "max-age=604800"
 </FilesMatch>
 

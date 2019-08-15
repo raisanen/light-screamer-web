@@ -32,7 +32,7 @@ workbox.routing.registerRoute(
 );
 
 workbox.routing.registerRoute(
-    rex('(app|chunk-vendors)\.[0-9a-z]+\.(?:js|css)$'),
+    rex('(app|chunk-vendors|(page|component)-[a-z]+)\.[0-9a-z]+\.(?:js|css)$'),
     stale('vue')
 );
 workbox.routing.registerRoute(

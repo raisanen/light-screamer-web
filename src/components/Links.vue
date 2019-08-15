@@ -43,3 +43,7 @@ export default class Links extends Vue {
     }
 }
 </script>
+
+<style lang="scss">
+    @import '../scss/components/links';
+</style>

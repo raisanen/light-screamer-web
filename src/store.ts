@@ -27,6 +27,7 @@ export interface WebSiteState {
   loading: boolean;
 
   lightboxImage: string;
+  currentPage: string;
 }
 
 export const defaultState: WebSiteState = {
@@ -46,6 +47,8 @@ export const defaultState: WebSiteState = {
   initializing: false,
 
   lightboxImage: null,
+  currentPage: null
+
 }
 const idsToObjs = (entry: any, objName: string, state: any) => {
   const idKey = `${objName}Ids`,
@@ -67,9 +70,11 @@ const testimonials = makeGetter('testimonial'),
 const allUpdates: any = {
   'pages': service.pages,
   'meta': service.meta,
+  'links': service.links,
+
   'splashes': service.splashes,
   'testimonials': service.testimonials,
-  'links': service.links,
+
   'videos': service.videos,
   'releases': service.releases,
   'photos': service.photos,
@@ -77,11 +82,10 @@ const allUpdates: any = {
   'instagram': socializer.get
 };
 
-const has = (obj: any, key: string) => obj[key] && Array.isArray(obj[key]) && obj[key].length > 0;
-
 export default new Vuex.Store<WebSiteState>({
   state: defaultState,
   getters: {
+    currentPage: (state, getters) => getters.pages.find((p: Page) => p.slug === state.currentPage),
     lightboxImage: (state) => state.lightboxImage,
     initializing: (state) => state.initializing,
     meta: (state) => {
@@ -145,6 +149,9 @@ export default new Vuex.Store<WebSiteState>({
     loading: (state) => state.loading
   },
   mutations: {
+    currentPage(state, name: string) {
+      state.currentPage = name;
+    },
     lightbox(state, image: string) {
       state.lightboxImage = image || null;
     },

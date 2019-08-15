@@ -65,6 +65,8 @@ $border-width-min: 1px;
 $border-width-medium: 2px;
 $border-width-max: 5px;
 
+$gutter-width: 30px;
+
 /// Functions
 @function size($factor, $base: $base-size) {
     @if $factor==auto {

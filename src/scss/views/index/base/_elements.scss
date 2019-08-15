@@ -1,3 +1,35 @@
+html,
+body,
+#app {
+    @include padding(0);
+    @include margin(0);
+    @include font($font-body, $size: 20px, $weight: 400, $height: 1.2);
+    @include text-shadow-default();
+
+    width: 100%;
+    background-color: transparent;
+    color: color(white);
+
+    @include mobile-only() {
+        font-size: 18px;
+    }
+}
+
+body {
+    background: color(black);
+    background-attachment: fixed;
+    background-position: top center;
+    background-size: cover;
+    background-repeat: no-repeat;
+
+    @include mobile-only {
+        background-size: auto 100vh;
+    }
+}
+
+* {
+    box-sizing: border-box;
+}
 
 a,
 a:active {
@@ -25,9 +57,8 @@ h3 {
 }
 
 h1 {
-    @include font($size: 2.5rem);
+    @include font($size: xx-large);
 }
-
 h2 {
     font-size: text-size(x-large);
 }
@@ -151,20 +182,6 @@ a, .btn {
     }
 }
 
-.show-in-desktop,
-.show-in-mobile {
-    width: 0;
-    height: 0;
-    line-height: 0;
-}
-@include desktop-only {
-    .show-in-mobile { display: none; }
-    .show-in-desktop { display: inline-block; }
-}
-@include mobile-only {
-    .show-in-mobile { display: inline-block; }
-    .show-in-desktop { display: none; }
-}
 
 .loading {
     animation: appear speed(slowest) ease-out both;

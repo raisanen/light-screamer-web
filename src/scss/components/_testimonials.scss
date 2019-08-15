@@ -1,0 +1,40 @@
+@import '../abstracts/include';
+
+.testimonial {
+    @include padding-left(6);
+    @include padding-bottom(2);
+
+    position: relative;
+
+    &:before {
+        @include position-absolute($top: size(2), $left: size(2));
+        @include font($size: text-size(x-large), $align: left, $height: 1);
+
+        content: '\00bb';
+
+        display: block;
+        width: size(1);
+        height: size(2);
+    }
+
+    blockquote, .source {
+        @include margin-x(4, 0);        
+    }
+
+    blockquote {
+        @include margin-y(0, .5);
+        @include font($size: text-size(medium), $weight: 400, $style: italic);
+
+        display: block;
+
+        &+.source {
+            display: block;
+
+            font-size: text-size(small);
+
+            &:before {
+                content: '\2014';
+            }
+        }
+    }
+}

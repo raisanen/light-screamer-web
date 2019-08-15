@@ -1,0 +1,5 @@
+@import '../abstracts/include';
+
+.box.text-box {
+    @include padding(2, 2, 3);
+}

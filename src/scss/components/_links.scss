@@ -1,5 +1,7 @@
+@import '../abstracts/include';
+
 .links {
-    @include flex($direction: row, $align: center, $justify: flex-start, $wrap: wrap);
+    @include flex($direction: row, $align: center, $justify: center, $wrap: wrap);
     @include margin-top(3);
 
     h3.links-title {

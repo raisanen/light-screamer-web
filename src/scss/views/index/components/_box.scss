@@ -1,0 +1,32 @@
+.box {
+    $bgcolor: color(black);
+
+    @include flex($direction: column);
+    @include padding(0);
+    @include margin-bottom(2);
+
+    flex-grow: 1;
+    font-weight: 400;
+
+    &:not(.transparent) {
+        background: $bgcolor;
+        background: linear-gradient(90deg, color-black(very-transparent) 0%, color-black(semi-opaque) 50%, color-black(transparent) 100%);
+    }
+
+    h1, h2, h3 {
+        @include margin(0);
+    }
+
+    p,
+    blockquote {
+        @include font($weight: 400, $size: text-size(medium), $height: 1.5);
+    }
+
+    p {
+        white-space: pre-wrap;
+
+        a {
+            font-weight: bold;
+        }
+    }
+}

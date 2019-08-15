@@ -1,0 +1,31 @@
+$container-margin: $gutter-width / 2;
+
+.cols {
+    @include flex($direction: row, $justify: stretch, $wrap: wrap);
+    margin-right: -$container-margin;
+    margin-left: -$container-margin;
+
+
+    .col {
+        @include flex($direction: column, $align: stretch, $justify: stretch);
+        padding-left: $container-margin;
+        padding-right: $container-margin;
+        flex-grow: 1;
+
+        @include mobile-only() {
+            width: 100%;
+        }
+    }
+
+    @for $n from 2 through 4 {
+        &.cols-#{$n}  .col {
+            flex-basis: percentage(1 / $n);
+            max-width: percentage(1 / $n);
+
+            @include mobile-only {
+                flex-basis: percentage(1 / ($n - 1));
+                max-width: percentage(1 / ($n - 1));   
+            }
+        }    
+    }
+}

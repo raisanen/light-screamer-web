@@ -1,0 +1,40 @@
+@import '../../abstracts/include';
+
+.release-item {
+    .buttons {
+        @include flex($direction: row, $justify: center, $align: center);
+        @include padding(4, 2);
+        background-color: color-black(semi-transparent);
+    }
+    .description-and-tracks {
+        @include margin-x(0);
+        @include padding(0);
+
+        .col.description {
+            flex-basis: 70%;
+            max-width: 70%;
+        }
+
+        .tracks {
+            @include padding(2, 2, 3);
+            flex-basis: 30%;
+            max-width: 30%;
+            background-color: color-black(transparent);
+
+            h3 {
+                @include margin-y(0, 1);
+                font-size: text-size(medium);
+            }
+            ol {
+                @include margin(0);
+                @include padding(0);
+                font-size: text-size(small);
+                list-style-position: inside;
+
+                li {
+                    @include margin-bottom(.5);
+                }
+            }
+        }
+    }
+}

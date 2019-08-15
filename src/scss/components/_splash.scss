@@ -1,0 +1,50 @@
+@import '../abstracts/include';
+
+.splash {
+    @include container();
+    color: color(white);
+    @include margin(4, auto, 14);
+    text-align: center;
+
+    p {
+        @include margin(0, auto, 4);
+        @include font($size: text-size(massive), $weight: 700, $height: 1);
+        @include text-shadow-large();
+
+        width: breakpoint(mobile);
+        max-width: 100%;
+
+        i {
+            display: block;
+        }
+    }
+
+    .btn {
+        @include font($size: text-size(large), $weight: 500);
+        background-color: color(white);
+        color: color(black);
+        border: none;
+
+        text-shadow: none;
+
+        .fa {
+            font-size: text-size(larger);
+        }
+
+        &:hover {
+            box-shadow: 0 0 $border-width-medium color-black(transparent);
+        }
+    }
+
+    @include mobile-only {
+        @include margin-bottom(10);
+
+        p {
+            font-size: text-size(xx-large);
+        }
+
+        .btn {
+            font-size: text-size(large);
+        }
+    }
+}

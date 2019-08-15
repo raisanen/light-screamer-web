@@ -20,3 +20,6 @@ export default class Lighbox extends Vue {
     }
 }
 </script>
+<style lang="scss">
+    @import '../scss/components/lightbox';
+</style>
