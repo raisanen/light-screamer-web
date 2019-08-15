@@ -2,11 +2,10 @@
 
 .content-list {
     .box {
-
         h2,
         p.description {
-            @include margin(0);
             @include padding-x(2);
+            @include margin(0);
         }
 
         h2 {
@@ -20,6 +19,10 @@
             }
         }
 
+        img {
+            max-width: 100%;
+        }
+
         p.description {
             @include font($size: text-size(medium), $weight: 400);
             @include padding-y(3, 4);
@@ -27,8 +30,7 @@
 
         .testimonials.cols {
             @include margin-x(0);
-            @include padding(2);
-            background-color: color-black(semi-transparent);
+            @include padding(3, 2, 4);
 
             .col {
                 @include padding-x(0);

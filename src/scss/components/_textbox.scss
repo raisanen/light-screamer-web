@@ -2,4 +2,23 @@
 
 .box.text-box {
     @include padding(2, 2, 3);
+    .links {
+        @include flex($justify: flex-start, $align: center);
+        @include margin-top(2);
+        
+        h3 {
+            @include margin-right(2);
+            &:after {
+                content: ':';
+            }
+        }
+        a {
+            .fa {
+                font-size: text-size(large);
+            }
+            &+a {
+                @include margin-left(2);
+            }
+        }
+    }
 }

@@ -2,7 +2,7 @@
 
 .testimonial {
     @include padding-left(6);
-    @include padding-bottom(2);
+    @include padding-y(2);
 
     position: relative;
 

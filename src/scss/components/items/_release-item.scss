@@ -4,12 +4,18 @@
     .buttons {
         @include flex($direction: row, $justify: center, $align: center);
         @include padding(4, 2);
+        @include margin(0);
         background-color: color-black(semi-transparent);
     }
-    .description-and-tracks {
+    .description-and-tracks, .videos {
         @include margin-x(0);
+    }
+    h3 {
+        @include margin-y(0, 1);
+        font-size: text-size(medium);
+    }
+    .description-and-tracks {
         @include padding(0);
-
         .col.description {
             flex-basis: 70%;
             max-width: 70%;
@@ -21,10 +27,6 @@
             max-width: 30%;
             background-color: color-black(transparent);
 
-            h3 {
-                @include margin-y(0, 1);
-                font-size: text-size(medium);
-            }
             ol {
                 @include margin(0);
                 @include padding(0);
@@ -34,6 +36,43 @@
                 li {
                     @include margin-bottom(.5);
                 }
+            }
+        }
+    }
+    .videos {
+        @include padding(2);
+        background-color: color-black(semi-transparent);
+
+        a {
+            display: block;
+            text-align: center;
+            text-transform: lowercase;
+            @include margin-y(1, 3);
+
+            > span {
+                @include margin-bottom(.5);
+                position: relative;
+                display: block;
+                line-height: 1;
+                img {
+                    max-width: 100%;
+                    display: block;
+                }
+    
+                i.fa {
+                    @include transition($speed: medium);
+                    @include position-absolute-centered($width: 100%, $height: 100%);
+                    @include flex($direction: column, $justify: center, $align: center);
+    
+                    font-size: text-size(xx-large);
+                    line-height: 1;
+                    opacity: 0;
+                }
+            }
+
+            &:hover > span i.fa {
+                background-color: color-black(semi-transparent);
+                opacity: 1;
             }
         }
     }

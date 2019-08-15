@@ -244,14 +244,17 @@ export class TestimonialContainer extends AirtableDtoContainer<Testimonial> {
 
 export class VideoContainer extends AirtableDtoContainer<Video> {
     protected parseData(record: AirtableRecord) {
-        const baseObj = RecordParser.parse(record, 'Text', 'Date', '*url', '*embed', '*releaseIds'); 
+        const baseObj = RecordParser.parse(record, 'Text', 'Date', '*url', '*embed', '*releaseIds'),
+            ytId = (baseObj.url || '').replace(
+                /https?\:\/\/www\.youtube\.com\/watch\?v\=(.+)/,
+                '$1'
+            );
         return (<Video>{
             ...baseObj,
             title: (baseObj.title || '').replace(/^Light Screamer\s+\-\s+/, '').replace(/\s*\(official[^)]+\)/i, ''),
-            imageUrl: (baseObj.url || '').replace(
-                /https?\:\/\/www\.youtube\.com\/watch\?v\=(.+)/,
-                'https://img.youtube.com/vi/$1/0.jpg'
-            )
+            imageUrl: `https://img.youtube.com/vi/${ytId}/0.jpg`,
+            thumbnailSmallUrl: `https://img.youtube.com/vi/${ytId}/4.jpg`,
+            thumbnailLargeUrl: `https://img.youtube.com/vi/${ytId}/1.jpg`,
         });
     }
 }

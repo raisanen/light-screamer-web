@@ -4,8 +4,6 @@
     <main class="content" v-if="currentPage" :class="{loading: initializing || loading}">
         <SplashComponent v-if="currentPage.splash" :splash="currentPage.splash"/>
 
-        <TextBox/>
-
         <router-view/>
 
         <Testimonials v-if="currentPage.testimonials" :testimonials="currentPage.testimonials" :columns="3"/>
@@ -29,7 +27,6 @@ import DynamicStyle from '@/components/DynamicStyle.vue';
 import Navigation from '@/components/Navigation.vue';
 
 const Testimonials = () => import(/* webpackChunkName: "component-testimonials" */ '@/components/Testimonials.vue');
-const TextBox = () => import(/* webpackChunkName: "component-textbox" */ '@/components/TextBox.vue');
 const SplashComponent = () => import(/* webpackChunkName: "component-splash" */ '@/components/Splash.vue');
 const Footer = () => import(/* webpackChunkName: "component-footer" */ '@/components/Footer.vue');
 const Lightbox = () => import(/* webpackChunkName: "component-lightbox" */ '@/components/Lightbox.vue');
@@ -42,7 +39,6 @@ const Lightbox = () => import(/* webpackChunkName: "component-lightbox" */ '@/co
     Navigation,
     SplashComponent,
     Testimonials,
-    TextBox
   },
 })
 export default class IndexPage extends Vue {

@@ -1,6 +1,6 @@
 <template>
-    <div class="box text-box" :class="transparent ? 'transparent' : ''" v-if="currentPage">
-        <h1>{{currentPage.title}}</h1>
+    <div class="box text-box" v-if="currentPage">
+        <h1 v-if="!hideTitle">{{currentPage.title}}</h1>
         <p class="description" v-html="currentPage.description"></p>
         <Links :links="currentPage.links" :title="currentPage.linksTitle"/>
     </div>
@@ -21,7 +21,8 @@ import { Page } from '@/models/dtos';
     }
 })
 export default class TextBox extends Vue {
-    @Prop() protected transparent?: boolean;
+    @Prop() protected hideTitle?: boolean;
+
     @Getter protected currentPage!:Page;
 }
 </script>

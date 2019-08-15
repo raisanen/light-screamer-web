@@ -169,19 +169,6 @@ a, .btn {
     display: none;
 }
 
-.image-icon {
-    $image-icon-size: 36px;
-    @include margin-right(1);
-
-    display: inline-block;
-    overflow: hidden;
-    border-radius: 50%;
-    &, & img {
-        width: $image-icon-size;
-        height: $image-icon-size;
-    }
-}
-
 
 .loading {
     animation: appear speed(slowest) ease-out both;

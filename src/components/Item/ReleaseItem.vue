@@ -25,6 +25,20 @@
                 </ol>
             </div>
         </div>
+        <div class="related videos" v-if="item.videos && item.videos.length > 0">
+            <h3>Videos</h3>
+            <div class="cols cols-3">
+                <div class="col" v-for="(v, index) in item.videos" :key="index">
+                    <router-link class="youtube" v-if="v" :to="{path: '/videos', hash: v.id}">
+                        <span>
+                            <ResponsiveImage :image="v"/>
+                            <i class="fa fa-play-circle"></i>
+                        </span>
+                        {{v.title}}
+                    </router-link>
+                </div> 
+            </div>
+        </div>
     </div>
 </template>
 
@@ -35,12 +49,13 @@ import { Prop } from 'vue-property-decorator';
 import { Release } from '@/models/dtos';
 
 
-const PhotoItem = () => import(/* webpackChunkName: "component-photoitem" */ '@/components//Item/PhotoItem.vue');
-
+const PhotoItem = () => import(/* webpackChunkName: "component-photoitem" */ '@/components/Item/PhotoItem.vue');
+const ResponsiveImage = () => import(/* webpackChunkName: "component-responsive-img" */ '@/components/ResponsiveImage.vue');
 @Component({
     name: 'release-item',
     components: {
-        PhotoItem
+        PhotoItem,
+        ResponsiveImage
     }
 })
 export default class ReleaseItem extends Vue {
