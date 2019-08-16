@@ -20,7 +20,7 @@ import { Getter, Mutation, State } from 'vuex-class';
 
 import moment from 'moment';
 
-import { Page, Meta  } from '@/models/airtable-record';
+import { Page, Meta, AirtableEntryWithMetaTags  } from '@/models/airtable-record';
 
 import Box from '@/components/Box.vue';
 import DynamicStyle from '@/components/DynamicStyle.vue';
@@ -71,16 +71,34 @@ export default class IndexPage extends Vue {
       `;
   }
 
-  private setTitle() {
+  private setTitleAndMeta() {
     const metaTitle = this.meta ? this.meta.title : 'Light Screamer',
       pageTitle = this.currentPage ? this.currentPage.title : '';
 
     document.title = `${metaTitle} - ${pageTitle}`;
+  
+    const setMetaTag = (name: string, content: string) => {
+      if (content === '') {
+        return;
+      }
+      document.querySelector(`meta[name=${name}]`).setAttribute('content', content);
+    };
+
+    const setMeta = (...from: AirtableEntryWithMetaTags[]) => {
+      const description = (from || []).map((f) => f && f.metaDescription ? f.metaDescription : '').filter(d => !!d).join(' ').trim(),
+        keywords = (from || []).map((f) => f && f.metaKeywords ? f.metaKeywords : '').filter(d => !!d).join(', ').trim();
+      setMetaTag('description', description);
+      setMetaTag('keywords', keywords);
+    };
+
+    if (this.meta || this.currentPage) {
+      setMeta(this.meta, this.currentPage);
+    }
   }
 
   beforeMount() {
-    this.$store.dispatch('initialize').then(() => this.setTitle());
-    this.$router.afterEach(() => this.setTitle());
+    this.$store.dispatch('initialize').then(() => this.setTitleAndMeta());
+    this.$router.afterEach(() => this.setTitleAndMeta());
   }
 }
 </script>

@@ -47,6 +47,11 @@ export interface AirtableEntryWithType extends AirtableEntry {
     type: string;
 }
 
+export interface AirtableEntryWithMetaTags extends AirtableEntry {
+    metaDescription?: string;
+    metaKeywords?: string;
+}
+
 export interface AirtableEntryWithImages extends AirtableEntry {
     image?: AirtableImageItem[];
     imageThumbnails?: Thumbnails;
@@ -83,7 +88,8 @@ export interface AirtableMeta
     extends
     AirtableEntryWithImages,
     AirtableEntryWithLinks,
-    AirtableEntryWithTitleAndDescription {
+    AirtableEntryWithTitle,
+    AirtableEntryWithMetaTags {
     footerText: string;
 }
 
@@ -91,6 +97,7 @@ export interface AirtableMeta
 export interface AirtablePage
     extends
     AirtableEntryWithTitleAndDescription,
+    AirtableEntryWithMetaTags,
     AirtableEntryWithTestimonials,
     AirtableEntryWithLinks,
     AirtableEntryWithImages,

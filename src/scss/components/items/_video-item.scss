@@ -1,9 +1,11 @@
 @import '../../abstracts/include';
 
 .content-list {
-    .col.instagram {
-        flex-basis: 50%;
-        max-width: 50%;
+    @include desktop-only {
+        .col.instagram {
+            flex-basis: 50%;
+            max-width: 50%;
+        }    
     }
     .video {
         .video-embed {
