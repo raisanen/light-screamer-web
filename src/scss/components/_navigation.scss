@@ -184,6 +184,9 @@
                         height: $border-width-max;
                         box-shadow: $border-width-medium $border-width-medium color-black(semi-opaque);
                     }
+                    &.router-link-active:hover {
+                        transform: translateY(-1px);
+                    }
                 }
 
                 img {
