@@ -1,13 +1,22 @@
 @import '../../abstracts/include';
 
 .content-list {
+    .col.instagram {
+        flex-basis: 50%;
+        max-width: 50%;
+    }
     .video {
         .video-embed {
             iframe, video {
                 background-color: color-black(opaque);
                 width: 100%;
                 max-width: 100%;
-                height: 400px;
+            }
+            iframe {
+                height: 350px;
+            }
+            video {
+                height: 250px;
             }
         }
         .image-icon {

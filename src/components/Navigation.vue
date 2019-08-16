@@ -2,7 +2,7 @@
   <nav id="nav" :class="{detached: detached}" v-if="pages">
     <div class="mobile-nav" :class="{active: showMenu, detached: mobileDetached}">
       <router-link @click.native="hideMenu()" to="/" class="logo" v-if="meta">
-        <img :src="meta.imageUrl" alt="Light Screamer"/>
+        <img v-if="logo" :src="logo.thumbnails.full.url" alt="Light Screamer"/>
       </router-link>
       <div class="heading" v-if="meta" >
         <router-link @click.native="hideMenu()" to="/">

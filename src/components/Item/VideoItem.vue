@@ -1,5 +1,5 @@
 <template>
-    <div class="video" v-if="item">
+    <div :class="`video ${item.type}`" v-if="item">
         <div v-html="item.embed" class="video-embed"/>
         <slot/>
         <div v-if="item.releaseItems" class="related releases">

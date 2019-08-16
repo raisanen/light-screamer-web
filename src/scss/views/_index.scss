@@ -24,7 +24,7 @@
     }
 
     @include mobile-only {
-        @include padding-top(2);
+        @include padding(2, 1);
     }
 }
 

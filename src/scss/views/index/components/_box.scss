@@ -22,11 +22,11 @@
         @include font($weight: 400, $size: text-size(medium), $height: 1.5);
     }
 
+    a {
+        font-weight: bold;
+    }
+
     p {
         white-space: pre-wrap;
-
-        a {
-            font-weight: bold;
-        }
     }
 }

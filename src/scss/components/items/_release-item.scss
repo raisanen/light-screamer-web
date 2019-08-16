@@ -27,7 +27,7 @@
                 max-width: 70%;
             }
 
-            .tracks {
+            .col.tracks {
                 @include padding(2, 2, 3);
                 flex-basis: 30%;
                 max-width: 30%;
@@ -42,6 +42,12 @@
                     li {
                         @include margin-bottom(.5);
                     }
+                }
+            }
+            @include mobile-only {
+                .col.description, .col.tracks {
+                    flex-basis: 100%;
+                    max-width: 100%;
                 }
             }
         }

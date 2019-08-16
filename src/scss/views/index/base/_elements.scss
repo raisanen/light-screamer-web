@@ -57,7 +57,7 @@ h3 {
 }
 
 h1 {
-    @include font($size: xx-large);
+    font-size: text-size(xx-large);
 }
 h2 {
     font-size: text-size(x-large);

@@ -7,7 +7,7 @@ import AirtableService from '@/services/airtable.service';
 import SocializerService from '@/services/instagram.service';
 
 import { Page, Testimonial, Video, Release, Meta, Photo, Post, Link, Splash, AirtableEntry, Entity, EntityWithTestimonials, AirtableEntryWithTestimonials, AirtableEntryWithLinks, EntityWithLinks, EntityWithVideos, AirtableEntryWithVideos, EntityWithReleases, AirtableEntryWithReleases, AirtableEntryWithDate, EntityWithDate, AirtableImageItem, Thumbnails, AirtableImageSource, EntityWithImage, AirtableEntryWithImages } from '@/models/airtable-record';
-import { InstagramPost } from '@/models/socializer-dtos';
+import { InstagramPost, instagramItemToVideo, instagramItemToPhoto } from '@/models/socializer-dtos';
 
 Vue.use(Vuex);
 
@@ -75,21 +75,7 @@ export const testimonials = (item: AirtableEntryWithTestimonials, state: WebSite
     };
   };
 
-const mapInstagramItem = (item: InstagramPost): any => {
-  const date = moment.utc(item.posted);
-  return {
-    id: item.id,
-    date: date.format('YYYY-MM-DD'),
-    dateMoment: date,
-    formattedDate:  date.format('YYYY-MM-DD'),
-    url: item.postLink,
-    title: item.postByUser,
-    type: 'instagram',
-    description: item.message
-      .replace(/#(\S+)/g,'<a href="https://instagram.com/explore/tags/$1/" rel="noreferrer" target="_blank">#$1</a>')
-      .replace(/@(\S+)/g,'<a href="https://instagram.com/$1" rel="noreferrer" target="_blank">@$1</a>')
-  }
-}
+const sortByDate = (a: {date: string}, b: {date: string}) => a.date < b.date ? 1 : -1;
 
 export default new Vuex.Store<WebSiteState>({
   state: defaultState,
@@ -116,22 +102,15 @@ export default new Vuex.Store<WebSiteState>({
       }).sort((a, b) => a.sort - b.sort);
     },
     videos: (state) => {
-      const videos = state.videos.map((v) => {
-        return {
-          ...v,
-          ...releases(v, state)
-        }
-      });
       return [
-        ...videos,
-        ...state.instagramImages.filter(i => i.type === 'video').map((i) => {
+        ...state.videos.map((v) => {
           return {
-            ...mapInstagramItem(i),
-            entityType: 'video',
-            embed: `<video controls><source src="${i.videoHighResUrl}"></video>`,
+            ...v,
+            ...releases(v, state)
           }
-        })
-      ].sort((a, b) => a.date < b.date ? 1 : -1);
+        }).sort(sortByDate),
+        ...state.instagramImages.filter(i => i.type === 'video').map(instagramItemToVideo).sort(sortByDate)
+      ];
     },
     releases: (state) => {
       return state.releases.map((r) => {
@@ -139,34 +118,15 @@ export default new Vuex.Store<WebSiteState>({
           ...r,
           ...testimonials(r, state),
           ...videos(r, state),
-          trackList: (r.tracks || '').split("\n").map(t => t.trim()).filter(t => t !== '')
+          trackList: (r.tracks || '').split("\n").map(t => t.trim().replace(/^\d+\.\s+/, '')).filter(t => t !== '')
         }
-      }).sort((a, b) => a.date < b.date ? 1 : -1);
+      }).sort(sortByDate);
     },
     photos: (state) => {
       return [
         ...state.photos,
-        ...state.instagramImages.filter(i => i.type === 'image').map((i) => {
-          const date = moment.utc(i.posted),
-            imageItem = <AirtableImageItem>{
-              url: i.postLink,
-              thumbnails: <Thumbnails>{
-                full: <AirtableImageSource>{url: i.imageLargeUrl},
-                large: <AirtableImageSource>{url: i.imageMediumUrl},
-                small: <AirtableImageSource>{url: i.imageSmallUrl}
-              }
-            };
-
-          const p = <Photo> {
-            ...mapInstagramItem(i),
-            entityType: 'photo',
-            type: 'instagram',
-            image: [imageItem],
-            imageItem
-          };
-          return p;
-        })
-      ].sort((a, b) => a.date < b.date ? 1 : -1);
+        ...state.instagramImages.filter(i => i.type === 'image').map(instagramItemToPhoto)
+      ].sort(sortByDate);
     },
     posts: (state) => state.posts,
     testimonials: (state) => state.testimonials,

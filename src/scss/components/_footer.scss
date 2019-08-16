@@ -21,4 +21,7 @@ footer {
             }
         }
     }
+    @include mobile-only {
+        @include padding-x(1);
+    }
 }

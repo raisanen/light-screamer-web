@@ -4,8 +4,8 @@
             {{currentPage.title}}
         </h1>
         <div :class="className">
-            <div class="col" v-for="item in items" :key="item.id">
-                <div class="box" :class="itemComponentName">
+            <div class="col" :class="item.type || ''" v-for="item in items" :key="item.id">
+                <div class="box" :class="`${itemComponentName} ${item.type || ''}`">
                     <h2>
                         <span>
                             <i v-if="item.type" :class="`fa fa-${item.type}`"></i>

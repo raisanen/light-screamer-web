@@ -27,7 +27,7 @@
         </div>
         <div class="related videos" v-if="item.videoItems && item.videoItems.length > 0">
             <h3>Videos</h3>
-            <div class="cols cols-3">
+            <div class="cols cols-4">
                 <div class="col" v-for="(v, index) in item.videoItems" :key="index">
                     <router-link class="youtube" v-if="v" :to="{path: '/videos', hash: v.id}">
                         <span>

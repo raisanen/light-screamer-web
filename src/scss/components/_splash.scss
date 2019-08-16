@@ -8,7 +8,7 @@
 
     p {
         @include margin(0, auto, 4);
-        @include font($size: text-size(massive), $weight: 700, $height: 1);
+        @include font($size: text-size(xxx-large), $weight: 700, $height: 1.2);
         @include text-shadow-large();
 
         width: breakpoint(mobile);
@@ -16,6 +16,7 @@
 
         i {
             display: block;
+            font-size: 1.2em;
         }
     }
 
@@ -37,10 +38,11 @@
     }
 
     @include mobile-only {
-        @include margin-bottom(10);
+        @include margin-y(3, 6);
 
         p {
             font-size: text-size(xx-large);
+            line-height: 1;
         }
 
         .btn {

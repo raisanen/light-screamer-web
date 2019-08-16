@@ -25,7 +25,7 @@
             background-color: color-black(semi-opaque);
             color: color(white);
 
-            &, a.logo, .heading, .menu-button {
+            &, a.logo > img, .heading > a, .menu-button {
                 @include transition($speed: slow);
             }
 
@@ -38,6 +38,10 @@
                 flex-grow: 1;
                 text-align: center;
                 text-shadow: none;
+                > a {
+                    font-weight: bold;
+                    color: color(white);
+                }
             }
             
             .menu-button {
@@ -98,6 +102,10 @@
 
                 .logo > img {
                     filter: invert(1);
+                }
+
+                .heading > a {
+                    color: color(black);
                 }
 
                 .icon {
@@ -207,6 +215,7 @@
             }
 
             li {
+                @include margin(0);
                 display: block;
                 width: 100%;
                 text-align: center;
@@ -220,6 +229,7 @@
                 }
 
                 a {
+                    @include margin(0);
                     display: block;
                     text-shadow: none !important;
 
@@ -228,7 +238,8 @@
                     }
 
                     &:not(.home) {
-                        @include margin-y(1);
+                        @include margin(0);
+                        @include padding-y(1.5);
                         &.router-link-active {
                             background-color: color(white);
                             color: color(black);
