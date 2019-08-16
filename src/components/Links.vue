@@ -19,7 +19,7 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
-import { Link } from '../models/dtos';
+import { Link } from '@/models/airtable-record';
 
 @Component
 export default class Links extends Vue {

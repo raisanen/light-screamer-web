@@ -13,6 +13,11 @@
             @include padding-y(1);
             font-size: text-size(large);
 
+            .fa {
+                flex-grow: 0;
+                flex-basis: 0;
+            }
+
             .date {
                 font-size: text-size(small);
                 font-weight: 400;

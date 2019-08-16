@@ -3,11 +3,8 @@ import Router from 'vue-router';
 
 import IndexPage from '@/views/Index.vue';
 
-const PhotosPage = () => import(/* webpackChunkName: "page-photos"*/ '@/views/pages/Photos.vue');
-const PostsPage = () => import(/* webpackChunkName: "page-posts"*/ '@/views/pages/Posts.vue');
-const ReleasesPage = () => import(/* webpackChunkName: "page-releases"*/ '@/views/pages/Releases.vue');
-const TextPage = () => import(/* webpackChunkName: "page-text"*/ '@/views/pages/Text.vue');
-const VideosPage = () => import(/* webpackChunkName: "page-videos"*/ '@/views/pages/Videos.vue');
+const TextPage = () => import(/* webpackChunkName: "page-text" */ '@/views/pages/Text.vue');
+const ListPage = () => import(/* webpackChunkName: "page-list" */ '@/views/pages/List.vue');
 
 import store from './store';
 
@@ -27,10 +24,10 @@ const router = new Router({
       children: [
         { name: 'home', path: '', component: TextPage },
         { name: 'about', path: 'about', component: TextPage },
-        { name: 'news', path: 'news', component: PostsPage, meta: { requires: ['posts']} },
-        { name: 'releases', path: 'releases', component: ReleasesPage, meta: { requires: ['releases', 'videos']}  },
-        { name: 'videos', path: 'videos', component: VideosPage, meta: { requires: ['videos', 'releases']} },
-        { name: 'photos', path: 'photos', component: PhotosPage, meta: { requires: ['photos', 'instagram']} },
+        { name: 'news', path: 'news', component: ListPage, meta: { requires: ['posts']} },
+        { name: 'releases', path: 'releases', component: ListPage, meta: { requires: ['releases', 'videos']}  },
+        { name: 'videos', path: 'videos', component: ListPage, meta: { requires: ['videos', 'instagram', 'releases']} },
+        { name: 'photos', path: 'photos', component: ListPage, meta: { requires: ['photos', 'instagram']} },
         { name: 'contact', path: 'contact', component: TextPage },
       ]
     }

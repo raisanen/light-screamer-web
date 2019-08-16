@@ -1,9 +1,9 @@
 <template>
-    <picture v-if="image">
-        <source media="(min-width: 901px)" :srcset="image.imageUrl">
-        <source media="(min-width: 701px and max-width: 900px)" :srcset="image.thumbnailLargeUrl">
-        <source media="(max-width: 700px)" :srcset="image.thumbnailSmallUrl">
-        <img :src="image.thumbnailSmallUrl" :alt="image.title">
+    <picture v-if="image && image.thumbnails">
+        <source media="(min-width: 901px)" :srcset="image.thumbnails.full.url">
+        <source media="(min-width: 701px and max-width: 900px)" :srcset="image.thumbnails.large.url">
+        <source media="(max-width: 700px)" :srcset="image.thumbnails.small.url">
+        <img :src="image.thumbnails.small.url" :alt="image.title">
     </picture>
 </template>
 
@@ -11,10 +11,10 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
-import { AirtableImageEntry } from '../models/dtos';
+import { AirtableImageItem} from '@/models/airtable-record';
 
 @Component
 export default class ResponsiveImage extends Vue {
-    @Prop() protected image!: AirtableImageEntry;
+    @Prop() protected image!: AirtableImageItem;
 }
 </script>

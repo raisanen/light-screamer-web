@@ -17,7 +17,7 @@
       <li class="menu-link" v-for="page in pages" :key="page.id">
         <router-link  @click.native="hideMenu()" :class="page.slug" :to="`/${page.slug === 'home' ? '' : page.slug}`">
           <span v-if="meta && page.slug === 'home'">
-            <img :src="meta.imageUrl" alt="Home"/>
+            <ResponsiveImage :image="logo"/>
           </span>
           <span v-else>
             {{page.title}}
@@ -31,9 +31,15 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import { Getter, Mutation, State } from 'vuex-class';
-import { Page, Meta } from '@/models/dtos';
+import { Page, Meta, AirtableImageItem } from '@/models/airtable-record';
 
-@Component
+const ResponsiveImage = () => import(/* webpackChunkName: "component-responsive-img" */ '@/components/ResponsiveImage.vue');
+
+@Component({
+  components: {
+    ResponsiveImage
+  }
+})
 export default class Navigation extends Vue {
   @Getter protected pages!: Page[];
   @Getter protected meta!: Meta;
@@ -41,6 +47,10 @@ export default class Navigation extends Vue {
   protected showMenu: boolean = false;
   protected detached: boolean = false;
   protected mobileDetached: boolean = false;
+
+  protected get logo(): AirtableImageItem {
+    return this.meta && this.meta.imageItem ? this.meta.imageItem : null;
+  }
 
   protected toggleMenu() {
     this.showMenu = !this.showMenu;

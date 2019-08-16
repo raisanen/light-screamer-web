@@ -2,12 +2,14 @@
     <div class="video" v-if="item">
         <div v-html="item.embed" class="video-embed"/>
         <slot/>
-        <div v-if="item.releases" class="related releases">
+        <div v-if="item.releaseItems" class="related releases">
             <h3>
                 Appears on:
             </h3>
-            <router-link v-for="(release, index) in item.releases" :to="{path: '/releases', hash: release ? release.id : ''}" :key="index">
-                <img class="image-icon" :src="release ? release.thumbnailSmallUrl : ''"/>
+            <router-link v-for="(release, index) in item.releaseItems" :to="{path: '/releases', hash: release ? release.id : ''}" :key="index">
+                <span class="image-icon" v-if="release && release.imageThumbnails">
+                    <img :src="release.imageThumbnails.small.url" :alt="release.title">
+                </span>
                 {{release ? release.title : ''}}
             </router-link>
         </div>
@@ -18,10 +20,10 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
-import { Video } from '../../models/dtos';
+import { Video } from '@/models/airtable-record';
 
 @Component({
-    name: 'video-item'
+    name: 'videos-item'
 })
 export default class VideoItem extends Vue {
     @Prop() protected item!: Video;

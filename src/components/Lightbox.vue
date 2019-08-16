@@ -1,8 +1,10 @@
 <template>
-    <div class="lightbox-container" :class="{active: !!lightboxImage}">
-        <button class="close-button" @click="close()"><i class="fa fa-times"></i></button>
-        <div class="lightbox" @click="close()">
-            <img v-if="!!lightboxImage" :src="lightboxImage" alt="Lightboxed image">
+    <div class="lightbox-container" :class="{active: !!lightboxImage}" @click="close">
+        <button class="close-button"><i class="fa fa-times"></i></button>
+        <div class="lightbox dont-close" v-if="lightboxImage">
+            <a :href="lightboxImage.url" target="_blank" rel="noreferrer">
+                <ResponsiveImage :image="lightboxImage"/>
+            </a>
         </div>
     </div>
 </template>
@@ -10,12 +12,26 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Getter } from 'vuex-class';
+import { AirtableImageItem } from '../models/airtable-record';
 
-@Component
+const ResponsiveImage = () => import(/* webpackChunkName: "component-responsive-img" */ '@/components/ResponsiveImage.vue');
+
+@Component({
+    components: {
+        ResponsiveImage
+    }
+})
 export default class Lighbox extends Vue {
-    @Getter protected lightboxImage!: string;
+    @Getter protected lightboxImage!: AirtableImageItem;
 
-    protected close(): void {
+    protected close(event: MouseEvent): void {
+        let elm = event.target as HTMLElement;
+        while (elm && !elm.classList.contains('lightbox-container')) {
+            if (elm.classList.contains('dont-close')) {
+                return;
+            }
+            elm = elm.parentElement;
+        }
         this.$store.dispatch('hideLightbox');
     }
 }

@@ -2,11 +2,11 @@
   <div class="main">
     <Navigation :class="{loading: initializing}"/>
     <main class="content" v-if="currentPage" :class="{loading: initializing || loading}">
-        <SplashComponent v-if="currentPage.splash" :splash="currentPage.splash"/>
+        <SplashComponent v-if="currentPage.splashItem" :splash="currentPage.splashItem"/>
 
         <router-view/>
 
-        <Testimonials v-if="currentPage.testimonials" :testimonials="currentPage.testimonials" :columns="3"/>
+        <Testimonials v-if="currentPage.testimonialItems" :testimonials="currentPage.testimonialItems" :columns="3"/>
     </main>
     <Footer :class="{loading: initializing}"/>
     <Lightbox/>
@@ -20,7 +20,7 @@ import { Getter, Mutation, State } from 'vuex-class';
 
 import moment from 'moment';
 
-import { Page, PageType, Meta  } from '@/models/dtos';
+import { Page, Meta  } from '@/models/airtable-record';
 
 import Box from '@/components/Box.vue';
 import DynamicStyle from '@/components/DynamicStyle.vue';
@@ -49,31 +49,23 @@ export default class IndexPage extends Vue {
   @Getter protected meta!: Meta;
   @Getter protected currentPage!: Page;
 
-  protected get currentPageId(): string {
-    return this.currentPage ? this.currentPage.slug : 'home';
-  }
-
-  protected get currentPageType(): PageType {
-    return this.currentPage ? this.currentPage.type : PageType.Unknown;
-  }
-
-
   protected get dynamicStyle(): string {
     const breakpoint = 700,
-      black = (opacity: string = '1.0') => `rgba(20, 20, 20, ${opacity})`;
+      black = (opacity: string = '1.0') => `rgba(20, 20, 20, ${opacity})`,
+      img = this.currentPage && this.currentPage.imageThumbnails ? this.currentPage.imageThumbnails : null;
 
-    return !this.currentPage ? '' 
+    return !(img) ? '' 
       : `
         @media (min-width: ${breakpoint + 1}px) {
           body { 
             background-image: linear-gradient(${black()}, ${black('0.2')} 20%, ${black('0.2')} 60%, ${black()} 100%),
-              url(${this.currentPage.imageUrl});
+              url(${img.full.url});
             background-blend-mode: multiply, luminosity;
           }
         }
         @media (max-width: ${breakpoint}px) {
           body { 
-            background-image: url(${this.currentPage.imageUrl});
+            background-image: url(${img.large.url});
           }
         }
       `;
@@ -87,7 +79,7 @@ export default class IndexPage extends Vue {
   }
 
   beforeMount() {
-    this.$store.dispatch('initialize');
+    this.$store.dispatch('initialize').then(() => this.setTitle());
     this.$router.afterEach(() => this.setTitle());
   }
 }

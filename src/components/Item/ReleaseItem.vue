@@ -1,6 +1,6 @@
 <template>
     <div class="release">
-        <PhotoItem :item="item"/>
+        <PhotoItem v-if="item && item.image" :item="item"/>
         <div class="buttons">
             <a class="btn bandcamp" v-if="item.bandcamp" :href="item.bandcamp" target="_blank" rel="noreferrer">
                 <i class="fa fa-bandcamp"></i> Bandcamp
@@ -13,25 +13,25 @@
             <div class="col description">
                 <slot/>
             </div>
-            <div v-if="item.tracks" class="col tracks">
+            <div v-if="item.trackList" class="col tracks">
                 <h3>
                     <i class="fa fa-list-ol"></i>
                     Track listing
                 </h3>
                 <ol>
-                    <li v-for="(track, index) in item.tracks" :key="index">
+                    <li v-for="(track, index) in item.trackList" :key="index">
                         {{track}}
                     </li>
                 </ol>
             </div>
         </div>
-        <div class="related videos" v-if="item.videos && item.videos.length > 0">
+        <div class="related videos" v-if="item.videoItems && item.videoItems.length > 0">
             <h3>Videos</h3>
             <div class="cols cols-3">
-                <div class="col" v-for="(v, index) in item.videos" :key="index">
+                <div class="col" v-for="(v, index) in item.videoItems" :key="index">
                     <router-link class="youtube" v-if="v" :to="{path: '/videos', hash: v.id}">
                         <span>
-                            <ResponsiveImage :image="v"/>
+                            <img v-if="v.imageThumbnails" :src="v.imageThumbnails.large.url" :alt="v.title"/>
                             <i class="fa fa-play-circle"></i>
                         </span>
                         {{v.title}}
@@ -46,13 +46,14 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
-import { Release } from '@/models/dtos';
 
+import { Release } from '@/models/airtable-record';
 
 const PhotoItem = () => import(/* webpackChunkName: "component-photoitem" */ '@/components/Item/PhotoItem.vue');
 const ResponsiveImage = () => import(/* webpackChunkName: "component-responsive-img" */ '@/components/ResponsiveImage.vue');
+
 @Component({
-    name: 'release-item',
+    name: 'releases-item',
     components: {
         PhotoItem,
         ResponsiveImage

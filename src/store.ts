@@ -1,9 +1,13 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import AirtableService from '@/services/airtable.service';
-import { Page, Testimonial, Video, Release, Meta, Photo, Post, Link, Splash } from './models/dtos';
-import SocializerService, { InstagramPost } from './services/instagram.service';
+
 import moment from 'moment';
+
+import AirtableService from '@/services/airtable.service';
+import SocializerService from '@/services/instagram.service';
+
+import { Page, Testimonial, Video, Release, Meta, Photo, Post, Link, Splash, AirtableEntry, Entity, EntityWithTestimonials, AirtableEntryWithTestimonials, AirtableEntryWithLinks, EntityWithLinks, EntityWithVideos, AirtableEntryWithVideos, EntityWithReleases, AirtableEntryWithReleases, AirtableEntryWithDate, EntityWithDate, AirtableImageItem, Thumbnails, AirtableImageSource, EntityWithImage, AirtableEntryWithImages } from '@/models/airtable-record';
+import { InstagramPost } from '@/models/socializer-dtos';
 
 Vue.use(Vuex);
 
@@ -26,7 +30,7 @@ export interface WebSiteState {
   initializing: boolean;
   loading: boolean;
 
-  lightboxImage: string;
+  lightboxImage: AirtableImageItem;
   currentPage: string;
 }
 
@@ -48,39 +52,44 @@ export const defaultState: WebSiteState = {
 
   lightboxImage: null,
   currentPage: null
+};
 
+export const testimonials = (item: AirtableEntryWithTestimonials, state: WebSiteState): EntityWithTestimonials => {
+  return <EntityWithTestimonials>{
+    testimonialItems: (item.testimonials || []).map((ti) => state.testimonials.find((t) => t.id === ti))
+  };
+},
+  links = (item: AirtableEntryWithLinks, state: WebSiteState): EntityWithLinks => {
+    return <EntityWithLinks>{
+      linkItems: (item.links || []).map((li) => state.links.find((l) => l.id === li))
+    };
+  },
+  videos = (item: AirtableEntryWithVideos, state: WebSiteState): EntityWithVideos => {
+    return <EntityWithVideos>{
+      videoItems: (item.videos || []).map((li) => state.videos.find((l) => l.id === li))
+    };
+  },
+  releases = (item: AirtableEntryWithReleases, state: WebSiteState): EntityWithReleases => {
+    return <EntityWithReleases>{
+      releaseItems: (item.releases || []).map((li) => state.releases.find((l) => l.id === li))
+    };
+  };
+
+const mapInstagramItem = (item: InstagramPost): any => {
+  const date = moment.utc(item.posted);
+  return {
+    id: item.id,
+    date: date.format('YYYY-MM-DD'),
+    dateMoment: date,
+    formattedDate:  date.format('YYYY-MM-DD'),
+    url: item.postLink,
+    title: item.postByUser,
+    type: 'instagram',
+    description: item.message
+      .replace(/#(\S+)/g,'<a href="https://instagram.com/explore/tags/$1/" rel="noreferrer" target="_blank">#$1</a>')
+      .replace(/@(\S+)/g,'<a href="https://instagram.com/$1" rel="noreferrer" target="_blank">@$1</a>')
+  }
 }
-const idsToObjs = (entry: any, objName: string, state: any) => {
-  const idKey = `${objName}Ids`,
-    stateKey = `${objName}s`,
-    obj: any = {};
-
-  obj[stateKey] = (entry[idKey] || []).map((ti: string) => state[stateKey].find((t: { id: string }) => t.id === ti));
-
-  return obj;
-};
-const makeGetter = (entryName: string) => {
-  return (entry: any, state: WebSiteState) => idsToObjs(entry, entryName, state);
-};
-const testimonials = makeGetter('testimonial'),
-  videos = makeGetter('video'),
-  releases = makeGetter('release'),
-  links = makeGetter('link');
-
-const allUpdates: any = {
-  'pages': service.pages,
-  'meta': service.meta,
-  'links': service.links,
-
-  'splashes': service.splashes,
-  'testimonials': service.testimonials,
-
-  'videos': service.videos,
-  'releases': service.releases,
-  'photos': service.photos,
-  'posts': service.posts,
-  'instagram': socializer.get
-};
 
 export default new Vuex.Store<WebSiteState>({
   state: defaultState,
@@ -92,26 +101,37 @@ export default new Vuex.Store<WebSiteState>({
       const meta = state.meta && state.meta.length > 0 ? state.meta[0] : <Meta>{};
       return <Meta>{
         ...meta,
-        footerLinks: (meta.footerLinkIds || []).map((li) => state.links.find((l) => l.id === li))
+        ...links(meta, state)
       };
     },
     pages: (state) => {
       return state.pages.filter((p) => p.active).map((p) => {
+        const splashes = (p.splash || []).map((pi) => state.splashes.find((s) => s.id === pi));
         return {
           ...p,
           ...testimonials(p, state),
           ...links(p, state),
-          splash: (p.splashId ? state.splashes.find((s) => s.id === p.splashId) : null)
+          splashItem: splashes.length > 0 ? splashes[0] : null
         };
       }).sort((a, b) => a.sort - b.sort);
     },
     videos: (state) => {
-      return state.videos.map((v) => {
+      const videos = state.videos.map((v) => {
         return {
           ...v,
           ...releases(v, state)
         }
-      }).sort((a, b) => a.date < b.date ? 1 : -1);
+      });
+      return [
+        ...videos,
+        ...state.instagramImages.filter(i => i.type === 'video').map((i) => {
+          return {
+            ...mapInstagramItem(i),
+            entityType: 'video',
+            embed: `<video controls><source src="${i.videoHighResUrl}"></video>`,
+          }
+        })
+      ].sort((a, b) => a.date < b.date ? 1 : -1);
     },
     releases: (state) => {
       return state.releases.map((r) => {
@@ -119,6 +139,7 @@ export default new Vuex.Store<WebSiteState>({
           ...r,
           ...testimonials(r, state),
           ...videos(r, state),
+          trackList: (r.tracks || '').split("\n").map(t => t.trim()).filter(t => t !== '')
         }
       }).sort((a, b) => a.date < b.date ? 1 : -1);
     },
@@ -126,20 +147,24 @@ export default new Vuex.Store<WebSiteState>({
       return [
         ...state.photos,
         ...state.instagramImages.filter(i => i.type === 'image').map((i) => {
-          return <Photo>{
-            id: i.id,
-            date: moment.utc(i.posted),
-            dateString:  moment.utc(i.posted).format('YYYY-MM-DD'),
-            description: i.message
-              .replace(/#(\S+)/g,'<a href="https://instagram.com/explore/tags/$1/" rel="noreferrer" target="_blank">#$1</a>')
-              .replace(/@(\S+)/g,'<a href="https://instagram.com/$1" rel="noreferrer" target="_blank">@$1</a>'),
-            imageUrl: i.imageLargeUrl,
-            thumbnailSmallUrl: i.imageSmallUrl,
-            thumbnailLargeUrl: i.imageLargeUrl,
-            postLink: i.postLink,
-            title: i.postByUser,
-            type: 'instagram'
-          }
+          const date = moment.utc(i.posted),
+            imageItem = <AirtableImageItem>{
+              url: i.postLink,
+              thumbnails: <Thumbnails>{
+                full: <AirtableImageSource>{url: i.imageLargeUrl},
+                large: <AirtableImageSource>{url: i.imageMediumUrl},
+                small: <AirtableImageSource>{url: i.imageSmallUrl}
+              }
+            };
+
+          const p = <Photo> {
+            ...mapInstagramItem(i),
+            entityType: 'photo',
+            type: 'instagram',
+            image: [imageItem],
+            imageItem
+          };
+          return p;
         })
       ].sort((a, b) => a.date < b.date ? 1 : -1);
     },
@@ -152,7 +177,7 @@ export default new Vuex.Store<WebSiteState>({
     currentPage(state, name: string) {
       state.currentPage = name;
     },
-    lightbox(state, image: string) {
+    lightbox(state, image: AirtableImageItem) {
       state.lightboxImage = image || null;
     },
     initializing(state, initializing: boolean) {
@@ -201,21 +226,23 @@ export default new Vuex.Store<WebSiteState>({
     },
     async initialize() {
       this.commit('initializing', true);
-      this.commit('pages', await service.pages());
-      this.commit('meta', await service.meta());
+      this.commit('pages', await service.fetch('pages'));
+      this.commit('meta', await service.fetch('meta'));
       this.commit('initializing', false);
     },
-    async loadData(_, payload: { update: string[]; overwrite?: boolean; }) {
-      const tablesToUpdate = [... payload.update],
-        overwrite = !!payload.overwrite;
+    async loadData(_, payload: { update: string[]; }) {
+      const tablesToUpdate = [... payload.update];
 
       if (tablesToUpdate.length > 0) {
-        !overwrite && this.commit('loading', true);
-
+        this.commit('loading', true);
         for (var table of tablesToUpdate) {
-          this.commit(table, await allUpdates[table].call(table === 'instagram' ? socializer : service, overwrite));
+          if (table === 'instagram') {
+            this.commit(table, await socializer.render());
+          } else {
+            this.commit(table, await service.fetch(table));
+          }
         }
-        !overwrite && this.commit('loading', false);
+        this.commit('loading', false);
       }
     }
   }
