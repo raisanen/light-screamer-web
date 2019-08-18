@@ -1,6 +1,5 @@
 <template>
-    <div class="box text-box" v-if="currentPage">
-        <h1 v-if="!hideTitle">{{currentPage.title}}</h1>
+    <div class="box text-box" v-if="currentPage && (pageHasDescription || pageHasLinks)">
         <p class="description" v-html="currentPage.description"></p>
         <Links v-if="currentPage.linkItems" :links="currentPage.linkItems" :title="currentPage.linksTitle"/>
     </div>
@@ -21,9 +20,16 @@ import { Page } from '@/models/airtable-record';
     }
 })
 export default class TextBox extends Vue {
-    @Prop() protected hideTitle?: boolean;
-
     @Getter protected currentPage!:Page;
+
+    protected get pageHasLinks(): boolean {
+        return this.currentPage.linkItems && this.currentPage.linkItems.length > 0;
+    }
+
+    protected get pageHasDescription(): boolean {
+        return (this.currentPage ? this.currentPage.description || '' : '').trim().length > 0;
+    }
+
 }
 </script>
 

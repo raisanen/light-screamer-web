@@ -1,20 +1,28 @@
 <template>
-    <div :class="currentPageType" v-if="items">
+    <div :class="currentPageType" v-if="currentPage && items">
+        <h1>{{currentPage.title}}</h1>
+        <Testimonials v-if="currentPage.testimonialItems && !currentPage.splashTestimonial" :testimonials="currentPage.testimonialItems" :columns="3"/>
         <ContentList :items="items" :columns="numColumns" :type="currentPageType"/>
+        <TextBox/>
     </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
-import { Photo, Entity, Page } from '@/models/airtable-record';
-
-import ContentList from '@/components/ContentList.vue';
 import { Getter } from 'vuex-class';
+
+import { Entity, Page } from '@/models/airtable-record';
+import ContentList from '@/components/ContentList.vue';
+
+const Testimonials = () => import(/* webpackChunkName: "component-testimonials" */ '@/components/Testimonials.vue');
+const TextBox = () => import(/* webpackChunkName: "component-textbox" */ '@/components/TextBox.vue');
 
 @Component({
     components: {
-        ContentList
+        ContentList,
+        Testimonials,
+        TextBox
     }
 })
 export default class ListPage extends Vue {
@@ -33,13 +41,6 @@ export default class ListPage extends Vue {
             return this.$store.getters[this.currentPageType];
         }
         return [];
-    }
-
-    beforeMount() {
-        console.log(this.currentPageType);
-        if (this.$store.getters[this.currentPageType]) {
-            console.log(this.$store.getters[this.currentPageType]);
-        }
     }
 }
 </script>

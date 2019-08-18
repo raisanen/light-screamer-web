@@ -1,5 +1,8 @@
 $container-margin: $gutter-width / 2;
-
+@mixin max-w($w) {
+    flex-basis: percentage($w);
+    max-width: percentage($w);
+}
 .cols {
     @include flex($direction: row, $justify: stretch, $wrap: wrap);
     margin-right: -$container-margin;
@@ -17,14 +20,22 @@ $container-margin: $gutter-width / 2;
         }
     }
 
-    @for $n from 2 through 4 {
+    @for $n from 2 through 6 {
         &.cols-#{$n}  .col {
-            flex-basis: percentage(1 / $n);
-            max-width: percentage(1 / $n);
+            $w: 1 / $n;
+            $mw: 1 / ($n - 1);
+            @include max-w($w);
 
             @include mobile-only {
-                flex-basis: percentage(1 / ($n - 1));
-                max-width: percentage(1 / ($n - 1));   
+                @include max-w($mw);
+            }
+            @for $c from 2 through $n {
+                &.col-#{$c} {
+                    @include max-w($w * $c);
+                    @include mobile-only {
+                        @include max-w($mw * $c);
+                    }
+                }
             }
         }    
     }

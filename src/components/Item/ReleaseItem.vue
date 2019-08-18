@@ -1,6 +1,7 @@
 <template>
     <div class="release">
-        <PhotoItem v-if="item && item.image" :item="item"/>
+        <slot name="standard-header"/>
+        <slot name="standard-image"/>
         <div class="buttons">
             <a class="btn bandcamp" v-if="item.bandcamp" :href="item.bandcamp" target="_blank" rel="noreferrer">
                 <i class="fa fa-bandcamp"></i> Bandcamp
@@ -11,7 +12,7 @@
         </div>
         <div class="cols cols-2 description-and-tracks">
             <div class="col description">
-                <slot/>
+                <slot name="description"/>
             </div>
             <div v-if="item.trackList" class="col tracks">
                 <h3>
@@ -39,6 +40,8 @@
                 </div> 
             </div>
         </div>
+
+        <slot name="testimonials"/>
     </div>
 </template>
 
@@ -49,15 +52,8 @@ import { Prop } from 'vue-property-decorator';
 
 import { Release } from '@/models/airtable-record';
 
-const PhotoItem = () => import(/* webpackChunkName: "component-photoitem" */ '@/components/Item/PhotoItem.vue');
-const ResponsiveImage = () => import(/* webpackChunkName: "component-responsive-img" */ '@/components/ResponsiveImage.vue');
-
 @Component({
-    name: 'releases-item',
-    components: {
-        PhotoItem,
-        ResponsiveImage
-    }
+    name: 'releases-item'
 })
 export default class ReleaseItem extends Vue {
     @Prop() protected item!: Release;

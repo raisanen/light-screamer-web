@@ -1,6 +1,6 @@
 @import '../abstracts/include';
 
-.testimonial {
+.box.testimonial {
     @include padding(1, 6);
     @include padding-y(2);
 

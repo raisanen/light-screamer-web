@@ -78,18 +78,30 @@ export interface AirtableEntryWithVideos extends AirtableEntry {
  * 
  */
 
+export interface AirtableEvent
+    extends
+        AirtableEntryWithDate,
+        AirtableEntryWithUrl,
+        AirtableEntryWithTitleAndDescription,
+        AirtableEntryWithImages
+{
+    venue: string;
+}
+
 export interface AirtableLink
     extends
-    AirtableEntryWithUrl,
-    AirtableEntryWithTitleAndDescription,
-    AirtableEntryWithType { }
+        AirtableEntryWithUrl,
+        AirtableEntryWithTitleAndDescription,
+        AirtableEntryWithType 
+{ }
 
 export interface AirtableMeta
     extends
-    AirtableEntryWithImages,
-    AirtableEntryWithLinks,
-    AirtableEntryWithTitle,
-    AirtableEntryWithMetaTags {
+        AirtableEntryWithImages,
+        AirtableEntryWithLinks,
+        AirtableEntryWithTitle,
+        AirtableEntryWithMetaTags
+{
     footerText: string;
 }
 
@@ -106,8 +118,8 @@ export interface AirtablePage
     sort: number;
     slug: string;
     active?: boolean;
+    splashTestimonial?: boolean;
 }
-
 
 export interface AirtablePost
     extends
@@ -180,7 +192,7 @@ export interface EntityWithReleases extends AirtableEntryWithReleases {
     releaseItems?: AirtableRelease[];
 }
 export interface EntityWithSplash extends AirtableEntryWithSplash {
-    splashItem?: AirtableSplash;
+    splashItem?: AirtableSplash | AirtableTestimonial;
 }
 export interface EntityWithTestimonials extends AirtableEntryWithTestimonials {
     testimonialItems?: AirtableTestimonial[];
@@ -190,6 +202,14 @@ export interface EntityWithVideos extends AirtableEntryWithVideos {
 }
 
 
+export interface Event 
+    extends 
+        Entity, 
+        EntityWithDate,
+        EntityWithImage,
+        AirtableEvent
+{
+}
 
 export interface Link
     extends Entity, AirtableLink {
@@ -200,7 +220,7 @@ export interface Meta
 }
 
 export interface Page
-    extends Entity, EntityWithImage, EntityWithLinks, EntityWithTestimonials, AirtablePage {
+    extends Entity, EntityWithSplash, EntityWithImage, EntityWithLinks, EntityWithTestimonials, AirtablePage {
 }
 
 export interface Post
@@ -281,8 +301,10 @@ export const mapRecordToEntity = <T extends Entity>(source: AirtableRecord): T =
             image.imageThumbnails = image.image[0].thumbnails;
             extraObj = { ...extraObj, ...image };
         }
-    } else if (source.fields.date) {
+    } 
+    if (source.fields.date) {
         const mom = moment.utc(source.fields.date);
+        console.log(source.fields.date, mom.format('YYYY-MM-DD'));
         if (mom.isValid()) {
             extraObj = {
                 ...extraObj,

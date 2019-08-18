@@ -1,0 +1,11 @@
+@import '../../abstracts/include';
+
+.content-list {
+    .events-item {
+        h2 .date { display: none; }
+        h3 {
+            @include padding(1, 2);
+            background-color: color-black(transparent);
+        }
+    }
+}

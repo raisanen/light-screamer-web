@@ -6,7 +6,7 @@ import moment from 'moment';
 import AirtableService from '@/services/airtable.service';
 import SocializerService from '@/services/instagram.service';
 
-import { Page, Testimonial, Video, Release, Meta, Photo, Post, Link, Splash, AirtableEntry, Entity, EntityWithTestimonials, AirtableEntryWithTestimonials, AirtableEntryWithLinks, EntityWithLinks, EntityWithVideos, AirtableEntryWithVideos, EntityWithReleases, AirtableEntryWithReleases, AirtableEntryWithDate, EntityWithDate, AirtableImageItem, Thumbnails, AirtableImageSource, EntityWithImage, AirtableEntryWithImages } from '@/models/airtable-record';
+import { Page, Testimonial, Video, Release, Meta, Photo, Post, Link, Splash, AirtableEntry, Entity, EntityWithTestimonials, AirtableEntryWithTestimonials, AirtableEntryWithLinks, EntityWithLinks, EntityWithVideos, AirtableEntryWithVideos, EntityWithReleases, AirtableEntryWithReleases, AirtableEntryWithDate, EntityWithDate, AirtableImageItem, Thumbnails, AirtableImageSource, EntityWithImage, AirtableEntryWithImages, Event } from '@/models/airtable-record';
 import { InstagramPost, instagramItemToVideo, instagramItemToPhoto } from '@/models/socializer-dtos';
 
 Vue.use(Vuex);
@@ -24,6 +24,7 @@ export interface WebSiteState {
   posts: Post[];
   links: Link[];
   splashes: Splash[];
+  events: Event[];
 
   meta: Meta[];
 
@@ -32,6 +33,8 @@ export interface WebSiteState {
 
   lightboxImage: AirtableImageItem;
   currentPage: string;
+
+  loaded: string[];
 }
 
 export const defaultState: WebSiteState = {
@@ -44,6 +47,7 @@ export const defaultState: WebSiteState = {
   posts: [],
   links: [],
   splashes: [],
+  events: [],
 
   meta: [],
 
@@ -51,7 +55,8 @@ export const defaultState: WebSiteState = {
   initializing: false,
 
   lightboxImage: null,
-  currentPage: null
+  currentPage: null,
+  loaded: []
 };
 
 export const testimonials = (item: AirtableEntryWithTestimonials, state: WebSiteState): EntityWithTestimonials => {
@@ -80,9 +85,11 @@ const sortByDate = (a: {date: string}, b: {date: string}) => a.date < b.date ? 1
 export default new Vuex.Store<WebSiteState>({
   state: defaultState,
   getters: {
+    loaded: (state) => state.loaded,
     currentPage: (state, getters) => getters.pages.find((p: Page) => p.slug === state.currentPage),
     lightboxImage: (state) => state.lightboxImage,
     initializing: (state) => state.initializing,
+    events: (state) => state.events,
     meta: (state) => {
       const meta = state.meta && state.meta.length > 0 ? state.meta[0] : <Meta>{};
       return <Meta>{
@@ -92,12 +99,16 @@ export default new Vuex.Store<WebSiteState>({
     },
     pages: (state) => {
       return state.pages.filter((p) => p.active).map((p) => {
-        const splashes = (p.splash || []).map((pi) => state.splashes.find((s) => s.id === pi));
+        const splashes = (p.splash || []).map((pi) => state.splashes.find((s) => s.id === pi)),
+          tests = testimonials(p, state),
+          splashItem = p.splashTestimonial && tests.testimonialItems.length > 0 
+            ? tests.testimonialItems[Math.floor(Math.random()*tests.testimonialItems.length)]
+            : splashes.length > 0 ? splashes[0] : null;
         return {
           ...p,
-          ...testimonials(p, state),
+          ...tests,
           ...links(p, state),
-          splashItem: splashes.length > 0 ? splashes[0] : null
+          splashItem
         };
       }).sort((a, b) => a.sort - b.sort);
     },
@@ -134,8 +145,14 @@ export default new Vuex.Store<WebSiteState>({
     loading: (state) => state.loading
   },
   mutations: {
+    loaded(state, name: string) {
+      state.loaded = [...state.loaded.filter(l => l !== name), name];
+    },
     currentPage(state, name: string) {
       state.currentPage = name;
+    },
+    events(state, events: Event[]) {
+      state.events = [...events];
     },
     lightbox(state, image: AirtableImageItem) {
       state.lightboxImage = image || null;
@@ -190,19 +207,21 @@ export default new Vuex.Store<WebSiteState>({
       this.commit('meta', await service.fetch('meta'));
       this.commit('initializing', false);
     },
-    async loadData(_, payload: { update: string[]; }) {
-      const tablesToUpdate = [... payload.update];
+    async loadData(state, payload: { update: string[]; }) {
+      const alreadyLoaded = state.getters.loaded, 
+        tablesToUpdate = [ ...payload.update ].filter((t) => !alreadyLoaded.includes(t));
 
       if (tablesToUpdate.length > 0) {
-        this.commit('loading', true);
+        const loading = alreadyLoaded.length > 0 ? 'loading' : 'initializing'; 
+        this.commit(loading, true);
         for (var table of tablesToUpdate) {
-          if (table === 'instagram') {
-            this.commit(table, await socializer.render());
-          } else {
-            this.commit(table, await service.fetch(table));
-          }
+          const update: Entity[] = (table === 'instagram') 
+            ? await socializer.render()
+            : await service.fetch(table);
+          this.commit(table, update);
+          this.commit('loaded', table);
         }
-        this.commit('loading', false);
+        this.commit(loading, false);
       }
     }
   }

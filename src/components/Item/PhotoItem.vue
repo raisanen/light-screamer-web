@@ -1,10 +1,8 @@
 <template>
     <div class="photo" v-show="item && item.imageItem">
-        <a @click="showLightbox()" :class="item.type || 'photo'">
-            <ResponsiveImage :image="item.imageItem"/>
-            <i v-if="item.type" :class="`fa fa-${item.type}`"></i>
-        </a>
-        <slot></slot>
+        <slot name="standard-header"/>
+        <slot name="standard-image"/>
+        <slot name="description"/>
     </div>
 </template>
 
@@ -14,20 +12,11 @@ import Component from 'vue-class-component';
 import { Prop } from 'vue-property-decorator';
 import { EntityWithImage } from '@/models/airtable-record';
 
-const ResponsiveImage = () => import(/* webpackChunkName: "component-responsive-img" */ '@/components/ResponsiveImage.vue');
-
 @Component({
     name: 'photos-item',
-    components: {
-        ResponsiveImage
-    }
 })
 export default class PhotoItem extends Vue {
     @Prop() protected item!: EntityWithImage;
-
-    protected showLightbox(): void {
-        this.$store.dispatch('showLightbox', this.item.imageItem);
-    }
 }
 </script>
 

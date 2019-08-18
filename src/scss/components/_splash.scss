@@ -19,6 +19,20 @@
             font-size: 1.2em;
         }
     }
+    &.testimonial {
+        p {
+            font-size: text-size(xx-large);
+            font-style: italic;
+            &:before {
+                @include font($size: text-size(xxx-large), $style: normal);
+                @include margin-right(1);
+                content: '\00bb';        
+            }
+        }
+        cite {
+            @include font($size: text-size(large), $weight: 500, $style: normal);
+        }    
+    }
 
     .btn {
         @include font($size: text-size(large), $weight: 500);

@@ -3,10 +3,7 @@
     <Navigation :class="{loading: initializing}"/>
     <main class="content" v-if="currentPage" :class="{loading: initializing || loading}">
         <SplashComponent v-if="currentPage.splashItem" :splash="currentPage.splashItem"/>
-
         <router-view/>
-
-        <Testimonials v-if="currentPage.testimonialItems" :testimonials="currentPage.testimonialItems" :columns="3"/>
     </main>
     <Footer :class="{loading: initializing}"/>
     <Lightbox/>
@@ -20,13 +17,12 @@ import { Getter, Mutation, State } from 'vuex-class';
 
 import moment from 'moment';
 
-import { Page, Meta, AirtableEntryWithMetaTags  } from '@/models/airtable-record';
+import { Page, Meta, AirtableEntryWithMetaTags, AirtableTestimonial, AirtableSplash  } from '@/models/airtable-record';
 
 import Box from '@/components/Box.vue';
 import DynamicStyle from '@/components/DynamicStyle.vue';
 import Navigation from '@/components/Navigation.vue';
 
-const Testimonials = () => import(/* webpackChunkName: "component-testimonials" */ '@/components/Testimonials.vue');
 const SplashComponent = () => import(/* webpackChunkName: "component-splash" */ '@/components/Splash.vue');
 const Footer = () => import(/* webpackChunkName: "component-footer" */ '@/components/Footer.vue');
 const Lightbox = () => import(/* webpackChunkName: "component-lightbox" */ '@/components/Lightbox.vue');
@@ -37,8 +33,7 @@ const Lightbox = () => import(/* webpackChunkName: "component-lightbox" */ '@/co
     Footer,
     Lightbox,
     Navigation,
-    SplashComponent,
-    Testimonials,
+    SplashComponent
   },
 })
 export default class IndexPage extends Vue {
@@ -97,7 +92,7 @@ export default class IndexPage extends Vue {
   }
 
   beforeMount() {
-    this.$store.dispatch('initialize').then(() => this.setTitleAndMeta());
+    this.setTitleAndMeta();
     this.$router.afterEach(() => this.setTitleAndMeta());
   }
 }

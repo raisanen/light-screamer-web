@@ -1,7 +1,6 @@
 import moment from 'moment';
 
 import { 
-    AirtableRecord,
     AirtableResponse,
     mapRecordToEntity,
     Entity

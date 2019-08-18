@@ -1,7 +1,8 @@
 <template>
     <div :class="`video ${item.type}`" v-if="item">
+        <slot name="standard-header"/>
         <div v-html="item.embed" class="video-embed"/>
-        <slot/>
+        <slot name="description"/>
         <div v-if="item.releaseItems" class="related releases">
             <h3>
                 Appears on:

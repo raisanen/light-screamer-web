@@ -7,7 +7,6 @@
             @include padding-x(2);
             @include margin(0);
         }
-
         h2 {
             @include flex($justify: space-between, $align: center);
             @include padding-y(1);
@@ -26,6 +25,15 @@
 
         img {
             max-width: 100%;
+        }
+        .image {
+            position: relative;
+            height: 350px;
+            overflow: hidden;
+            img {
+                @include position-absolute-centered;
+                
+            }
         }
 
         p.description {

@@ -3,12 +3,7 @@
 .content-list {
     .photo {
         line-height: 0;
-        > a {
-            position: relative;
-            display: block;
-            width: 100%;
-            height: 400px;
-            overflow: hidden;
+        .image > a {
             img, .fa {
                 @include transition($speed: medium);
                 @include position-absolute-centered();

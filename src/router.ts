@@ -20,14 +20,15 @@ const router = new Router({
     {
       path: '/',
       component: IndexPage, 
-      meta: { requires: [ 'links', 'splashes', 'testimonials' ]},
+      meta: { requires: [ 'pages', 'meta', 'links', 'splashes', 'testimonials' ]},
       children: [
         { name: 'home', path: '', component: TextPage },
         { name: 'about', path: 'about', component: TextPage },
-        { name: 'news', path: 'news', component: ListPage, meta: { requires: ['posts']} },
-        { name: 'releases', path: 'releases', component: ListPage, meta: { requires: ['releases', 'videos']}  },
-        { name: 'videos', path: 'videos', component: ListPage, meta: { requires: ['videos', 'instagram', 'releases']} },
-        { name: 'photos', path: 'photos', component: ListPage, meta: { requires: ['photos', 'instagram']} },
+        { name: 'shows', path: 'shows', component: ListPage, meta: { requires: ['events'] } },
+        { name: 'news', path: 'news', component: ListPage, meta: { requires: ['posts'] } },
+        { name: 'releases', path: 'releases', component: ListPage, meta: { requires: ['releases', 'videos'] } },
+        { name: 'videos', path: 'videos', component: ListPage, meta: { requires: ['videos', 'instagram', 'releases'] } },
+        { name: 'photos', path: 'photos', component: ListPage, meta: { requires: ['photos', 'instagram'] } },
         { name: 'contact', path: 'contact', component: TextPage },
       ]
     }
