@@ -5,6 +5,7 @@ import moment from 'moment';
 
 import AirtableService from '@/services/airtable.service';
 import SocializerService from '@/services/instagram.service';
+import FacebookEventsService from '@/services/facebookevents.service';
 
 import { Page, Testimonial, Video, Release, Meta, Photo, Post, Link, Splash, AirtableEntry, Entity, EntityWithTestimonials, AirtableEntryWithTestimonials, AirtableEntryWithLinks, EntityWithLinks, EntityWithVideos, AirtableEntryWithVideos, EntityWithReleases, AirtableEntryWithReleases, AirtableEntryWithDate, EntityWithDate, AirtableImageItem, Thumbnails, AirtableImageSource, EntityWithImage, AirtableEntryWithImages, Event } from '@/models/airtable-record';
 import { InstagramPost, instagramItemToVideo, instagramItemToPhoto } from '@/models/socializer-dtos';
@@ -12,7 +13,8 @@ import { InstagramPost, instagramItemToVideo, instagramItemToPhoto } from '@/mod
 Vue.use(Vuex);
 
 const service = new AirtableService(),
-  socializer = new SocializerService();
+  socializer = new SocializerService(),
+  facebook = new FacebookEventsService();
 
 export interface WebSiteState {
   pages: Page[];
@@ -218,7 +220,13 @@ export default new Vuex.Store<WebSiteState>({
           const update: Entity[] = (table === 'instagram') 
             ? await socializer.render()
             : await service.fetch(table);
-          this.commit(table, update);
+          if (table === 'events') {
+            const fbEvents = await facebook.get();
+            console.log(fbEvents);
+            this.commit(table, [...fbEvents, ...update]);
+          } else {
+            this.commit(table, update);
+          }
           this.commit('loaded', table);
         }
         this.commit(loading, false);

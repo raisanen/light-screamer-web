@@ -5,13 +5,19 @@
                 <slot name="date"/> / <slot name="title"/>
             </a>
         </h2>
-        <slot name="image"/>
-        <h3>
-                <slot name="date"/>
-                &mdash;
-                <i>{{item.venue}}</i>
-        </h3>
-        <slot name="description"/>
+        <div class="expander" :class="{active: readmore}">
+            <slot name="image"/>
+            <h3>
+                    <slot name="date"/>
+                    &mdash;
+                    <i>{{item.venue}}</i>
+            </h3>
+            <slot name="description"/>
+            <button class="btn solid" @click="readmore = true">
+                <i class="fa fa-chevron-circle-down"></i>
+                read more
+            </button>
+        </div>
     </div>
 </template>
 
@@ -27,6 +33,8 @@ import { Event } from '@/models/airtable-record';
 })
 export default class EventItem extends Vue {
     @Prop() protected item!: Event;
+
+    protected readmore: boolean = false;
 }
 </script>
 

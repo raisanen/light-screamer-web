@@ -20,7 +20,7 @@ const router = new Router({
     {
       path: '/',
       component: IndexPage, 
-      meta: { requires: [ 'pages', 'meta', 'links', 'splashes', 'testimonials' ]},
+      meta: { requires: [ ]},
       children: [
         { name: 'home', path: '', component: TextPage },
         { name: 'about', path: 'about', component: TextPage },
@@ -39,7 +39,7 @@ router.beforeEach((to, _, next) => {
   const wantedData = to.matched
     .filter((record) => record.meta && record.meta.requires)
     .map((record) => record.meta.requires)
-    .reduce((p, c) => [...p, ...c], []),
+    .reduce((p, c) => [...p, ...c], ['pages', 'meta', 'links', 'splashes', 'testimonials']),
     wantedPage = to.name || 'home';
 
   store.commit('currentPage', wantedPage);
