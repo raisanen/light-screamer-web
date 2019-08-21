@@ -1,0 +1,37 @@
+@include critical {
+    .box {
+        @extend %flex-box--column;
+        @extend %no-padding;
+    
+        @include margin-bottom(2);
+    
+        flex-grow: 1;
+        font-weight: 400;
+        
+        h1, h2, h3 {
+            @extend %no-margin;
+        }
+    
+        p,
+        blockquote {
+            @include font($weight: 400, $size: text-size(medium), $height: 1.5);
+        }
+    
+        a {
+            font-weight: bold;
+        }
+    
+        p {
+            white-space: pre-wrap;
+        }
+    }    
+}
+
+@include non-critical {
+    .box {
+        &:not(.box--transparent) {
+            background: color(black);
+            background: linear-gradient(90deg, color-black(very-transparent) 0%, color-black(semi-opaque) 50%, color-black(transparent) 100%);
+        }
+    }
+}

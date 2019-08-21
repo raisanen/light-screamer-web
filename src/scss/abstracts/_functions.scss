@@ -1,0 +1,54 @@
+@function size($factor, $base: $base-size) {
+    @if $factor==auto {
+        @return $factor;
+    }
+
+    @return $base * $factor;
+}
+
+@function relative-size($factor) {
+    @return size(1em);
+}
+
+@function z($level) {
+    @if map-has($z-levels, $level) {
+        @return map-get($z-levels, $level);
+    }
+    @return $level;
+}
+
+@function speed($speed) {
+    @if map-has($transition-speeds, $speed) {
+        @return map-get($transition-speeds, $speed);
+    }
+    @return map-get($transition-speeds, fast);
+}
+
+@function color($color) {
+    @if map-has($colors, $color) {
+        @return map-get($colors, $color);
+    }
+
+    @return transparent;
+}
+@function text-size($size) {
+    @if map-has($text-size, $size) {
+        @return map-get($text-size, $size);
+    }
+    @return 1em;
+}
+
+@function color-black($opacity: max) {
+    @if map-has($background-opacity, $opacity) {
+        @return rgba(color(black), map-get($background-opacity, $opacity));
+    }
+    @return rgba(color(black), map-get($background-opacity, opaque));
+}
+
+@function breakpoint($breakpoint) {
+    @if map-has($breakpoints, $breakpoint) {
+        @return map-get($breakpoints, $breakpoint);
+    }
+
+    @return map-get($breakpoints, desktop);
+}

@@ -2,11 +2,11 @@
 <div :class="containerClass" v-if="testimonials && testimonials.length > 0">
     <div class="col" v-for="(item, index) in testimonials" :key="index" :id="item ? item.id : ''">
         <div class="box testimonial" v-if="item">
-            <blockquote>{{item.description}}</blockquote>
-            <a class="source" v-if="item.url" :href="item.url" target="_blank" rel="noreferrer">
+            <blockquote class="testimonial__quote">{{item.description}}</blockquote>
+            <a class="testimonial__source" v-if="item.url" :href="item.url" target="_blank" rel="noreferrer">
                 {{item.label}}
             </a>
-            <span class="source" v-else>
+            <span class="testimonial__source" v-else>
                 {{item.label}}
             </span>
         </div>
@@ -33,6 +33,3 @@ export default class Testimonials extends Vue {
     }
 }
 </script>
-<style lang="scss">
-    @import '../scss/components/testimonials';
-</style>

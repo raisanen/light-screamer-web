@@ -1,5 +1,5 @@
 <template>
-    <div class="post">
+    <div class="list-item--post">
     </div>
 </template>
 

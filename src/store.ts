@@ -91,7 +91,7 @@ export default new Vuex.Store<WebSiteState>({
     currentPage: (state, getters) => getters.pages.find((p: Page) => p.slug === state.currentPage),
     lightboxImage: (state) => state.lightboxImage,
     initializing: (state) => state.initializing,
-    events: (state) => state.events,
+    events: (state) => state.events.sort(sortByDate),
     meta: (state) => {
       const meta = state.meta && state.meta.length > 0 ? state.meta[0] : <Meta>{};
       return <Meta>{
@@ -208,6 +208,7 @@ export default new Vuex.Store<WebSiteState>({
       this.commit('pages', await service.fetch('pages'));
       this.commit('meta', await service.fetch('meta'));
       this.commit('initializing', false);
+      this.dispatch('loadData', { update: ['links', 'splashes', 'testimonials'] });
     },
     async loadData(state, payload: { update: string[]; }) {
       const alreadyLoaded = state.getters.loaded, 

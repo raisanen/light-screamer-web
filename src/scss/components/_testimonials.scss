@@ -1,33 +1,34 @@
-@import '../abstracts/include';
+@include non-critical {
+    .testimonial {
+        @include padding(1, 6);
+        @include padding-y(2);
 
-.box.testimonial {
-    @include padding(1, 6);
-    @include padding-y(2);
+        position: relative;
 
-    position: relative;
+        &:before {
+            @include position-absolute($top: size(2), $left: size(2));
+            @include font($size: text-size(x-large), $align: left, $height: 1);
 
-    &:before {
-        @include position-absolute($top: size(2), $left: size(2));
-        @include font($size: text-size(x-large), $align: left, $height: 1);
+            content: '\00bb';
 
-        content: '\00bb';
+            display: block;
+            width: size(1);
+            height: size(2);
+        }
 
-        display: block;
-        width: size(1);
-        height: size(2);
-    }
+        &__quote,
+        &__source {
+            @include margin-x(1, 0);
+        }
 
-    blockquote, .source {
-        @include margin-x(1, 0);        
-    }
+        &__quote {
+            @include margin-y(0, .5);
+            @include font($size: text-size(medium), $weight: 400, $style: italic);
 
-    blockquote {
-        @include margin-y(0, .5);
-        @include font($size: text-size(medium), $weight: 400, $style: italic);
+            display: block;
+        }
 
-        display: block;
-
-        &+.source {
+        &__source {
             display: block;
 
             font-size: text-size(small);

@@ -1,45 +1,45 @@
-@import '../abstracts/include';
-
-.links {
-    @include flex($direction: row, $align: center, $justify: center, $wrap: wrap);
-    @include margin-top(3);
-
-    h3.links-title {
-        @include margin-right(2);
-        @include margin-bottom(1);
-
-        &:after {
-            content: ':';
+@include non-critical {
+    .links {
+        @include flex($direction: row, $align: center, $justify: center, $wrap: wrap);
+        @include margin-top(3);
+    
+        &__title {
+            @include margin-right(2);
+            @include margin-bottom(1);
+    
+            &:after {
+                content: ':';
+            }
+    
+            @include mobile-only {
+                @include margin(0, 0, 2);
+                width: 100%;
+                flex-grow: 1;
+            }
         }
-
+    
+        a {
+            @include flex($inline: true, $align: center);
+            @include margin-bottom(1);
+    
+            font-size: text-size(medium);
+            text-shadow: none;
+    
+    
+            .fa {
+                @include margin-right(1);
+                font-size: text-size(x-large);
+            }
+    
+            &+a {
+                @include margin-left(3);
+            }
+        }
+    
         @include mobile-only {
-            @include margin(0, 0, 2);
-            width: 100%;
-            flex-grow: 1;
-        }
-    }
-
-    a {
-        @include flex($inline: true, $align: center);
-        @include margin-bottom(1);
-
-        font-size: text-size(medium);
-        text-shadow: none;
-
-
-        .fa {
-            @include margin-right(1);
-            font-size: text-size(x-large);
-        }
-
-        &+a {
-            @include margin-left(3);
-        }
-    }
-
-    @include mobile-only {
-        &:not(.buttons) a {
-            @include margin-bottom(4);
+            &:not(.links--buttons) a {
+                @include margin-bottom(4);
+            }
         }
     }
 }

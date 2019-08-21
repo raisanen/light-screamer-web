@@ -33,6 +33,3 @@ export default class TextBox extends Vue {
 }
 </script>
 
-<style lang="sass">
-    @import '../scss/components/textbox';
-</style>

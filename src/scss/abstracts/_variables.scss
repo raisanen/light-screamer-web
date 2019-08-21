@@ -1,0 +1,70 @@
+$breakpoints: (
+    desktop: 900px,
+    mobile: 700px
+);
+
+$site-colors: (
+    black: #040404,
+    white: #fff,
+    focus: #abc
+);
+$brand-colors: (
+    web: #abc,
+    spotify: #1db954,
+    bandcamp: #629aa9,
+    youtube: #ff0000,
+    facebook: #3b5998,
+    facebook-square: #3b5998,
+    instagram: #c13584,
+    soundcloud: #ff8800,
+    twitter: #1da1f2
+);
+$colors: map-merge($site-colors, $brand-colors);
+
+$background-opacity: (
+    opaque: 1,
+    semi-opaque: .85,
+    semi-transparent: .66, 
+    transparent: .44,
+    very-transparent: .22,
+    fully-transparent: 0,
+);
+
+$text-size: (
+    small: .75rem,
+    medium: 1rem,
+    large: 1.4rem,
+    x-large: 1.8rem,
+    xx-large: 2.6rem,
+    xxx-large: 3.5rem,
+    massive: 4.5rem,
+    smaller: .8em,
+    larger: 1.2em
+);
+
+$font-body: 'DM Sans', sans-serif;
+$base-size: 10px;
+
+$z-levels: (
+    top: 1000,
+    middle:  800,
+    bottom:  600
+);
+
+$transition-speeds: (
+    fast: .2s,
+    medium: .4s,
+    slow: .6s,
+    slowest: .88s,
+);
+
+$desktop-menu-height: 160px;
+$mobile-menu-height: 80px;
+$desktop-menu-detached-height: $mobile-menu-height;
+$mobile-menu-detached-height: 60px;
+
+$border-width-min: 1px;
+$border-width-medium: 2px;
+$border-width-max: 5px;
+
+$gutter-width: 30px;

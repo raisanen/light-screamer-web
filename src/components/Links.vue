@@ -1,6 +1,6 @@
 <template>
     <div :class="containerClass">
-        <h3 class="links-title" v-if="title">
+        <h3 class="links__title" v-if="title">
             <i v-if="icon" :class="iconClass"></i>
             {{title}}
         </h3>
@@ -44,6 +44,3 @@ export default class Links extends Vue {
 }
 </script>
 
-<style lang="scss">
-    @import '../scss/components/links';
-</style>

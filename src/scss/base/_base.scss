@@ -1,0 +1,73 @@
+@include critical {
+    html,
+    body,
+    #app {
+        @extend %no-padding;
+        @extend %no-margin;
+
+        @include font($font-body, $size: 20px, $weight: 400, $height: 1.2);
+        @include text-shadow-default();
+
+        width: 100%;
+        background-color: transparent;
+        color: color(white);
+
+        @include mobile-only() {
+            font-size: 18px;
+        }
+    }
+
+    body {
+        background: color(black);
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .hidden,
+    .loading,
+    .loading-container {
+        display: none;
+    }
+}
+
+@include non-critical {
+
+    html,
+    body,
+    #app {
+        @include text-shadow-default();
+    }
+
+    body {
+        background-attachment: fixed;
+        background-position: top center;
+        background-size: cover;
+        background-repeat: no-repeat;
+
+        @include mobile-only {
+            background-size: auto 100vh;
+        }
+    }
+
+    .loading,
+    .loading-container {
+        display: block;
+    }
+
+    .loading {
+        animation: appear speed(slowest) ease-out both;
+    }
+
+    .loading-container {
+        @include transition($speed: slow);
+        transform-origin: top;
+
+        &.loading {
+            transform: scaleY(0);
+            opacity: 0;
+        }
+    }
+
+}

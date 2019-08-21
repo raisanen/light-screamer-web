@@ -44,7 +44,3 @@ export default class ListPage extends Vue {
     }
 }
 </script>
-
-<style lang="sass">
-    @import '../../scss/views/list';
-</style>

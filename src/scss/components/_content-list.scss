@@ -1,59 +1,10 @@
-@import '../abstracts/include';
-
-.content-list {
-    .box {
-        h2,
-        p.description {
-            @include padding-x(2);
-            @include margin(0);
+@include non-critical {
+    .content-list {
+        @include desktop-only {
+            .col.instagram {
+                flex-basis: 50%;
+                max-width: 50%;
+            }    
         }
-        h2 {
-            @include flex($justify: space-between, $align: center);
-            @include padding-y(1);
-            font-size: text-size(large);
-
-            .fa {
-                flex-grow: 0;
-                flex-basis: 0;
-            }
-
-            .date {
-                font-size: text-size(small);
-                font-weight: 400;
-            }
-        }
-
-        img {
-            max-width: 100%;
-            min-width: 100%;
-        }
-        .image {
-            position: relative;
-            height: 350px;
-            overflow: hidden;
-            img {
-                @include position-absolute-centered;
-                
-            }
-        }
-
-        p.description {
-            @include font($size: text-size(medium), $weight: 400);
-            @include padding-y(3, 4);
-        }
-
-        .testimonials.cols {
-            @include margin-x(0);
-            @include padding(3, 2, 4);
-
-            .col {
-                @include padding-x(0);
-
-                .box {
-                    @include margin-bottom(0);
-                    background: transparent;
-                }
-            }
-        }
-    }
+    }    
 }

@@ -1,16 +1,16 @@
 <template>
-  <nav id="nav" :class="{detached: detached}" v-if="pages">
-    <div class="mobile-nav" :class="{active: showMenu, detached: mobileDetached}">
-      <router-link @click.native="hideMenu()" to="/" class="logo" v-if="meta">
+  <nav class="navigation" :class="{'navigation--detached': detached}" v-if="pages">
+    <div class="mobile-navigation" :class="{'mobile-navigation--active': showMenu, 'mobile-navigation--detached': mobileDetached}">
+      <router-link @click.native="hideMenu()" to="/" class="mobile-navigation__logo" v-if="meta">
         <img v-if="logo" :src="logo.thumbnails.full.url" alt="Light Screamer"/>
       </router-link>
-      <div class="heading" v-if="meta" >
+      <div class="mobile-navigation__heading" v-if="meta" >
         <router-link @click.native="hideMenu()" to="/">
           {{meta.title}}
         </router-link>
       </div>
-      <button class="menu-button" @click="toggleMenu()" aria-label="Menu" role="button">
-          <span class="icon"></span>
+      <button class="mobile-navigation__menu-button" @click="toggleMenu()" aria-label="Menu" role="button">
+          <span class="mobile-navigation__icon"></span>
       </button>
     </div>
     <ul :class="{show: showMenu}" role="navigation">
@@ -77,6 +77,3 @@ export default class Navigation extends Vue {
 }
 </script>
 
-<style lang="scss">
-  @import '../scss/components/navigation';
-</style>

@@ -1,16 +1,16 @@
 <template>
     <div>
         <div :class="className">
-            <div class="col" :class="item.type || ''" v-for="item in items" :key="item.id">
+            <div class="col list-item" :class="item.type || ''" v-for="item in items" :key="item.id">
                 <div class="box" :class="`${itemComponentName} ${item.type || ''}`">
                     <component :is="itemComponentName" :item="item" :id="item.id">
                         <template v-slot:title>{{item.title}}</template>
                         <template v-slot:date>{{item.date ? item.formattedDate : ''}}</template>
                         <template v-slot:description>
-                            <p class="description" v-html="item.description"></p>
+                            <p class="list-item__description" v-html="item.description"></p>
                         </template>
                         <template v-slot:testimonials>
-                            <Testimonials v-if="item.testimonialItems" :testimonials="item.testimonialItems"/>
+                            <Testimonials class="list-item__testimonials" v-if="item.testimonialItems" :testimonials="item.testimonialItems"/>
                         </template>
                         <template v-slot:image>
                             <ResponsiveImage v-if="item.image" :image="item.imageItem"/>
@@ -21,18 +21,18 @@
 
 
                         <template v-slot:standard-header>
-                            <h2>
+                            <h2 class="list-item__title">
                                 <span>
                                     <i v-if="item.type" :class="`fa fa-${item.type}`"></i>
                                     {{item.title}}
                                 </span>
-                                <span class="date" v-if="item.date">
+                                <span class="list-item__date" v-if="item.date">
                                     {{item.formattedDate}}
                                 </span>
                             </h2>
                         </template>
                         <template v-slot:standard-image>
-                            <div class="image">
+                            <div class="list-item__image">
                                 <LightBoxLink :image="item.imageItem" v-if="item.image">
                                     <ResponsiveImage :image="item.imageItem"/>
                                     <i v-if="item.type" :class="`fa fa-${item.type}`"></i>
@@ -41,8 +41,8 @@
                         </template>
 
                         <template v-slot:standard-footer>
-                            <p class="description" v-html="item.description"></p>
-                            <Testimonials v-if="item.testimonialItems" :testimonials="item.testimonialItems"/>
+                            <p class="list-item__description" v-html="item.description"></p>
+                            <Testimonials class="list-item__testimonials" v-if="item.testimonialItems" :testimonials="item.testimonialItems"/>
                         </template>
                     </component>
 
@@ -70,7 +70,6 @@ const ReleasesItem = () => import(/* webpackChunkName: "component-releaseitem" *
 const ResponsiveImage = () => import(/* webpackChunkName: "component-responsive-img" */ '@/components/ResponsiveImage.vue');
 
 const LightBoxLink = () => import(/* webpackChunkName: "component-lightboxlink" */ '@/components/LightboxLink.vue');
-
 
 @Component({
     components: {
@@ -100,7 +99,3 @@ export default class ContentList extends Vue {
     }
 }
 </script>
-
-<style lang="scss">
-    @import '../scss/components/content-list';
-</style>

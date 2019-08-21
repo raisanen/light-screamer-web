@@ -1,5 +1,5 @@
 <template>
-    <div class="photo" v-show="item && item.imageItem">
+    <div class="list-item--photo" v-show="item && item.imageItem">
         <slot name="standard-header"/>
         <slot name="standard-image"/>
         <slot name="description"/>
@@ -19,7 +19,3 @@ export default class PhotoItem extends Vue {
     @Prop() protected item!: EntityWithImage;
 }
 </script>
-
-<style lang="scss">
-    @import '../../scss/components/items/photo-item';
-</style>

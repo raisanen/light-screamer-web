@@ -1,33 +1,21 @@
-@import
-    '../abstracts/include';
-
-@import
-    './index/base/typography',
-    './index/base/elements';
-
-@import
-    './index/layout/grid';
-
-@import
-    './index/components/box';
-
-
-.main {
-    min-height: 100vh;
-    width: 100%;
-
-    overflow-x: hidden;
-    background-color: transparent;
-
-    @include desktop-only {
-        @include padding-top(16);
+@include critical {
+    .main {
+        min-height: 100vh;
+        width: 100%;
+    
+        overflow-x: hidden;
+        background-color: transparent;
+    
+        @include desktop-only {
+            @include padding-top(16);
+        }
+    
+        @include mobile-only {
+            @include padding(2, 1);
+        }
     }
-
-    @include mobile-only {
-        @include padding(2, 1);
-    }
-}
-
-.content {
-    @include container();
+    
+    .content {
+        @extend %container;
+    }    
 }

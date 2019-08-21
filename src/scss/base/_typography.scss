@@ -1,0 +1,39 @@
+@include critical {
+    a,
+    a:active {
+        @include font($weight: 500, $decoration: none);
+    
+        color: color(white);    
+    }
+    
+    h1,
+    h2,
+    h3 {
+        font-weight: 700;
+        text-transform: lowercase;
+    
+        .fa {
+            @include margin-right(.5);
+            font-size: text-size(smaller);
+            display: inline-block;
+        }
+    }
+    
+    h1 {
+        font-size: text-size(xx-large);
+    }
+    h2 {
+        font-size: text-size(x-large);
+    }    
+}
+
+@include non-critical {
+    a,
+    a:active {
+        @include transition($speed: fast);    
+        &:hover {
+            color: color(focus);
+        }
+        cursor: pointer;
+    }    
+}

@@ -1,39 +1,45 @@
-@import '../abstracts/include';
-
-.lightbox-container {
-    @include flex($justify: center, $align: center);
-    @include position-fixed($top: 0, $left: 0, $z-index: top);
-    @include transition(opacity, $speed: slow);
-    overflow: hidden;
-    width: 0;
-    height: 0;
-
-    opacity: 0;
-    background: color-black(semi-transparent);
-
-    .close-button {
-        @include position-absolute($top: size(2), $right: size(2));
-        @include mobile-only {
-            top: size(1);
-            right: size(1);
+@include critical {
+    .lightbox-container {
+        display: none;
+    }
+}
+@include non-critical {
+    .lightbox-container {
+        @include flex($justify: center, $align: center);
+        @include position-fixed($top: 0, $left: 0, $z-index: top);
+        @include transition(opacity, $speed: slow);
+    
+        overflow: hidden;
+        width: 0;
+        height: 0;
+    
+        opacity: 0;
+        background: color-black(semi-transparent);
+    
+        &__close-button {
+            @include position-absolute($top: size(2), $right: size(2));
+            @include mobile-only {
+                top: size(1);
+                right: size(1);
+            }
+    
+            font-size: text-size(x-large);
+    
+            background-color: transparent;
+            border: none;
+            color: color(white);
         }
-
-        font-size: text-size(x-large);
-
-        background-color: transparent;
-        border: none;
-        color: color(white);
-    }
-    .lightbox {
-        img {
-            max-width: 90vh;
-            max-height: 80vh;
+        &__lightbox {
+            img {
+                max-width: 90vh;
+                max-height: 80vh;
+            }
         }
-    }
-
-    &.active {
-        width: 100%;
-        height: 100%;
-        opacity: 1;
-    }
+    
+        &--active {
+            width: 100%;
+            height: 100%;
+            opacity: 1;
+        }
+    }    
 }

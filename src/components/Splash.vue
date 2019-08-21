@@ -1,8 +1,8 @@
 <template>
-    <div :class="`splash ${splash.entityType}`" v-if="splash">
-        <p v-html="splash.description"/>
+    <div :class="`splash splash--${splash.entityType}`" v-if="splash">
+        <p class="splash__text" v-html="splash.description"/>
         <a v-if="splash.entityType === 'splash'" target="_blank" rel="noreferrer"
-                :class="`btn solid inverted shiny ${splash.type}`" 
+                :class="`btn btn--solid btn--inverted btn--shiny btn--${splash.type}`" 
                 :href="splash.url">
             <i v-if="splash.type" :class="`fa fa-${splash.type}`"></i>
             {{splash.label}}
@@ -23,7 +23,3 @@ export default class SplashComponent extends Vue {
     @Prop() protected splash!: AirtableSplash | AirtableTestimonial;
 }
 </script>
-
-<style lang="sass">
-    @import '../scss/components/splash';
-</style>

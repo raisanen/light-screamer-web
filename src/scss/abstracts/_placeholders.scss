@@ -1,0 +1,18 @@
+%flex-box--column {
+    @include flex($direction: column);
+}
+%flex-box--row {
+    @include flex($direction: row);
+}
+
+%container {
+    @include container();
+}
+
+%no-padding {
+    @include padding(0);
+}
+
+%no-margin {
+    @include margin(0);
+}

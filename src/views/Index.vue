@@ -92,12 +92,11 @@ export default class IndexPage extends Vue {
   }
 
   beforeMount() {
-    this.setTitleAndMeta();
+    this.$store.dispatch('initialize').then(() => this.setTitleAndMeta());
     this.$router.afterEach(() => this.setTitleAndMeta());
   }
 }
 </script>
-
 <style lang="scss">
-  @import '../scss/views/index';
+  @import '../scss/main';
 </style>

@@ -1,11 +1,12 @@
 <template>
-    <div class="event">
-        <h2>
+    <div class="list-item--event">
+        <h2 class="list-item__description">
             <a :href="item.url" target="_blank" rel="noreferrer">
                 <slot name="date"/> / <slot name="title"/>
             </a>
         </h2>
-        <div class="expander" :class="{active: readmore}">
+        <div class="list-item__read-more-container" 
+            :class="{'list-item__read-more-container--active': readmore}">
             <slot name="image"/>
             <h3>
                     <slot name="date"/>
@@ -13,11 +14,11 @@
                     <i>{{item.venue}}</i>
             </h3>
             <slot name="description"/>
-            <button class="btn solid" @click="readmore = true">
-                <i class="fa fa-chevron-circle-down"></i>
-                read more
-            </button>
         </div>
+        <button class="list-item__read-more-button btn btn--invert" @click="readmore = true">
+            <i class="fa fa-chevron-circle-down"></i>
+            read more
+        </button>
     </div>
 </template>
 
@@ -37,7 +38,3 @@ export default class EventItem extends Vue {
     protected readmore: boolean = false;
 }
 </script>
-
-<style lang="scss">
-    @import '../../scss/components/items/event-item';
-</style>
