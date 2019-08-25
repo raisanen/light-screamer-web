@@ -14,7 +14,7 @@
             }
             @for $i from 1 through 10 {
                 >span.c-#{$i} {
-                    font-variation-settings: 'wght' ($i * 150 + 100);
+                    font-variation-settings: 'wght' ($i * 75 + 100);
                 }
             }
         }
@@ -41,7 +41,7 @@
             }
     
             to {
-                font-variation-settings: 'wght' ($i * 150 + 100);
+                font-variation-settings: 'wght' ($i * 75 + 100);
             }
         }
     }
