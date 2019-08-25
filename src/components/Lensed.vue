@@ -24,12 +24,12 @@ export default class Lensed extends Vue {
             return [];
         }
         const chars = this.text.split('');
-        const max = Math.min(5, Math.ceil(chars.length / 2));
-        const min = max > 4 ? 1 : 2;
+        const max = Math.min(6, Math.ceil(chars.length / 2));
+        const min = max >= 4 ? 1 : 2;
 
         return chars.map((char, i) => {
             let n = i > max ? Math.min(chars.length - i, max) : i;
-            n = Math.min(n + min, 5);
+            n = Math.min(n + min, 6);
 
             return <LensChar>{
                 char,
