@@ -1,5 +1,5 @@
 <template>
-    <div :class="currentPageType" v-if="currentPage">
+    <div :class="currentPageType" v-if="currentPage" :id="currentPage.id">
         <h1>{{currentPage.title}}</h1>
         <h2>Upcoming shows</h2>
         <template v-if="comingEvents && comingEvents.length > 0">

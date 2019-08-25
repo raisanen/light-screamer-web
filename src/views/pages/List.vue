@@ -1,5 +1,5 @@
 <template>
-    <div :class="currentPageType" v-if="currentPage && items">
+    <div :class="currentPageType" v-if="currentPage && items" :id="currentPage.id">
         <h1>{{currentPage.title}}</h1>
         <Testimonials v-if="currentPage.testimonialItems && !currentPage.splashTestimonial" :testimonials="currentPage.testimonialItems" :columns="3"/>
         <ContentList :items="items" :columns="numColumns" :type="currentPageType"/>

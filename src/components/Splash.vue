@@ -1,5 +1,5 @@
 <template>
-    <div :class="`splash splash--${splash.entityType}`" v-if="splash">
+    <div :class="`splash splash--${splash.entityType}`" v-if="splash" :id="splash.id">
         <p class="splash__text">
             {{descriptionPreamble}}
             <span :if="descriptionLensed" class="lensed"><span class="c-4">{{descriptionLensed}}</span></span>

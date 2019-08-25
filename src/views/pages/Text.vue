@@ -1,5 +1,5 @@
 <template>
-    <div v-if="currentPage" class="text-page">
+    <div v-if="currentPage" class="text-page" :id="currentPage.id">
         <h1 v-if="meta">
             <Lensed :text="meta.title"/>
         </h1>
