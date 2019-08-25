@@ -1,0 +1,48 @@
+@include critical {
+    .lensed {
+        font-variation-settings: 'wght' 200;
+        text-transform: uppercase;
+
+        &,
+        > span {
+            transform-style: preserve-3d;
+            display: inline-block;
+        }
+        > span {
+            &.c-empty {
+                width: .15em;
+            }
+            @for $i from 1 through 10 {
+                >span.c-#{$i} {
+                    font-variation-settings: 'wght' ($i * 150 + 100);
+                }
+            }
+        }
+    }
+}
+
+@include non-critical {
+    .lensed {
+        @for $i from 1 through 10 {
+            >span.c-#{$i} {
+                animation: fatten-#{$i} 3s ease-in-out 1 forwards;
+                &.repeat {
+                    animation-direction: alternate;
+                    animation-iteration-count: infinite;
+                }
+            }
+        }
+
+    }
+    @for $i from 1 through 10 {
+        @keyframes fatten-#{$i} {
+            from {
+                font-variation-settings: 'wght' 100;
+            }
+    
+            to {
+                font-variation-settings: 'wght' ($i * 150 + 100);
+            }
+        }
+    }
+}

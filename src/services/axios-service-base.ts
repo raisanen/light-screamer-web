@@ -1,10 +1,10 @@
 import axios, { AxiosInstance } from 'axios';
 
 export default abstract class AxiosServiceBase {
-    private static _axios: AxiosInstance = null;
+    private static _axios: AxiosInstance;
 
     private get axios(): AxiosInstance {
-        if (AxiosServiceBase._axios === null) {
+        if (!AxiosServiceBase._axios) {
             AxiosServiceBase._axios = axios.create();
         }
         return AxiosServiceBase._axios;

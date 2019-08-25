@@ -97,6 +97,3 @@ export default class IndexPage extends Vue {
   }
 }
 </script>
-<style lang="scss">
-  @import '../scss/main';
-</style>

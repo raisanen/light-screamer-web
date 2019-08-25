@@ -1,0 +1,15 @@
+@include critical {
+    .text-page {
+        h1, h2 {
+            margin: 0;
+            text-align: center;
+        }
+        h2 {
+            font-weight: 400;
+            margin-bottom: 20px;
+            .lensed {
+                text-transform: lowercase;
+            }
+        }
+    }
+}

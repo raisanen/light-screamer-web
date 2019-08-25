@@ -31,6 +31,6 @@ export default class AirtableService extends AxiosServiceBase {
 
     public async fetch<T extends Entity>(tableName: string): Promise<T[]> {
         const result = await this.get<AirtableResponse>(this.tableUrl(tableName));
-        return result.records.map((r) => mapRecordToEntity<T>(r));
+        return result.records.map((r: any) => mapRecordToEntity<T>(r));
     }
 }

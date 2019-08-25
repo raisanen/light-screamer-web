@@ -20,10 +20,11 @@ import Vue from 'vue';
 import { Component, Prop } from 'vue-property-decorator';
 import { Getter } from 'vuex-class';
 
-import { Entity, Page, Event } from '@/models/airtable-record';
-import ContentList from '@/components/ContentList.vue';
 import moment from 'moment';
 
+import { Entity, Page, Event } from '@/models/airtable-record';
+
+import ContentList from '@/components/ContentList.vue';
 
 @Component({
     components: {

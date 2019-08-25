@@ -13,9 +13,13 @@
             width: breakpoint(mobile);
             max-width: 100%;
     
-            i {
+            i, > span {
                 display: block;
                 font-size: 1.2em;
+                font-style: italic;
+                &.lensed {
+                    text-transform: none;
+                }
             }
         }
         &--testimonial {

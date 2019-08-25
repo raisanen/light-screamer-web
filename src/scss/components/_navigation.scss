@@ -1,5 +1,6 @@
 @include critical {
     .navigation {
+        $desktop-image-size: $desktop-menu-height * .8;
         $mobile-image-size: $mobile-menu-height * .8;
         @include padding-y(2);
     
@@ -25,7 +26,7 @@
                 color: color(white);
     
                 &__logo, 
-                &__logo > img {
+                &__logo > svg {
                     display: block;
                     height: $mobile-image-size;
                     width: $mobile-image-size;
@@ -107,9 +108,9 @@
                         @include text-shadow-default();
                     }
     
-                    img {
-                        max-height: $mobile-menu-height;
-                        max-width: $mobile-menu-height;
+                    svg {
+                        max-height: $desktop-image-size;
+                        max-width: $desktop-image-size;
                     }
                 }
             }
@@ -177,9 +178,8 @@
             height: $desktop-menu-height;
             overflow: hidden;
     
-            &, ul > li > a img {
+            &, ul > li > a svg {
                 @include margin-right(1);
-                @include transition($speed: medium);
             }
         }
     }
@@ -190,7 +190,7 @@
         .mobile-navigation {
             @include mobile-only() {    
                 &, 
-                &__logo > img, 
+                &__logo > svg, 
                 &__heading > a, 
                 &__menu-button {
                     @include transition($speed: slow);
@@ -199,6 +199,11 @@
     
                     &, &:before, &:after {
                         @include transition($speed: medium);
+                    }
+                }
+                &__logo > svg {
+                    g#text-layer {
+                        opacity: 0;
                     }
                 }    
     
@@ -227,7 +232,7 @@
                     background-color: color(white);
                     color: color(black);
     
-                    .mobile-navigation__logo > img {
+                    .mobile-navigation__logo > svg {
                         filter: invert(1);
                     }
     
@@ -288,12 +293,7 @@
                         &.router-link-active:hover {
                             transform: translateY(-1px);
                         }
-                    }
-    
-                    img {
-                        max-height: $mobile-menu-height;
-                        max-width: $mobile-menu-height;
-                    }
+                    }    
                 }
             }
     
@@ -303,7 +303,7 @@
         }
         
         @include desktop-only {
-            &, ul > li > a img {
+            &, ul > li > a svg, ul > li > a svg g {
                 @include transition($speed: medium);
             }
     
@@ -317,13 +317,57 @@
                     &:not(.home) {
                         @include margin-y(1);
                     }
-                    img {
+                    svg {
                         @include margin-x(2);
                         max-height: $detached-image-size;
                         max-width: $detached-image-size;
+                        g#text-layer {
+                            opacity: 0;
+                        }
                     }
                 }
             }
         }
-    }    
+    }
+
+    svg {
+        
+        g#upper-outer-left,
+        g#upper-outer-right,
+        g#g1156 {
+            @for $i from 1 through 20 {
+                path:nth-child(#{$i}) {
+                    opacity: 0;
+                    animation: fadeIn .25s #{$i * .125}s ease-in-out forwards 1;
+                }
+            }
+        }
+        
+        g#text-layer {
+            g#light,
+            g#screamer {
+                @for $i from 1 through 20 {
+                    path:nth-child(#{$i}) {
+                        opacity: 0;
+                        animation: fadeIn .25s #{$i * .125}s ease-in-out forwards 1;
+                    }
+                }
+            }
+        }    }
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    @keyframes growIn {
+        from {
+            transform: scaleY(2);
+        }
+        to {
+            transform: scaleY(1);
+        }
+    }
 }

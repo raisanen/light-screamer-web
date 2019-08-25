@@ -6,6 +6,7 @@
     'abstracts/animations';
 
 @import
+    'base/fonts',
     'base/base',
     'base/typography';
 
@@ -15,12 +16,14 @@
 
 @import
     'views/index',
-    'views/list';
+    'views/list',
+    'views/text-page';
 
 @import
     'components/box',
     'components/buttons',
     'components/content-list',
+    'components/lensed',
     'components/lightbox',
     'components/links',
     'components/list-item',

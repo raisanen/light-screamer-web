@@ -223,7 +223,6 @@ export default new Vuex.Store<WebSiteState>({
             : await service.fetch(table);
           if (table === 'events') {
             const fbEvents = await facebook.get();
-            console.log(fbEvents);
             this.commit(table, [...fbEvents, ...update]);
           } else {
             this.commit(table, update);
