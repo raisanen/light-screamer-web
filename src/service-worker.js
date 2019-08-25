@@ -39,7 +39,10 @@ workbox.routing.registerRoute(
     matchExt('png|gif|jpg|jpeg|svg'),
     stale('images', expiration(mediaExpiration))
 );
-
+workbox.routing.registerRoute(
+    matchExt('woff|woff2|ttf|otf'),
+    stale('fonts', expiration(mediaExpiration))
+);
 workbox.routing.registerRoute(
     matchUrl('ls.fivebyfive.se/proxy'),
     network('api', expiration(proxyExpiration))
